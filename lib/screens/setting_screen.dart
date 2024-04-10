@@ -99,7 +99,7 @@ class CustomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
-        style: ButtonStyle(minimumSize: MaterialStatePropertyAll(Size(30, 50))),
+        style: const ButtonStyle(minimumSize: MaterialStatePropertyAll(Size(30, 50))),
         onPressed: onPressed,
         child: Row(
           mainAxisSize: MainAxisSize.max,

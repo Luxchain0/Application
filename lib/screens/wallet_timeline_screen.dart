@@ -35,11 +35,11 @@ class _WalletTimelineScreenState extends State<WalletTimelineScreen> {
                   SizedBox(
                     width: width * 0.02,
                   ),
-                  Icon(Icons.visibility),
+                  const Icon(Icons.visibility),
                 ],
               ),
               Container(
-                margin: EdgeInsets.symmetric(vertical: 3),
+                margin: const EdgeInsets.symmetric(vertical: 3),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [

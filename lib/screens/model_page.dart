@@ -127,8 +127,8 @@ class _ModelScreenState extends State<ModelScreen> {
                     )),
                     OutlinedButton.icon(
                         onPressed: () => {},
-                        icon: Icon(Icons.arrow_back_ios),
-                        label: Text('Back to the market')),
+                        icon: const Icon(Icons.arrow_back_ios),
+                        label: const Text('Back to the market')),
                   ],
                 )
               ],
@@ -166,7 +166,7 @@ class CustomRowForQuote extends StatelessWidget {
             Text(
               listinoPrice.toString(),
               style:
-                  TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
+                  const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
             ),
             Text(
               quotePrice.toString(),

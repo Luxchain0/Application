@@ -22,7 +22,8 @@ class _FrameScreenState extends State<FrameScreen> {
     HomeScreen(), //Le quote che hai in vendita
     WatchTinderScreen(), //Ultime quote che hai comprato o venduto
     WatchTinderScreen(), //Preferiti
-    SettingScreen()];
+    SettingScreen()
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +35,7 @@ class _FrameScreenState extends State<FrameScreen> {
             elevation: 40,
             title: Row(
               children: [
-                Container(
+                SizedBox(
                     width: width * 0.1,
                     child: Image.asset('assets/images/LogoLUXCHAIN.png')),
                 SizedBox(
@@ -52,8 +53,8 @@ class _FrameScreenState extends State<FrameScreen> {
           labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
           destinations: const [
             NavigationDestination(
-                icon: Icon(Icons.wallet_rounded), 
-                label: 'Boh',
+              icon: Icon(Icons.wallet_rounded),
+              label: 'Boh',
             ),
             NavigationDestination(
                 icon: Icon(Icons.store_rounded), label: 'Market'),

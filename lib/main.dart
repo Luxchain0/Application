@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
           
         },
         theme: MyTheme.lightTheme,
-        home: FrameScreen(),
+        home: const FrameScreen(),
       );
   }
 }

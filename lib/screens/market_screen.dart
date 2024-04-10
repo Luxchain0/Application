@@ -248,7 +248,7 @@ class CustomButton extends StatelessWidget {
               Size(screenWidth * 0.2, screenWidth * 0.08))),
       child: Text(
         text,
-        style: TextStyle(
+        style: const TextStyle(
           fontWeight: FontWeight.bold,
         ),
       ),
