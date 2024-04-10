@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lux_chain/utilities/api_calls.dart';
+import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 
 class WalletScreen extends StatefulWidget {
@@ -10,10 +12,18 @@ class WalletScreen extends StatefulWidget {
 }
 
 class _WalletScreenState extends State<WalletScreen> {
+  late Future<List<WalletWatch>> futureWatches;
+
+  @override
+  void initState() {
+    super.initState();
+    futureWatches = getUserWalletWatches(0);
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    double heigh = SizeConfig.screenH!;
+    double height = SizeConfig.screenH!;
     double width = SizeConfig.screenW!;
 
     return Scaffold(
@@ -21,7 +31,7 @@ class _WalletScreenState extends State<WalletScreen> {
         bottom: false,
         child: Padding(
           padding: EdgeInsets.only(
-              right: width * 0.05, left: width * 0.05, top: heigh * 0.01),
+              right: width * 0.05, left: width * 0.05, top: height * 0.01),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -35,11 +45,11 @@ class _WalletScreenState extends State<WalletScreen> {
                   SizedBox(
                     width: width * 0.02,
                   ),
-                  Icon(Icons.visibility),
+                  const Icon(Icons.visibility),
                 ],
               ),
               Container(
-                margin: EdgeInsets.symmetric(vertical: 3),
+                margin: const EdgeInsets.symmetric(vertical: 3),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
@@ -84,10 +94,10 @@ class _WalletScreenState extends State<WalletScreen> {
                 style: TextStyle(fontSize: width * 0.04),
               ),
               SizedBox(
-                height: heigh * 0.04,
+                height: height * 0.04,
               ),
               Container(
-                margin: EdgeInsets.symmetric(vertical: heigh * 0.02),
+                margin: EdgeInsets.symmetric(vertical: height * 0.02),
                 child: Row(
                   children: [
                     Icon(
@@ -115,43 +125,41 @@ class _WalletScreenState extends State<WalletScreen> {
               ),
               Expanded(
                 child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: Column(children: [
-                    CustomBottomBigCard(
-                        screenWidth: width,
-                        img: 'assets/images/o1.jpg',
-                        shortName: 'nome corto'.toUpperCase(),
-                        longName: 'nome lungo con descrizione'.toUpperCase(),
-                        serialNumber: '34XX7WZY',
-                        valoreAttuale: 3070,
-                        valoreDiAcquisto: 3040,
-                        quotePossedute: 4,
-                        controvalore: 12345.45,
-                        incremento: 0.4),
-                    CustomBottomBigCard(
-                        screenWidth: width,
-                        img: 'assets/images/o2.jpg',
-                        shortName: 'nome corto'.toUpperCase(),
-                        longName: 'nome lungo con descrizione'.toUpperCase(),
-                        serialNumber: '34X4dWZY',
-                        valoreAttuale: 3070,
-                        valoreDiAcquisto: 3040,
-                        quotePossedute: 4,
-                        controvalore: 12345.45,
-                        incremento: 0.4),
-                    CustomBottomBigCard(
-                        screenWidth: width,
-                        img: 'assets/images/o3.jpg',
-                        shortName: 'nome corto'.toUpperCase(),
-                        longName: 'nome lungo con descrizione'.toUpperCase(),
-                        serialNumber: '34ZS8WZY',
-                        valoreAttuale: 3070,
-                        valoreDiAcquisto: 3040,
-                        quotePossedute: 4,
-                        controvalore: 12345.45,
-                        incremento: 0.4),
-                  ]),
-                ),
+                    scrollDirection: Axis.vertical,
+                    child: FutureBuilder<List<WalletWatch>>(
+                        future: futureWatches,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          } else if (snapshot.hasData) {
+                            List<WalletWatch> walletWatches = snapshot.data!;
+                            return Column(
+                              children: walletWatches.map((watch) {
+                                return CustomBottomBigCard(
+                                  screenWidth: width,
+                                  imgUrl: watch.modeltype.imageuri as String,
+                                  shortName: watch.watchid.toString(),
+                                  longName: watch.modeltype.model.modelname,
+                                  serialNumber: watch.watchid.toString(),
+                                  valoreAttuale: 0,
+                                  valoreDiAcquisto: watch.initialprice,
+                                  quotePossedute: watch.owned,
+                                  quoteTotali: watch.numberofshares,
+                                  controvalore: 0,
+                                  incremento: 0,
+                                );
+                              }).toList(),
+                            );
+                          } else if (snapshot.hasError) {
+                            // Gestisci il caso in cui si verifica un errore
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            // Gestisci il caso in cui non ci sono dati disponibili
+                            return const SizedBox(); // Placeholder widget when no data is available
+                          }
+                        })),
               ),
             ],
           ),
@@ -165,13 +173,14 @@ class CustomBottomBigCard extends StatelessWidget {
   const CustomBottomBigCard({
     super.key,
     required this.screenWidth,
-    required this.img,
+    required this.imgUrl,
     required this.shortName,
     required this.longName,
     required this.serialNumber,
     required this.valoreAttuale,
     required this.valoreDiAcquisto,
     required this.quotePossedute,
+    required this.quoteTotali,
     required this.controvalore,
     required this.incremento,
   });
@@ -179,9 +188,10 @@ class CustomBottomBigCard extends StatelessWidget {
   final double screenWidth;
   final String shortName;
   final String longName;
-  final String img;
+  final String imgUrl;
   final String serialNumber;
   final int quotePossedute;
+  final int quoteTotali;
   final double controvalore;
   final double valoreDiAcquisto;
   final double valoreAttuale;
@@ -209,13 +219,13 @@ class CustomBottomBigCard extends StatelessWidget {
       child: Row(children: [
         Container(
           padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
-          child: Column(
-            children: [
+          child: Column(children: [
             Container(
               margin: const EdgeInsets.only(right: 15),
               alignment: Alignment.center, // This is needed
-              child: Image.asset(
-                img,
+              child: Image.network(
+                // Utilizzo di Image.network per caricare l'immagine da un URL
+                imgUrl, // Utilizzo dell'URL dell'immagine
                 fit: BoxFit.contain,
                 width: screenWidth * 0.15,
               ),
@@ -251,7 +261,7 @@ class CustomBottomBigCard extends StatelessWidget {
             ),
             Text('Serial: $serialNumber'),
             SizedBox(height: screenWidth * 0.02),
-            Text('Quote Possedute: $quotePossedute/100'),
+            Text('Quote Possedute: $quotePossedute/$quoteTotali'),
             Text('Controvalore: $controvalore €'),
             Text('Valore di acquisto: $valoreDiAcquisto €'),
             Text('Valore attuale: $valoreAttuale €'),
