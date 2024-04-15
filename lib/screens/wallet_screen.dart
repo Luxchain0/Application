@@ -17,7 +17,7 @@ class _WalletScreenState extends State<WalletScreen> {
   @override
   void initState() {
     super.initState();
-    futureWatches = getUserWalletWatches(0);
+    futureWatches = getUserWalletWatches(1);
   }
 
   @override
@@ -139,7 +139,7 @@ class _WalletScreenState extends State<WalletScreen> {
                               children: walletWatches.map((watch) {
                                 return CustomBottomBigCard(
                                   screenWidth: width,
-                                  imgUrl: watch.modeltype.imageuri as String,
+                                  imgUrl: watch.modeltype.imageuri!,
                                   shortName: watch.watchid.toString(),
                                   longName: watch.modeltype.model.modelname,
                                   serialNumber: watch.watchid.toString(),
@@ -150,7 +150,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                   controvalore: 0,
                                   incremento: 0,
                                 );
-                              }).toList(),
+                              },).toList(),
                             );
                           } else if (snapshot.hasError) {
                             // Gestisci il caso in cui si verifica un errore
@@ -172,17 +172,17 @@ class _WalletScreenState extends State<WalletScreen> {
 class CustomBottomBigCard extends StatelessWidget {
   const CustomBottomBigCard({
     super.key,
-    required this.screenWidth,
-    required this.imgUrl,
-    required this.shortName,
-    required this.longName,
-    required this.serialNumber,
-    required this.valoreAttuale,
-    required this.valoreDiAcquisto,
-    required this.quotePossedute,
-    required this.quoteTotali,
-    required this.controvalore,
-    required this.incremento,
+    required this.screenWidth, //
+    required this.imgUrl, //
+    required this.shortName, //
+    required this.longName, //
+    required this.serialNumber, //
+    required this.valoreAttuale, //
+    required this.valoreDiAcquisto, //
+    required this.quotePossedute, //
+    required this.quoteTotali, //
+    required this.controvalore, //
+    required this.incremento, //
   });
 
   final double screenWidth;

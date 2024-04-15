@@ -39,28 +39,22 @@ class Model {
 }
 
 class ModelType {
-  final int modeltypeid;
-  final String? braceletcolor;
-  final String? braceletmaterial;
-  final String? casecolor;
-  final String? casematerial;
+  final int modeltypeid; //
+  final String? braceletmaterial; //
+  final String? casematerial; //
   final String? dialcolor;
   final int? diameter;
-  final bool? digital;
-  final String? gender;
+  final int? year;
   final String? imageuri;
   final Model model;
 
   const ModelType({
     required this.modeltypeid,
-    this.braceletcolor,
     this.braceletmaterial,
-    this.casecolor,
     this.casematerial,
     this.dialcolor,
     this.diameter,
-    this.digital,
-    this.gender,
+    this.year,
     this.imageuri,
     required this.model,
   });
@@ -68,14 +62,11 @@ class ModelType {
   factory ModelType.fromJson(Map<String, dynamic> json) {
     return ModelType(
       modeltypeid: json['modeltypeid'] as int,
-      braceletcolor: json['braceletcolor'] as String?,
       braceletmaterial: json['braceletmaterial'] as String?,
-      casecolor: json['casecolor'] as String?,
       casematerial: json['casematerial'] as String?,
       dialcolor: json['dialcolor'] as String?,
       diameter: json['diameter'] as int?,
-      digital: json['digital'] as bool?,
-      gender: json['gender'] as String?,
+      year: json['year'] as int,
       imageuri: json['imageuri'] as String?,
       model: Model.fromJson(json['model'] as Map<String, dynamic>),
     );
@@ -249,15 +240,19 @@ class WantToBuy {
 
 class WalletWatch {
   final int watchid;
+  final String condition;
   final int numberofshares;
   final double initialprice;
+  final double actualprice;
   final ModelType modeltype;
   final int owned;
 
   const WalletWatch({
     required this.watchid,
+    required this.condition,
     required this.numberofshares,
     required this.initialprice,
+    required this.actualprice,
     required this.modeltype,
     required this.owned,
   });
@@ -265,8 +260,10 @@ class WalletWatch {
   factory WalletWatch.fromJson(Map<String, dynamic> json) {
     return WalletWatch(
       watchid: json['watchid'] as int,
+      condition: json['condition'] as String,
       numberofshares: json['numberofshares'] as int,
-      initialprice: (json['initialprice'] as num)
+      initialprice: (json['initialprice'] as num).toDouble(),
+      actualprice: (json['actualprice'] as num)
           .toDouble(), // Conversione esplicita da int a double
       modeltype: ModelType.fromJson(json['modeltype'] as Map<String, dynamic>),
       owned: json['owned'] as int,
