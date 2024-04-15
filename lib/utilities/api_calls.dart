@@ -11,10 +11,7 @@ Future<List<WalletWatch>> getUserWalletWatches(int userID) async {
     );
 
     if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);
-      print(data);
-      print(WalletWatch.fromJson(data[0]));
-      
+      final List<dynamic> data = jsonDecode(response.body);      
       return data.map((e) => WalletWatch.fromJson(e)).toList();
     } else {
       throw Exception('[FLUTTER] Failed to load user shares');

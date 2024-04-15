@@ -139,9 +139,9 @@ class _WalletScreenState extends State<WalletScreen> {
                               children: walletWatches.map((watch) {
                                 return CustomBottomBigCard(
                                   screenWidth: width,
-                                  imgUrl: '',// watch.modeltype.imageuri!,
+                                  imgUrl: watch.modeltype.imageuri,
                                   shortName: watch.watchid.toString(),
-                                  longName: '',//watch.modeltype.model.modelname,
+                                  longName: watch.modeltype.model.modelname,
                                   serialNumber: watch.watchid.toString(),
                                   valoreAttuale: 0,
                                   valoreDiAcquisto: watch.initialprice,
