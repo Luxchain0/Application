@@ -21,53 +21,56 @@ class Favorite {
 class Model {
   final int modelid;
   final String modelname;
-  final String? brandname;
+  final String brandname;
 
   const Model({
     required this.modelid,
     required this.modelname,
-    this.brandname,
+    required this.brandname,
   });
 
   factory Model.fromJson(Map<String, dynamic> json) {
     return Model(
       modelid: json['modelid'] as int,
       modelname: json['modelname'] as String,
-      brandname: json['brandname'] as String?,
+      brandname: json['brandname'] as String,
     );
   }
 }
 
 class ModelType {
-  final int modeltypeid; //
-  final String? braceletmaterial; //
-  final String? casematerial; //
-  final String? dialcolor;
-  final int? diameter;
-  final int? year;
-  final String? imageuri;
+  final int modeltypeid;
+  final String braceletmaterial;
+  final String casematerial;
+  final String dialcolor;
+  final int diameter;
+  final int year;
+  final String imageuri;
+  final int modelid;
   final Model model;
 
   const ModelType({
     required this.modeltypeid,
-    this.braceletmaterial,
-    this.casematerial,
-    this.dialcolor,
-    this.diameter,
-    this.year,
-    this.imageuri,
+    required this.braceletmaterial,
+    required this.casematerial,
+    required this.dialcolor,
+    required this.diameter,
+    required this.year,
+    required this.imageuri,
+    required this.modelid,
     required this.model,
   });
 
   factory ModelType.fromJson(Map<String, dynamic> json) {
     return ModelType(
       modeltypeid: json['modeltypeid'] as int,
-      braceletmaterial: json['braceletmaterial'] as String?,
-      casematerial: json['casematerial'] as String?,
-      dialcolor: json['dialcolor'] as String?,
-      diameter: json['diameter'] as int?,
+      braceletmaterial: json['braceletmaterial'] as String,
+      casematerial: json['casematerial'] as String,
+      dialcolor: json['dialcolor'] as String,
+      diameter: json['diameter'] as int,
       year: json['year'] as int,
-      imageuri: json['imageuri'] as String?,
+      imageuri: json['imageuri'] as String,
+      modelid: json['modelid'] as int,
       model: Model.fromJson(json['model'] as Map<String, dynamic>),
     );
   }
@@ -244,6 +247,7 @@ class WalletWatch {
   final int numberofshares;
   final double initialprice;
   final double actualprice;
+  final int modeltypeid;
   final ModelType modeltype;
   final int owned;
 
@@ -253,6 +257,7 @@ class WalletWatch {
     required this.numberofshares,
     required this.initialprice,
     required this.actualprice,
+    required this.modeltypeid,
     required this.modeltype,
     required this.owned,
   });
@@ -263,8 +268,8 @@ class WalletWatch {
       condition: json['condition'] as String,
       numberofshares: json['numberofshares'] as int,
       initialprice: (json['initialprice'] as num).toDouble(),
-      actualprice: (json['actualprice'] as num)
-          .toDouble(), // Conversione esplicita da int a double
+      actualprice: (json['actualprice'] as num).toDouble(),
+      modeltypeid: json['modeltypeid'] as int,
       modeltype: ModelType.fromJson(json['modeltype'] as Map<String, dynamic>),
       owned: json['owned'] as int,
     );
