@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lux_chain/screens/buy_screen.dart';
-import 'package:lux_chain/screens/home_screen.dart';
+//import 'package:lux_chain/screens/home_screen.dart';
 import 'package:lux_chain/screens/market_screen.dart';
 import 'package:lux_chain/screens/sell_screen.dart';
 import 'package:lux_chain/screens/serial_screen.dart';
-//import 'package:lux_chain/screens/wallet_screen.dart';
+import 'package:lux_chain/screens/wallet_screen.dart';
 import 'package:lux_chain/screens/watch_tinder_screen.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 
@@ -19,9 +19,9 @@ class FrameScreen extends StatefulWidget {
 class _FrameScreenState extends State<FrameScreen> {
   int currentPageIndex = 0;
   List<Widget> pages = const [
-    SerialScreen(),
+    WalletScreen(),
     MarketScreen(),
-    HomeScreen(), //Le quote che hai in vendita
+    SerialScreen(), //Le quote che hai in vendita
     WatchTinderScreen(), //Ultime quote che hai comprato o venduto
     BuyScreen(), //Preferiti
     SellScreen()
