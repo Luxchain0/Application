@@ -221,13 +221,13 @@ class CustomBottomBigCard extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
           child: Column(children: [
             Container(
-              margin: const EdgeInsets.only(right: 15),
+              margin: const EdgeInsets.only(right: 0),
               alignment: Alignment.center, // This is needed
               child: Image.network(
                 // Utilizzo di Image.network per caricare l'immagine da un URL
                 imgUrl, // Utilizzo dell'URL dell'immagine
                 fit: BoxFit.contain,
-                width: screenWidth * 0.15,
+                width: screenWidth * 0.22,
               ),
             ),
             SizedBox(height: screenWidth * 0.07),
@@ -240,6 +240,7 @@ class CustomBottomBigCard extends StatelessWidget {
             ),
           ]),
         ),
+        SizedBox(width: 10),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

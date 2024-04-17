@@ -11,7 +11,121 @@ Future<List<WalletWatch>> getUserWalletWatches(int userID) async {
     );
 
     if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);      
+      final List<dynamic> data = jsonDecode(response.body);     
+      return data.map((e) => WalletWatch.fromJson(e)).toList();
+    } else {
+      throw Exception('[FLUTTER] Failed to load user shares');
+    }
+  } catch (e) {
+    
+    throw Exception('[FLUTTER] Error retrieving user watches: $e');
+  }
+}
+
+Future<List<WalletWatch>> getSharesByUser(int userID) async {
+  try {
+    // Effettua la chiamata per ottenere le azioni associate all'utente
+    final response = await http.get(
+      Uri.parse('https://luxchain-flame.vercel.app/api/shares/$userID'),
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);     
+      return data.map((e) => WalletWatch.fromJson(e)).toList();
+    } else {
+      throw Exception('[FLUTTER] Failed to load user shares');
+    }
+  } catch (e) {
+    
+    throw Exception('[FLUTTER] Error retrieving user watches: $e');
+  }
+}
+
+Future<List<WalletWatch>> getSharesByWatch(int watchID) async {
+  try {
+    // Effettua la chiamata per ottenere le azioni associate all'utente
+    final response = await http.get(
+      Uri.parse('https://luxchain-flame.vercel.app/api/watches/shares/$watchID'),
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);     
+      return data.map((e) => WalletWatch.fromJson(e)).toList();
+    } else {
+      throw Exception('[FLUTTER] Failed to load user shares');
+    }
+  } catch (e) {
+    
+    throw Exception('[FLUTTER] Error retrieving user watches: $e');
+  }
+}
+
+Future<List<WalletWatch>> getTradedShares(int userID) async {
+  try {
+    // Effettua la chiamata per ottenere le azioni associate all'utente
+    final response = await http.get(
+      Uri.parse('https://luxchain-flame.vercel.app/api/shares/traded/$userID'),
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);     
+      return data.map((e) => WalletWatch.fromJson(e)).toList();
+    } else {
+      throw Exception('[FLUTTER] Failed to load user shares');
+    }
+  } catch (e) {
+    
+    throw Exception('[FLUTTER] Error retrieving user watches: $e');
+  }
+}
+
+Future<List<WalletWatch>> getSharesOnSale(int userID) async {
+  try {
+    // Effettua la chiamata per ottenere le azioni associate all'utente
+    final response = await http.get(
+      Uri.parse('https://luxchain-flame.vercel.app/api/shares/onSale/$userID'),
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);     
+      return data.map((e) => WalletWatch.fromJson(e)).toList();
+    } else {
+      throw Exception('[FLUTTER] Failed to load user shares');
+    }
+  } catch (e) {
+    
+    throw Exception('[FLUTTER] Error retrieving user watches: $e');
+  }
+}
+
+Future<List<WalletWatch>> getFavouritesShared(int userID) async {
+  try {
+    // Effettua la chiamata per ottenere le azioni associate all'utente
+    final response = await http.get(
+      Uri.parse('https://luxchain-flame.vercel.app/api/shares/favourites/$userID'),
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);     
+      return data.map((e) => WalletWatch.fromJson(e)).toList();
+    } else {
+      throw Exception('[FLUTTER] Failed to load user shares');
+    }
+  } catch (e) {
+    
+    throw Exception('[FLUTTER] Error retrieving user watches: $e');
+  }
+}
+
+Future<List<WalletWatch>> getSharesOnMarketPlace(int userID) async {
+  try {
+    // Effettua la chiamata per ottenere le azioni associate all'utente
+    final response = await http.get(
+      Uri.parse('https://luxchain-flame.vercel.app/api/shares/marketplace/$userID'),
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);     
       return data.map((e) => WalletWatch.fromJson(e)).toList();
     } else {
       throw Exception('[FLUTTER] Failed to load user shares');
