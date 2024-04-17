@@ -135,3 +135,22 @@ Future<List<WalletWatch>> getSharesOnMarketPlace(int userID) async {
     throw Exception('[FLUTTER] Error retrieving user watches: $e');
   }
 }
+
+Future<WalletData> getWalletData(int userID) async {
+  try {
+    // Effettua la chiamata per ottenere le azioni associate all'utente
+    final response = await http.get(
+      Uri.parse('https://luxchain-flame.vercel.app/api/wallet/data/$userID'),
+    );
+
+    if (response.statusCode == 200) {
+      final dynamic data = jsonDecode(response.body);     
+      return WalletData.fromJson(data);
+    } else {
+      throw Exception('[FLUTTER] Failed to load wallet data');
+    }
+  } catch (e) {
+    
+    throw Exception('[FLUTTER] Error retrieving wallet data: $e');
+  }
+}
