@@ -19,42 +19,39 @@ class _SettingScreenState extends State<SettingScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: width*0.1, vertical: heigh * 0.02),
+        padding: EdgeInsets.symmetric(
+            horizontal: width * 0.1, vertical: heigh * 0.02),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Container(
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15.0, vertical: 15.0),
-                    child: CircleAvatar(
-                      radius: width * 0.1,
-                      backgroundColor: Colors.amber,
-                    ),
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 15.0, vertical: 15.0),
+                  child: CircleAvatar(
+                    radius: width * 0.1,
+                    backgroundColor: Colors.amber,
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'NOME e COGNOME',
-                        style: TextStyle(
-                            fontFamily: 'Bebas',
-                            fontSize: width * 0.07,
-                            height: 1),
-                      ),
-                      const Text('mailDellUtente@gmail.com'),
-                    ],
-                  )
-                ],
-              ),
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'NOME e COGNOME',
+                      style: TextStyle(
+                          fontFamily: 'Bebas',
+                          fontSize: width * 0.07,
+                          height: 1),
+                    ),
+                    const Text('mailDellUtente@gmail.com'),
+                  ],
+                )
+              ],
             ),
             CustomCard(
-                icon: Icons.person,
-                text: 'Personal data',
-                onPressed: () => {}),
+                icon: Icons.person, text: 'Personal data', onPressed: () => {}),
             CustomCard(
                 icon: Icons.notifications,
                 text: 'Notification',
@@ -64,19 +61,13 @@ class _SettingScreenState extends State<SettingScreen> {
                 text: 'Assistance',
                 onPressed: () => {}),
             CustomCard(
-                icon: Icons.question_mark,
-                text: 'FAQ',
-                onPressed: () => {}),
-            CustomCard(
-                icon: Icons.book, text: 'Guide', onPressed: () => {}),
+                icon: Icons.question_mark, text: 'FAQ', onPressed: () => {}),
+            CustomCard(icon: Icons.book, text: 'Guide', onPressed: () => {}),
             CustomCard(
                 icon: Icons.lightbulb, text: 'Hints', onPressed: () => {}),
             CustomCard(
-                icon: Icons.translate,
-                text: 'Language',
-                onPressed: () => {}),
-            CustomCard(
-                icon: Icons.logout, text: 'Logout', onPressed: () => {}),
+                icon: Icons.translate, text: 'Language', onPressed: () => {}),
+            CustomCard(icon: Icons.logout, text: 'Logout', onPressed: () => {}),
           ],
         ),
       ),
@@ -99,7 +90,8 @@ class CustomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
-        style: const ButtonStyle(minimumSize: MaterialStatePropertyAll(Size(30, 50))),
+        style: const ButtonStyle(
+            minimumSize: MaterialStatePropertyAll(Size(30, 50))),
         onPressed: onPressed,
         child: Row(
           mainAxisSize: MainAxisSize.max,

@@ -31,22 +31,7 @@ class _FrameScreenState extends State<FrameScreen> {
     double width = SizeConfig.screenW!;
 
     return Scaffold(
-        appBar: AppBar(
-            elevation: 40,
-            title: Row(
-              children: [
-                SizedBox(
-                    width: width * 0.1,
-                    child: Image.asset('assets/images/LogoLUXCHAIN.png')),
-                SizedBox(
-                  width: width * 0.05,
-                ),
-                Text(
-                  'Luxchain'.toUpperCase(),
-                  style: TextStyle(fontFamily: 'Bebas', fontSize: width * 0.08),
-                ),
-              ],
-            )),
+        appBar: appBar(width),
         body: pages[currentPageIndex],
         bottomNavigationBar: NavigationBar(
           animationDuration: const Duration(seconds: 1),
@@ -75,4 +60,23 @@ class _FrameScreenState extends State<FrameScreen> {
           },
         ));
   }
+}
+
+appBar(width) {
+  return AppBar(
+      elevation: 40,
+      title: Row(
+        children: [
+          SizedBox(
+              width: width * 0.1,
+              child: Image.asset('assets/images/LogoLUXCHAIN.png')),
+          SizedBox(
+            width: width * 0.05,
+          ),
+          Text(
+            'Luxchain'.toUpperCase(),
+            style: TextStyle(fontFamily: 'Bebas', fontSize: width * 0.08),
+          ),
+        ],
+      ));
 }

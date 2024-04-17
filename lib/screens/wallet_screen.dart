@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lux_chain/screens/wallet_specs_screen.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
@@ -48,41 +49,50 @@ class _WalletScreenState extends State<WalletScreen> {
                   const Icon(Icons.visibility),
                 ],
               ),
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 3),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      '134 456.43',
-                      style: TextStyle(
-                          color: Colors.black87,
-                          height: 1,
-                          fontSize: width * 0.1,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      width: width * 0.01,
-                    ),
-                    Text(
-                      '€',
-                      style: TextStyle(
-                        fontSize: width * 0.06,
-                        height: 1,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const WalletSpecsScreen()),
+                  );
+                },
+                child: Container(
+                  margin: const EdgeInsets.symmetric(vertical: 3),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        '134 456.43',
+                        style: TextStyle(
+                            color: Colors.black87,
+                            height: 1,
+                            fontSize: width * 0.1,
+                            fontWeight: FontWeight.bold),
                       ),
-                    ),
-                    Expanded(
-                        child: SizedBox(
-                      width: width * 0.01,
-                    )),
-                    Container(
-                      padding: const EdgeInsets.all(5),
-                      decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(3)),
-                          color: Colors.lightGreen),
-                      child: const Text('+ 2.3%'),
-                    ),
-                  ],
+                      SizedBox(
+                        width: width * 0.01,
+                      ),
+                      Text(
+                        '€',
+                        style: TextStyle(
+                          fontSize: width * 0.06,
+                          height: 1,
+                        ),
+                      ),
+                      Expanded(
+                          child: SizedBox(
+                        width: width * 0.01,
+                      )),
+                      Container(
+                        padding: const EdgeInsets.all(5),
+                        decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(3)),
+                            color: Colors.lightGreen),
+                        child: const Text('+ 2.3%'),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Text(
@@ -136,21 +146,23 @@ class _WalletScreenState extends State<WalletScreen> {
                           } else if (snapshot.hasData) {
                             List<WalletWatch> walletWatches = snapshot.data!;
                             return Column(
-                              children: walletWatches.map((watch) {
-                                return CustomBottomBigCard(
-                                  screenWidth: width,
-                                  imgUrl: watch.modeltype.imageuri,
-                                  shortName: watch.watchid.toString(),
-                                  longName: watch.modeltype.model.modelname,
-                                  serialNumber: watch.watchid.toString(),
-                                  valoreAttuale: 0,
-                                  valoreDiAcquisto: watch.initialprice,
-                                  quotePossedute: watch.owned,
-                                  quoteTotali: watch.numberofshares,
-                                  controvalore: 0,
-                                  incremento: 0,
-                                );
-                              },).toList(),
+                              children: walletWatches.map(
+                                (watch) {
+                                  return CustomBottomBigCard(
+                                    screenWidth: width,
+                                    imgUrl: watch.modeltype.imageuri,
+                                    shortName: watch.watchid.toString(),
+                                    longName: watch.modeltype.model.modelname,
+                                    serialNumber: watch.watchid.toString(),
+                                    valoreAttuale: 0,
+                                    valoreDiAcquisto: watch.initialprice,
+                                    quotePossedute: watch.owned,
+                                    quoteTotali: watch.numberofshares,
+                                    controvalore: 0,
+                                    incremento: 0,
+                                  );
+                                },
+                              ).toList(),
                             );
                           } else if (snapshot.hasError) {
                             // Gestisci il caso in cui si verifica un errore
