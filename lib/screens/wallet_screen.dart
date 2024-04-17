@@ -165,23 +165,6 @@ class _WalletScreenState extends State<WalletScreen> {
                                   );
                                 },
                               ).toList(),
-                              children: walletWatches.map(
-                                (watch) {
-                                  return CustomBottomBigCard(
-                                    screenWidth: width,
-                                    imgUrl: watch.modeltype.imageuri,
-                                    shortName: watch.watchid.toString(),
-                                    longName: watch.modeltype.model.modelname,
-                                    serialNumber: watch.watchid.toString(),
-                                    valoreAttuale: 0,
-                                    valoreDiAcquisto: watch.initialprice,
-                                    quotePossedute: watch.owned,
-                                    quoteTotali: watch.numberofshares,
-                                    controvalore: 0,
-                                    incremento: 0,
-                                  );
-                                },
-                              ).toList(),
                             );
                           } else if (snapshot.hasError) {
                             // Gestisci il caso in cui si verifica un errore
