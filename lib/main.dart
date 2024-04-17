@@ -3,11 +3,12 @@ import 'package:lux_chain/screens/buy_screen.dart';
 import 'package:lux_chain/screens/home_screen.dart';
 import 'package:lux_chain/screens/market_screen.dart';
 import 'package:lux_chain/screens/model_page.dart';
+import 'package:lux_chain/screens/serial_screen.dart';
 import 'package:lux_chain/screens/setting_screen.dart';
 import 'package:lux_chain/screens/sell_screen.dart';
 import 'package:lux_chain/screens/wallet_screen.dart';
 import 'package:lux_chain/screens/wallet_timeline_screen.dart';
-import 'package:lux_chain/screens/watch_tinder.dart';
+import 'package:lux_chain/screens/watch_tinder_screen.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/theme_data.dart';
 
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
           ModelScreen.id: (context) => const ModelScreen(),
           MarketScreen.id: (context) => const MarketScreen(),
           FrameScreen.id: (context) => const FrameScreen(),
+          SerialScreen.id: (context) => const SerialScreen(),
           
         },
         theme: MyTheme.lightTheme,

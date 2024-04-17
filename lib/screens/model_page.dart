@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 
+//DEPRECATA ... da togliere perchè non serve ... mettere tutto nella pagina seriale
+
 class ModelScreen extends StatefulWidget {
   static const String id = 'ModelScreen';
   const ModelScreen({super.key});
