@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lux_chain/screens/buy_screen.dart';
 import 'package:lux_chain/screens/home_screen.dart';
 import 'package:lux_chain/screens/market_screen.dart';
-import 'package:lux_chain/screens/setting_screen.dart';
+import 'package:lux_chain/screens/sell_screen.dart';
 import 'package:lux_chain/screens/wallet_screen.dart';
 import 'package:lux_chain/screens/watch_tinder.dart';
 import 'package:lux_chain/utilities/size_config.dart';
@@ -21,8 +22,8 @@ class _FrameScreenState extends State<FrameScreen> {
     MarketScreen(),
     HomeScreen(), //Le quote che hai in vendita
     WatchTinderScreen(), //Ultime quote che hai comprato o venduto
-    WatchTinderScreen(), //Preferiti
-    SettingScreen()
+    BuyScreen(), //Preferiti
+    SellScreen()
   ];
 
   @override

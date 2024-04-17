@@ -275,3 +275,23 @@ class WalletWatch {
     );
   }
 }
+
+class WalletData {
+  final double liquidity;
+  final int inShares; // TODO: modify this to be a double
+  final int rate;
+
+  const WalletData({
+    required this.liquidity,
+    required this.inShares,
+    required this.rate,
+  });
+
+  factory WalletData.fromJson(Map<String, dynamic> json) {
+    return WalletData(
+      liquidity: json['liquidity'] as double,
+      inShares: json['inShares'] as int,
+      rate: json['rate'] as int,
+    );
+  }
+}

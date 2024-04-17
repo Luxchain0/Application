@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 
 class BuyScreen extends StatefulWidget {
@@ -10,6 +11,22 @@ class BuyScreen extends StatefulWidget {
 }
 
 class _BuyScreenState extends State<BuyScreen> {
+  final double _sellPrice = 800.0;
+  final int _shareOnSale = 5;
+  final int _shareSelected = 36;
+  final double _moneyInTheWallet = 6345.45;
+
+  var formatter = NumberFormat("#,##0.00", "en_US");
+
+  doesTheUserHaveEnoughMoney() {
+    return (_shareSelected <= _shareOnSale &&
+            (_shareSelected * _sellPrice) <= _moneyInTheWallet)
+        ? true
+        : false;
+  }
+
+  buyShares() {}
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -110,7 +127,7 @@ class _BuyScreenState extends State<BuyScreen> {
                       ),
                     ),
                     Text(
-                      'Totale: 3 200€',
+                      'Totale: ${formatter.format(_shareSelected * _sellPrice)}',
                       style: TextStyle(
                           fontSize: heigh * 0.023, fontWeight: FontWeight.bold),
                     ),
@@ -120,7 +137,9 @@ class _BuyScreenState extends State<BuyScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     OutlinedButton(
-                      onPressed: () => {},
+                      onPressed: doesTheUserHaveEnoughMoney()
+                          ? () => buyShares()
+                          : null,
                       style: ButtonStyle(
                           backgroundColor:
                               const MaterialStatePropertyAll(Colors.blueAccent),

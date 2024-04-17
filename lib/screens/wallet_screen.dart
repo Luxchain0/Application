@@ -14,11 +14,13 @@ class WalletScreen extends StatefulWidget {
 
 class _WalletScreenState extends State<WalletScreen> {
   late Future<List<WalletWatch>> futureWatches;
+  late Future<WalletData> futureWalletData;
 
   @override
   void initState() {
     super.initState();
     futureWatches = getUserWalletWatches(1);
+    futureWalletData = getWalletData(1);
   }
 
   @override
@@ -163,6 +165,23 @@ class _WalletScreenState extends State<WalletScreen> {
                                   );
                                 },
                               ).toList(),
+                              children: walletWatches.map(
+                                (watch) {
+                                  return CustomBottomBigCard(
+                                    screenWidth: width,
+                                    imgUrl: watch.modeltype.imageuri,
+                                    shortName: watch.watchid.toString(),
+                                    longName: watch.modeltype.model.modelname,
+                                    serialNumber: watch.watchid.toString(),
+                                    valoreAttuale: 0,
+                                    valoreDiAcquisto: watch.initialprice,
+                                    quotePossedute: watch.owned,
+                                    quoteTotali: watch.numberofshares,
+                                    controvalore: 0,
+                                    incremento: 0,
+                                  );
+                                },
+                              ).toList(),
                             );
                           } else if (snapshot.hasError) {
                             // Gestisci il caso in cui si verifica un errore
@@ -233,13 +252,13 @@ class CustomBottomBigCard extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
           child: Column(children: [
             Container(
-              margin: const EdgeInsets.only(right: 15),
+              margin: const EdgeInsets.only(right: 0),
               alignment: Alignment.center, // This is needed
               child: Image.network(
                 // Utilizzo di Image.network per caricare l'immagine da un URL
                 imgUrl, // Utilizzo dell'URL dell'immagine
                 fit: BoxFit.contain,
-                width: screenWidth * 0.15,
+                width: screenWidth * 0.22,
               ),
             ),
             SizedBox(height: screenWidth * 0.07),
@@ -252,6 +271,7 @@ class CustomBottomBigCard extends StatelessWidget {
             ),
           ]),
         ),
+        SizedBox(width: 10),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
