@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lux_chain/screens/wallet_specs_screen.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
@@ -50,72 +51,59 @@ class _WalletScreenState extends State<WalletScreen> {
                   const Icon(Icons.visibility),
                 ],
               ),
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 3),
-                child: FutureBuilder<WalletData>(
-                    future: futureWalletData,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
-                      } else if (snapshot.hasData) {
-                        WalletData walletData = snapshot.data!;
-                        return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    (walletData.liquidity + walletData.inShares)
-                                        .toString(),
-                                    style: TextStyle(
-                                        color: Colors.black87,
-                                        height: 1,
-                                        fontSize: width * 0.1,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  SizedBox(
-                                    width: width * 0.01,
-                                  ),
-                                  Text(
-                                    '€',
-                                    style: TextStyle(
-                                      fontSize: width * 0.06,
-                                      height: 1,
-                                    ),
-                                  ),
-                                  Expanded(
-                                      child: SizedBox(
-                                    width: width * 0.01,
-                                  )),
-                                  Container(
-                                    padding: const EdgeInsets.all(5),
-                                    decoration: const BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(3)),
-                                        color: Colors.lightGreen),
-                                    child: Text('+ ${walletData.rate}%'),
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                'In collezioni: ${walletData.inShares} €',
-                                style: TextStyle(fontSize: width * 0.04),
-                              ),
-                              Text(
-                                'Liquidi: ${walletData.liquidity} €',
-                                style: TextStyle(fontSize: width * 0.04),
-                              ),
-                            ]);
-                      } else if (snapshot.hasError) {
-                        // Gestisci il caso in cui si verifica un errore
-                        return Text('Error: ${snapshot.error}');
-                      } else {
-                        // Gestisci il caso in cui non ci sono dati disponibili
-                        return const SizedBox(); // Placeholder widget when no data is available
-                      }
-                    }),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const WalletSpecsScreen()),
+                  );
+                },
+                child: Container(
+                  margin: const EdgeInsets.symmetric(vertical: 3),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        '134 456.43',
+                        style: TextStyle(
+                            color: Colors.black87,
+                            height: 1,
+                            fontSize: width * 0.1,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(
+                        width: width * 0.01,
+                      ),
+                      Text(
+                        '€',
+                        style: TextStyle(
+                          fontSize: width * 0.06,
+                          height: 1,
+                        ),
+                      ),
+                      Expanded(
+                          child: SizedBox(
+                        width: width * 0.01,
+                      )),
+                      Container(
+                        padding: const EdgeInsets.all(5),
+                        decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(3)),
+                            color: Colors.lightGreen),
+                        child: const Text('+ 2.3%'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Text(
+                'In collezioni: 100 000.00 €',
+                style: TextStyle(fontSize: width * 0.04),
+              ),
+              Text(
+                'Liquidi: 34 456.43 €',
+                style: TextStyle(fontSize: width * 0.04),
               ),
               SizedBox(
                 height: height * 0.04,
