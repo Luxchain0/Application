@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/size_config.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class WalletSpecsScreen extends StatelessWidget {
   static const String id = 'WalletSpecsScreen';
@@ -11,6 +12,18 @@ class WalletSpecsScreen extends StatelessWidget {
     SizeConfig().init(context);
     double height = SizeConfig.screenH!;
     double width = SizeConfig.screenW!;
+
+    List<FlSpot> chartData = [
+      FlSpot(0, 1),
+      FlSpot(1, 3),
+      FlSpot(2, 10),
+      FlSpot(3, 7),
+      FlSpot(4, 12),
+      FlSpot(5, 13),
+      FlSpot(6, 17),
+      FlSpot(7, 15),
+      FlSpot(8, 20),
+    ];
 
     return Scaffold(
       appBar: appBar(width),
@@ -83,30 +96,46 @@ class WalletSpecsScreen extends StatelessWidget {
               SizedBox(
                 height: height * 0.04,
               ),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: height * 0.02),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.archive,
-                      size: width * 0.08,
+              SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      width: double.infinity,
+                      height: 300,
+                      child: LineChart(
+                        LineChartData(
+                            borderData: FlBorderData(show: false),
+                            lineBarsData: [
+                              LineChartBarData(spots: chartData),
+                            ]),
+                      ),
                     ),
-                    Icon(
-                      Icons.timelapse,
-                      size: width * 0.08,
+                    SizedBox(
+                      height: height * 0.03,
                     ),
-                    Icon(
-                      Icons.store,
-                      size: width * 0.08,
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      width: double.infinity,
+                      height: 300,
+                      child: PieChart(
+                        PieChartData(
+                          sections: [
+                            PieChartSectionData(
+                              value: 40,
+                              color: Colors.blue,
+                              title: 'LIQUIDI',
+                            ),
+                            PieChartSectionData(
+                              value: 60,
+                              color: Colors.blueGrey,
+                              title: 'COLLEZIONI',
+                            ),
+                          ],
+                          centerSpaceRadius: 0,
+                        ),
+                      ),
                     ),
-                    Icon(
-                      Icons.star,
-                      size: width * 0.08,
-                    ),
-                    Expanded(child: SizedBox(width: width * 0.08)),
-                    Icon(Icons.arrow_outward_rounded, size: width * 0.08),
-                    Icon(Icons.filter, size: width * 0.08),
-                    Icon(Icons.search, size: width * 0.08),
                   ],
                 ),
               ),
