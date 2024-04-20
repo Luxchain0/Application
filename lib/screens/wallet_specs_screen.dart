@@ -96,47 +96,53 @@ class WalletSpecsScreen extends StatelessWidget {
               SizedBox(
                 height: height * 0.04,
               ),
-              SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      width: double.infinity,
-                      height: 300,
-                      child: LineChart(
-                        LineChartData(
-                            borderData: FlBorderData(show: false),
-                            lineBarsData: [
-                              LineChartBarData(spots: chartData),
-                            ]),
-                      ),
-                    ),
-                    SizedBox(
-                      height: height * 0.03,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      width: double.infinity,
-                      height: 300,
-                      child: PieChart(
-                        PieChartData(
-                          sections: [
-                            PieChartSectionData(
-                              value: 40,
-                              color: Colors.blue,
-                              title: 'LIQUIDI',
-                            ),
-                            PieChartSectionData(
-                              value: 60,
-                              color: Colors.blueGrey,
-                              title: 'COLLEZIONI',
-                            ),
-                          ],
-                          centerSpaceRadius: 0,
+              Expanded(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        width: double.infinity,
+                        height: 300,
+                        child: LineChart(
+                          LineChartData(
+                              borderData: FlBorderData(show: false),
+                              lineBarsData: [
+                                LineChartBarData(spots: chartData),
+                              ]),
                         ),
                       ),
-                    ),
-                  ],
+                      SizedBox(
+                        height: height * 0.03,
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        width: double.infinity,
+                        height: 300,
+                        child: PieChart(
+                          PieChartData(
+                            sections: [
+                              PieChartSectionData(
+                                value: 60,
+                                color: Colors.blue,
+                                title: 'LIQUIDI',
+                                radius: 125,
+                              ),
+                              PieChartSectionData(
+                                value: 40,
+                                color: Colors.blueGrey,
+                                title: 'COLLEZIONI',
+                                radius: 125,
+                              ),
+                            ],
+                            centerSpaceRadius: 0,
+                            sectionsSpace: 0,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
