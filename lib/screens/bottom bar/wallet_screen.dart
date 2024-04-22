@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lux_chain/screens/wallet_specs_screen.dart';
-import 'package:lux_chain/screens/watch_screen.dart';
+import 'package:lux_chain/screens/bottom%20bar/watch_screen.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
@@ -218,10 +218,8 @@ class CustomBottomBigCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => {Navigator.pushNamed(
-        context, 
-        WatchScreen.id,
-        arguments: watchID)},
+      onTap: () =>
+          {Navigator.pushNamed(context, WatchScreen.id, arguments: watchID)},
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 7),
         padding: const EdgeInsets.only(top: 10, bottom: 10),

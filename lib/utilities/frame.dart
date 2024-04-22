@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:lux_chain/screens/buy_screen.dart';
+import 'package:lux_chain/screens/bottom%20bar/buy_screen.dart';
 //import 'package:lux_chain/screens/home_screen.dart';
-import 'package:lux_chain/screens/market_screen.dart';
-import 'package:lux_chain/screens/sell_screen.dart';
-import 'package:lux_chain/screens/watch_screen.dart';
-import 'package:lux_chain/screens/wallet_screen.dart';
+import 'package:lux_chain/screens/bottom%20bar/market_screen.dart';
+import 'package:lux_chain/screens/bottom%20bar/sell_screen.dart';
+import 'package:lux_chain/screens/bottom%20bar/watch_screen.dart';
+import 'package:lux_chain/screens/bottom%20bar/wallet_screen.dart';
 import 'package:lux_chain/screens/watch_tinder_screen.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 
@@ -40,9 +40,7 @@ class _FrameScreenState extends State<FrameScreen> {
           labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
           destinations: const [
             NavigationDestination(
-              icon: Icon(Icons.wallet_rounded),
-              label: 'Boh',
-            ),
+                icon: Icon(Icons.wallet_rounded), label: 'Wallet'),
             NavigationDestination(
                 icon: Icon(Icons.store_rounded), label: 'Market'),
             NavigationDestination(
