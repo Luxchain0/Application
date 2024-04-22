@@ -22,7 +22,7 @@ Future<List<WalletWatch>> getUserWalletWatches(int userID) async {
   }
 }
 
-Future<WalletWatch> getWatchByWatchId(int watchID) async {
+Future<Watch> getWatchByWatchId(int watchID) async {
   try {
     // Effettua la chiamata per ottenere le azioni associate all'utente
     final response = await http.get(
@@ -31,7 +31,7 @@ Future<WalletWatch> getWatchByWatchId(int watchID) async {
 
     if (response.statusCode == 200) {
       final dynamic data = jsonDecode(response.body);     
-      return data.map((e) => WalletWatch.fromJson(e));
+      return Watch.fromJson(data);
     } else {
       throw Exception('[FLUTTER] Failed to load user shares');
     }

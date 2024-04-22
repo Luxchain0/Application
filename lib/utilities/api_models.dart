@@ -276,6 +276,38 @@ class WalletWatch {
   }
 }
 
+class Watch {
+  final int watchId;
+  final String condition;
+  final int numberOfShares;
+  final double initialPrice;
+  final double actualPrice;
+  final int modelTypeId;
+  final ModelType modelType;
+
+  const Watch({
+    required this.watchId,
+    required this.condition,
+    required this.numberOfShares,
+    required this.initialPrice,
+    required this.actualPrice,
+    required this.modelTypeId,
+    required this.modelType,
+  });
+
+  factory Watch.fromJson(Map<String, dynamic> json) {
+    return Watch(
+      watchId: json['watchid'] as int,
+      condition: json['condition'] as String,
+      numberOfShares: json['numberofshares'] as int,
+      initialPrice: double.parse(json['initialprice'] as String),
+      actualPrice: double.parse(json['actualprice'] as String),
+      modelTypeId: json['modeltypeid'] as int,
+      modelType: ModelType.fromJson(json['modeltype'] as Map<String, dynamic>),
+    );
+  }
+}
+
 class WalletData {
   final double liquidity;
   final int inShares; // TODO: modify this to be a double

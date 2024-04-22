@@ -14,7 +14,7 @@ class WatchScreen extends StatefulWidget {
 }
 
 class _WatchScreenState extends State<WatchScreen> {
-  late Future<WalletWatch> futureWatchData;
+  late Future<Watch> futureWatchData;
 
   @override
   void initState() {
