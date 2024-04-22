@@ -3,7 +3,7 @@ import 'package:lux_chain/screens/buy_screen.dart';
 //import 'package:lux_chain/screens/home_screen.dart';
 import 'package:lux_chain/screens/market_screen.dart';
 import 'package:lux_chain/screens/sell_screen.dart';
-import 'package:lux_chain/screens/serial_screen.dart';
+import 'package:lux_chain/screens/watch_screen.dart';
 import 'package:lux_chain/screens/wallet_screen.dart';
 import 'package:lux_chain/screens/watch_tinder_screen.dart';
 import 'package:lux_chain/utilities/size_config.dart';
@@ -21,7 +21,7 @@ class _FrameScreenState extends State<FrameScreen> {
   List<Widget> pages = const [
     WalletScreen(),
     MarketScreen(),
-    SerialScreen(), //Le quote che hai in vendita
+    WatchScreen(watchID: 1), //Le quote che hai in vendita
     WatchTinderScreen(), //Ultime quote che hai comprato o venduto
     BuyScreen(), //Preferiti
     SellScreen()

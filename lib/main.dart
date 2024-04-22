@@ -3,7 +3,7 @@ import 'package:lux_chain/screens/buy_screen.dart';
 import 'package:lux_chain/screens/home_screen.dart';
 import 'package:lux_chain/screens/market_screen.dart';
 import 'package:lux_chain/screens/model_page.dart';
-import 'package:lux_chain/screens/serial_screen.dart';
+import 'package:lux_chain/screens/watch_screen.dart';
 import 'package:lux_chain/screens/setting_screen.dart';
 import 'package:lux_chain/screens/sell_screen.dart';
 import 'package:lux_chain/screens/wallet_screen.dart';
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
           ModelScreen.id: (context) => const ModelScreen(),
           MarketScreen.id: (context) => const MarketScreen(),
           FrameScreen.id: (context) => const FrameScreen(),
-          SerialScreen.id: (context) => const SerialScreen(),
+          WatchScreen.id: (context) => const WatchScreen(watchID: 1),
           
         },
         theme: MyTheme.lightTheme,

@@ -22,6 +22,25 @@ Future<List<WalletWatch>> getUserWalletWatches(int userID) async {
   }
 }
 
+Future<WalletWatch> getWatchByWatchId(int watchID) async {
+  try {
+    // Effettua la chiamata per ottenere le azioni associate all'utente
+    final response = await http.get(
+      Uri.parse('https://luxchain-flame.vercel.app/api/watch/$watchID'),
+    );
+
+    if (response.statusCode == 200) {
+      final dynamic data = jsonDecode(response.body);     
+      return data.map((e) => WalletWatch.fromJson(e));
+    } else {
+      throw Exception('[FLUTTER] Failed to load user shares');
+    }
+  } catch (e) {
+    
+    throw Exception('[FLUTTER] Error retrieving user watches: $e');
+  }
+}
+
 Future<List<WalletWatch>> getSharesByUser(int userID) async {
   try {
     // Effettua la chiamata per ottenere le azioni associate all'utente
@@ -79,7 +98,7 @@ Future<List<WalletWatch>> getTradedShares(int userID) async {
   }
 }
 
-Future<List<WalletWatch>> getSharesOnSale(int userID) async {
+Future<List<WalletWatch>> getSharesOfUserOnSale(int userID) async {
   try {
     // Effettua la chiamata per ottenere le azioni associate all'utente
     final response = await http.get(

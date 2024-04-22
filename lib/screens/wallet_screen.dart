@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lux_chain/screens/wallet_specs_screen.dart';
+import 'package:lux_chain/screens/watch_screen.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
@@ -151,6 +152,7 @@ class _WalletScreenState extends State<WalletScreen> {
                               children: walletWatches.map(
                                 (watch) {
                                   return CustomBottomBigCard(
+                                    watchID: watch.watchid,
                                     screenWidth: width,
                                     imgUrl: watch.modeltype.imageuri,
                                     shortName: watch.watchid.toString(),
@@ -186,6 +188,7 @@ class _WalletScreenState extends State<WalletScreen> {
 class CustomBottomBigCard extends StatelessWidget {
   const CustomBottomBigCard({
     super.key,
+    required this.watchID,
     required this.screenWidth, //
     required this.imgUrl, //
     required this.shortName, //
@@ -199,6 +202,7 @@ class CustomBottomBigCard extends StatelessWidget {
     required this.incremento, //
   });
 
+  final int watchID;
   final double screenWidth;
   final String shortName;
   final String longName;
@@ -213,76 +217,82 @@ class CustomBottomBigCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 7),
-      padding: const EdgeInsets.only(top: 10, bottom: 10),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(
-            color: Colors.black26,
-            width: 1,
-          ),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 2,
-              offset: Offset(3, 3), // Shadow position
+    return GestureDetector(
+      onTap: () => {Navigator.pushNamed(
+        context, 
+        WatchScreen.id,
+        arguments: watchID)},
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 7),
+        padding: const EdgeInsets.only(top: 10, bottom: 10),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(
+              color: Colors.black26,
+              width: 1,
             ),
-          ],
-          borderRadius: const BorderRadius.all(Radius.circular(7))),
-      child: Row(children: [
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
-          child: Column(children: [
-            Container(
-              margin: const EdgeInsets.only(right: 0),
-              alignment: Alignment.center, // This is needed
-              child: Image.network(
-                // Utilizzo di Image.network per caricare l'immagine da un URL
-                imgUrl, // Utilizzo dell'URL dell'immagine
-                fit: BoxFit.contain,
-                width: screenWidth * 0.22,
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 2,
+                offset: Offset(3, 3), // Shadow position
               ),
-            ),
-            SizedBox(height: screenWidth * 0.07),
-            Container(
-              padding: const EdgeInsets.all(5),
-              decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(3)),
-                  color: Colors.lightGreen),
-              child: Text('$incremento%'),
-            ),
-          ]),
-        ),
-        SizedBox(width: 10),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              shortName,
-              style: TextStyle(
-                  color: Colors.black38,
-                  height: 1,
-                  fontSize: screenWidth * 0.05,
-                  fontFamily: 'Bebas'),
-            ),
-            Text(
-              longName,
-              style: TextStyle(
-                  color: Colors.black87,
-                  height: 1,
-                  fontSize: screenWidth * 0.055,
-                  fontFamily: 'Bebas'),
-            ),
-            Text('Serial: $serialNumber'),
-            SizedBox(height: screenWidth * 0.02),
-            Text('Quote Possedute: $quotePossedute/$quoteTotali'),
-            Text('Controvalore: $controvalore €'),
-            Text('Valore di acquisto: $valoreDiAcquisto €'),
-            Text('Valore attuale: $valoreAttuale €'),
-          ],
-        )
-      ]),
+            ],
+            borderRadius: const BorderRadius.all(Radius.circular(7))),
+        child: Row(children: [
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+            child: Column(children: [
+              Container(
+                margin: const EdgeInsets.only(right: 0),
+                alignment: Alignment.center, // This is needed
+                child: Image.network(
+                  // Utilizzo di Image.network per caricare l'immagine da un URL
+                  imgUrl, // Utilizzo dell'URL dell'immagine
+                  fit: BoxFit.contain,
+                  width: screenWidth * 0.22,
+                ),
+              ),
+              SizedBox(height: screenWidth * 0.07),
+              Container(
+                padding: const EdgeInsets.all(5),
+                decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(3)),
+                    color: Colors.lightGreen),
+                child: Text('$incremento%'),
+              ),
+            ]),
+          ),
+          SizedBox(width: 10),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                shortName,
+                style: TextStyle(
+                    color: Colors.black38,
+                    height: 1,
+                    fontSize: screenWidth * 0.05,
+                    fontFamily: 'Bebas'),
+              ),
+              Text(
+                longName,
+                style: TextStyle(
+                    color: Colors.black87,
+                    height: 1,
+                    fontSize: screenWidth * 0.055,
+                    fontFamily: 'Bebas'),
+              ),
+              Text('Serial: $serialNumber'),
+              SizedBox(height: screenWidth * 0.02),
+              Text('Quote Possedute: $quotePossedute/$quoteTotali'),
+              Text('Controvalore: $controvalore €'),
+              Text('Valore di acquisto: $valoreDiAcquisto €'),
+              Text('Valore attuale: $valoreAttuale €'),
+            ],
+          )
+        ]),
+      ),
     );
   }
 }
