@@ -89,9 +89,9 @@ class _WatchScreenState extends State<WatchScreen> {
                       alignment: Alignment.center, // This is needed
                       child: Padding(
                         padding: EdgeInsets.all(heigh * 0.02),
-                        child: Image.asset(
+                        child: Image.network(
                           watch.modelType.imageuri,
-                          fit: BoxFit.contain,
+                          fit: BoxFit.cover,
                           height: heigh * 0.3,
                         ),
                       ),
