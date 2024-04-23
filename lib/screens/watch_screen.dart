@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:lux_chain/screens/buy_screen.dart';
+import 'package:lux_chain/screens/sell_screen.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/models.dart';
@@ -154,7 +155,22 @@ class _WatchScreenState extends State<WatchScreen> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             OutlinedButton(
-                              onPressed: () => {},
+                              onPressed: () => {
+                                Navigator.pushNamed(context, SellScreen.id,
+                                    arguments: SellInfo(
+                                      watchid: widget.watchID,
+                                      brandName:
+                                          watch.modelType.model.brandname,
+                                      modelName:
+                                          watch.modelType.model.modelname,
+                                      actualPrice: watch.actualPrice,
+                                      totalNumberOfShares: watch.numberOfShares,
+                                      image: watch.modelType.imageuri,
+                                      proposalPrice: watch.actualPrice,
+                                      numberOfShares: watch
+                                          .numberOfShares, // TODO: Change this
+                                    ))
+                              },
                               style: ButtonStyle(
                                   backgroundColor:
                                       const MaterialStatePropertyAll(

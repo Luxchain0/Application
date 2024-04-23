@@ -103,7 +103,6 @@ class OnSale {
   }
 }
 
-
 class ShareOnSale {
   final double price;
   final int shareCount;
@@ -326,6 +325,42 @@ class WalletData {
       liquidity: json['liquidity'] as double,
       inShares: json['inShares'] as int,
       rate: json['rate'] as int,
+    );
+  }
+}
+
+class MarketPlaceWatch extends Watch {
+  final int shareOnSale;
+
+  const MarketPlaceWatch({
+    required int watchId,
+    required String condition,
+    required int numberOfShares,
+    required double initialPrice,
+    required double actualPrice,
+    required int modelTypeId,
+    required ModelType modelType,
+    required this.shareOnSale,
+  }) : super(
+          watchId: watchId,
+          condition: condition,
+          numberOfShares: numberOfShares,
+          initialPrice: initialPrice,
+          actualPrice: actualPrice,
+          modelTypeId: modelTypeId,
+          modelType: modelType,
+        );
+
+  factory MarketPlaceWatch.fromJson(Map<String, dynamic> json) {
+    return MarketPlaceWatch(
+      watchId: json['watchid'] as int,
+      condition: json['condition'] as String,
+      numberOfShares: json['numberofshares'] as int,
+      initialPrice: double.parse(json['initialprice'] as String),
+      actualPrice: double.parse(json['actualprice'] as String),
+      modelTypeId: json['modeltypeid'] as int,
+      modelType: ModelType.fromJson(json['modeltype'] as Map<String, dynamic>),
+      shareOnSale: json['shareOnSale'] as int,
     );
   }
 }

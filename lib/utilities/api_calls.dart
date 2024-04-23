@@ -202,3 +202,22 @@ Future<APIStatus> sellShares(int userID, int watchID, int numberOfShares, double
     throw Exception('[FLUTTER] Error selling shares: $e');
   }
 }
+
+Future<List<MarketPlaceWatch>> getMarketPlaceWatches() async {
+  try {
+    // Effettua la chiamata per ottenere tutte le azioni in vendita
+    final response = await http.get(
+      Uri.parse('https://luxchain-flame.vercel.app/api/marketplace/watches'),
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data.map((e) => MarketPlaceWatch.fromJson(e)).toList();
+    } else {
+      throw Exception('[FLUTTER] Failed to load market place watches');
+    }
+  } catch (e) {
+    
+    throw Exception('[FLUTTER] Error retrieving market place watches: $e');
+  }
+}

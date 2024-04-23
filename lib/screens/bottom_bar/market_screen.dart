@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lux_chain/utilities/api_calls.dart';
+import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 
 class MarketScreen extends StatefulWidget {
@@ -10,6 +12,14 @@ class MarketScreen extends StatefulWidget {
 }
 
 class _MarketScreenState extends State<MarketScreen> {
+  late Future<List<MarketPlaceWatch>> futureMarketPlaceWatches;
+
+  @override
+  void initState() {
+    super.initState();
+    futureMarketPlaceWatches = getMarketPlaceWatches();
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -19,99 +29,86 @@ class _MarketScreenState extends State<MarketScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: heigh*0.02, horizontal: width*0.04 ),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    'MarketPlace',
-                    style: TextStyle(
-                        color: Colors.black87,
-                        height: 1,
-                        fontSize: width * 0.1,
-                        fontFamily: 'Bebas'
-                    ),
-                  ),
-                  SizedBox(
-                    height: heigh * 0.02,
-                  ),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                        borderSide: BorderSide(
+          child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+              vertical: heigh * 0.02, horizontal: width * 0.04),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                'MarketPlace',
+                style: TextStyle(
+                    color: Colors.black87,
+                    height: 1,
+                    fontSize: width * 0.1,
+                    fontFamily: 'Bebas'),
+              ),
+              SizedBox(
+                height: heigh * 0.02,
+              ),
+              TextFormField(
+                decoration: const InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      borderSide: BorderSide(
                         color: Colors.grey,
-                        ),
                       ),
+                    ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
                       borderSide: BorderSide(color: Colors.grey),
                     ),
-                      suffixIcon: Icon(Icons.search),
-                      alignLabelWithHint: true,
-                      labelText: 'Insert the name of the watch'
-                    ),
-                  ),
-                  Container(
-                  margin: EdgeInsets.symmetric(vertical: heigh * 0.02),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.star,
-                        size: width * 0.08,
-                      ),
-                      Expanded(child: SizedBox(width: width * 0.08)),
-                      Icon(Icons.arrow_outward_rounded, size: width * 0.08),
-                      Icon(Icons.filter, size: width * 0.08),
-                    ],
-                  ),
-                ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: Column(
-                    children: [
-                      CustomBottomBigCard(
-                          screenWidth: width,
-                          img: 'assets/images/o2.jpg',
-                          modelName: 'nome corto'.toUpperCase(),
-                          brandName: 'nome lungo con descrizione'.toUpperCase(),
-                          serialNumber: '34XX7WZY',
-                          prezzoDiListino: 230000,
-                          quoteTotali: 300,
-                          pezziDisponibili: 4,
-                          incremento: 0.4),
-                      CustomBottomBigCard(
-                          screenWidth: width,
-                          img: 'assets/images/o2.jpg',
-                          modelName: 'nome corto'.toUpperCase(),
-                          brandName: 'nome lungo con descrizione'.toUpperCase(),
-                          serialNumber: '34X4dWZY',
-                          prezzoDiListino: 250000,
-                          quoteTotali: 400,
-                          pezziDisponibili: 12,
-                          incremento: 3.4),
-                      CustomBottomBigCard(
-                          screenWidth: width,
-                          img: 'assets/images/o2.jpg',
-                          modelName: 'nome corto'.toUpperCase(),
-                          brandName: 'nome lungo con descrizione'.toUpperCase(),
-                          serialNumber: '34ZS8WZY',
-                          prezzoDiListino: 130000,
-                          quoteTotali: 100,
-                          pezziDisponibili: 3,
-                          incremento: -0.45),
-                    ],
-                  ),
-                ),
-                ],
+                    suffixIcon: Icon(Icons.search),
+                    alignLabelWithHint: true,
+                    labelText: 'Insert the name of the watch'),
               ),
+              Container(
+                margin: EdgeInsets.symmetric(vertical: heigh * 0.02),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.star,
+                      size: width * 0.08,
+                    ),
+                    Expanded(child: SizedBox(width: width * 0.08)),
+                    Icon(Icons.arrow_outward_rounded, size: width * 0.08),
+                    Icon(Icons.filter, size: width * 0.08),
+                  ],
+                ),
+              ),
+              FutureBuilder<List<MarketPlaceWatch>>(
+                future: futureMarketPlaceWatches,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    List<MarketPlaceWatch> marketWatchesList = snapshot.data!;
+                    return Column(
+                      children: marketWatchesList
+                          .map((watch) => CustomBottomBigCard(
+                              screenWidth: width,
+                              img: watch.modelType.imageuri,
+                              modelName: watch.modelType.model.modelname,
+                              brandName: watch.modelType.model.brandname,
+                              serialNumber: watch.watchId.toString(),
+                              prezzoDiListino: watch.initialPrice.toInt(),
+                              quoteTotali: watch.numberOfShares,
+                              pezziDisponibili: watch.shareOnSale,
+                              incremento: 0))
+                          .toList(),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  }
+
+                  return const CircularProgressIndicator();
+                },
+              ),
+            ],
           ),
-        ) 
-      ),
+        ),
+      )),
     );
   }
 }
@@ -164,7 +161,7 @@ class CustomBottomBigCard extends StatelessWidget {
           Container(
             margin: const EdgeInsets.only(right: 15),
             alignment: Alignment.center, // This is needed
-            child: Image.asset(
+            child: Image.network(
               img,
               fit: BoxFit.contain,
               width: screenWidth * 0.19,
@@ -209,10 +206,10 @@ class CustomBottomBigCard extends StatelessWidget {
             Row(
               children: [
                 CustomButton(
-                    screenWidth: screenWidth,
-                    backgorundColor: const Color.fromARGB(255, 17, 45, 68),
-                    textColor: Colors.white,
-                    text: 'Vedi i dettagli',
+                  screenWidth: screenWidth,
+                  backgorundColor: const Color.fromARGB(255, 17, 45, 68),
+                  textColor: Colors.white,
+                  text: 'Vedi i dettagli',
                 ),
               ],
             )
@@ -224,13 +221,12 @@ class CustomBottomBigCard extends StatelessWidget {
 }
 
 class CustomButton extends StatelessWidget {
-  const CustomButton({
-    super.key,
-    required this.screenWidth,
-    required this.backgorundColor,
-    required this.textColor,
-    required this.text
-  });
+  const CustomButton(
+      {super.key,
+      required this.screenWidth,
+      required this.backgorundColor,
+      required this.textColor,
+      required this.text});
 
   final double screenWidth;
   final Color backgorundColor;

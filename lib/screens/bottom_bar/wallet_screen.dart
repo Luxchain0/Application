@@ -167,9 +167,9 @@ class _WalletScreenState extends State<WalletScreen> {
                                             watchID: watch.watchid,
                                             screenWidth: width,
                                             imgUrl: watch.modeltype.imageuri,
-                                            modelName: watch.watchid.toString(),
+                                            modelName: watch.modeltype.model.modelname,
                                             brandName:
-                                                watch.modeltype.model.modelname,
+                                                watch.modeltype.model.brandname,
                                             serialNumber:
                                                 watch.watchid.toString(),
                                             valoreAttuale: 0,
@@ -289,7 +289,7 @@ class CustomBottomBigCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                modelName,
+                brandName,
                 style: TextStyle(
                     color: Colors.black38,
                     height: 1,
@@ -297,7 +297,7 @@ class CustomBottomBigCard extends StatelessWidget {
                     fontFamily: 'Bebas'),
               ),
               Text(
-                brandName,
+                modelName,
                 style: TextStyle(
                     color: Colors.black87,
                     height: 1,
