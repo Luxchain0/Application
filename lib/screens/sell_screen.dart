@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:lux_chain/utilities/api_calls.dart';
+import 'package:lux_chain/utilities/models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 
 class SellScreen extends StatefulWidget {
   static const String id = 'SellScreen';
-  const SellScreen({super.key});
+  final SellInfo sellInfo;
+  const SellScreen({required this.sellInfo, super.key});
 
   @override
-  State<SellScreen> createState() => _SellScreenState();
+  // ignore: no_logic_in_create_state
+  State<SellScreen> createState() => _SellScreenState(sellInfo: sellInfo);
 }
 
 class _SellScreenState extends State<SellScreen> {
+  final SellInfo sellInfo;
+  int _shareSelected = 0;
+  double _priceOfOneShare = 0;
+
+  _SellScreenState({required this.sellInfo});
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -21,7 +30,8 @@ class _SellScreenState extends State<SellScreen> {
         bottom: false,
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: width*0.05, vertical: heigh*0.01),
+            padding: EdgeInsets.symmetric(
+                horizontal: width * 0.05, vertical: heigh * 0.01),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -32,45 +42,42 @@ class _SellScreenState extends State<SellScreen> {
                       color: Colors.black87,
                       height: 1,
                       fontSize: width * 0.1,
-                      fontFamily: 'Bebas'
-                  ),
+                      fontFamily: 'Bebas'),
                 ),
                 Container(
-                  margin: EdgeInsets.symmetric(vertical: heigh*0.02),
+                  margin: EdgeInsets.symmetric(vertical: heigh * 0.02),
                   decoration: BoxDecoration(
-            color: Colors.white,
-              border: Border.all(
-                color: Colors.black26,
-                width: 1,
-              ),
-              borderRadius: const BorderRadius.all(Radius.circular(7))),
+                      color: Colors.white,
+                      border: Border.all(
+                        color: Colors.black26,
+                        width: 1,
+                      ),
+                      borderRadius: const BorderRadius.all(Radius.circular(7))),
                   alignment: Alignment.center, // This is needed
                   child: Padding(
-                    padding: EdgeInsets.all(heigh*0.02),
-                    child: Image.asset(
-                      'assets/images/o1.jpg',
+                    padding: EdgeInsets.all(heigh * 0.02),
+                    child: Image.network(
+                      sellInfo.image,
                       fit: BoxFit.contain,
                       height: heigh * 0.27,
                     ),
                   ),
                 ),
                 Text(
-                  'model_name'.toUpperCase(),
+                  sellInfo.brandName,
                   style: TextStyle(
-                    color: Colors.black38,
-                    height: 1,
-                    fontSize: width * 0.07,
-                    fontFamily: 'Bebas'
-                  ),
+                      color: Colors.black38,
+                      height: 1,
+                      fontSize: width * 0.07,
+                      fontFamily: 'Bebas'),
                 ),
                 Text(
-                  'brand_name'.toUpperCase(),
+                  sellInfo.modelName,
                   style: TextStyle(
-                    color: Colors.black87,
-                    height: 1,
-                    fontSize: width * 0.08,
-                    fontFamily: 'Bebas'
-                  ),
+                      color: Colors.black87,
+                      height: 1,
+                      fontSize: width * 0.08,
+                      fontFamily: 'Bebas'),
                 ),
                 Container(
                   padding: const EdgeInsets.all(5),
@@ -79,45 +86,67 @@ class _SellScreenState extends State<SellScreen> {
                       color: Colors.lightGreen),
                   child: const Text('+ 2.3%'),
                 ),
-                SizedBox(height: heigh*0.02,),
-                const Text('Prezzo di listino: 119 990€'),
-                const Text('Numero di quote: 200'),
-                const Text('Prezzo medio: 780€'),
-                const Text('Numero di quote possedute: 5'),
-                SizedBox(height: heigh*0.06,),
+                SizedBox(
+                  height: heigh * 0.02,
+                ),
+                const Text('Prezzo di listino: - €'),
+                Text('Numero di quote: ${sellInfo.totalNumberOfShares}'),
+                const Text('Prezzo medio: -€'),
+                const Text('Numero di quote possedute: ?'),
+                SizedBox(
+                  height: heigh * 0.06,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox(
-                      width: width*0.4,
-                      height: heigh*0.04,
+                      width: width * 0.4,
+                      height: heigh * 0.04,
                       child: TextFormField(
-                        keyboardType: TextInputType.emailAddress,
-                        autofocus: false, 
-                        style: const TextStyle(fontWeight: FontWeight.normal, color: Colors.black87),
+                        keyboardType: TextInputType.number,
+                        autofocus: false,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.normal,
+                            color: Colors.black87),
                         decoration: InputDecoration(
-                          hintText: 'N° di quote', 
-                          contentPadding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                          hintText: 'N° di quote',
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(32.0)
-                          ),
+                              borderRadius: BorderRadius.circular(32.0)),
                         ),
+                        onChanged: (value) {
+                          if (value.isNotEmpty) {
+                            _shareSelected = int.parse(value);
+                          } else {
+                            _shareSelected = 0;
+                          }
+                        },
                       ),
                     ),
                     SizedBox(
-                      width: width*0.4,
-                      height: heigh*0.04,
+                      width: width * 0.4,
+                      height: heigh * 0.04,
                       child: TextFormField(
-                        keyboardType: TextInputType.emailAddress,
-                        autofocus: false, 
-                        style: const TextStyle(fontWeight: FontWeight.normal, color: Colors.black87),
+                        keyboardType: TextInputType.number,
+                        autofocus: false,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.normal,
+                            color: Colors.black87),
                         decoration: InputDecoration(
-                          hintText: 'Prezzo', 
-                          contentPadding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                          hintText: 'Prezzo',
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(32.0)
-                          ),
+                              borderRadius: BorderRadius.circular(32.0)),
                         ),
+                        onChanged: (value) {
+                          if (value.isNotEmpty) {
+                            _priceOfOneShare = double.parse(value);
+                          } else {
+                            _priceOfOneShare = 0;
+                          }
+                        },
                       ),
                     ),
                   ],
@@ -126,12 +155,17 @@ class _SellScreenState extends State<SellScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     OutlinedButton(
-                      onPressed: () => {},
+                      onPressed: () => {
+                        sellShares(1, sellInfo.watchid, _shareSelected,
+                            _priceOfOneShare)
+                      },
                       style: ButtonStyle(
-                        backgroundColor: const MaterialStatePropertyAll(Colors.blueAccent),
-                        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                        minimumSize: MaterialStateProperty.all<Size>(Size(width*0.25, width*0.08))
-                      ),
+                          backgroundColor:
+                              const MaterialStatePropertyAll(Colors.blueAccent),
+                          foregroundColor:
+                              MaterialStateProperty.all<Color>(Colors.white),
+                          minimumSize: MaterialStateProperty.all<Size>(
+                              Size(width * 0.25, width * 0.08))),
                       child: const Text(
                         'Sell',
                       ),

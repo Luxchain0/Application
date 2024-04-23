@@ -1,3 +1,7 @@
+enum APIStatus {
+  success,
+  error,
+}
 class Favorite {
   final int favoriteid;
   final int watchid;
