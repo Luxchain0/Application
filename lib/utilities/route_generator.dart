@@ -29,7 +29,10 @@ class RouteGenerator {
         }
         break;
       case SellScreen.id:
-        return MaterialPageRoute(builder: (_) => const SellScreen());
+        if (args is SellInfo) {
+          return MaterialPageRoute(builder: (_) => SellScreen(sellInfo: args));
+        }
+        break;
       case WalletScreen.id:
         return MaterialPageRoute(builder: (_) => const WalletScreen());
       case WalletTimelineScreen.id:

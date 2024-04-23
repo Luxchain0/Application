@@ -172,3 +172,33 @@ Future<WalletData> getWalletData(int userID) async {
     throw Exception('[FLUTTER] Error retrieving wallet data: $e');
   }
 }
+
+Future<APIStatus> sellShares(int userID, int watchID, int numberOfShares, double priceOfOneShare) async {
+  try {
+    // Costruisci il corpo della richiesta come una mappa JSON
+    Map<String, dynamic> requestBody = {
+      'price': priceOfOneShare.toString(),
+      'numberOfSharesToSell': numberOfShares,
+    };
+
+    // Effettua la richiesta HTTP POST con i parametri nel body
+    final response = await http.post(
+      Uri.parse('https://luxchain-flame.vercel.app/api/trade/sell/$watchID/$userID'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(requestBody),
+    );
+
+    // Gestisci la risposta
+    if (response.statusCode == 200) {
+      // ignore: avoid_print
+      print("SUCCESS SELL");
+      return APIStatus.success;
+    } else {
+      throw Exception('[FLUTTER] Failed to sell $numberOfShares shares of watch $watchID');
+    }
+  } catch (e) {
+    throw Exception('[FLUTTER] Error selling shares: $e');
+  }
+}
