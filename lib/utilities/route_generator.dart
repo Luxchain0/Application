@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:lux_chain/screens/bottom%20bar/buy_screen.dart';
-import 'package:lux_chain/screens/bottom%20bar/market_screen.dart';
-import 'package:lux_chain/screens/bottom%20bar/sell_screen.dart';
-import 'package:lux_chain/screens/bottom%20bar/wallet_screen.dart';
-import 'package:lux_chain/screens/bottom%20bar/watch_screen.dart';
+import 'package:lux_chain/screens/buy_screen.dart';
+import 'package:lux_chain/screens/bottom_bar/market_screen.dart';
+import 'package:lux_chain/screens/sell_screen.dart';
+import 'package:lux_chain/screens/bottom_bar/wallet_screen.dart';
+import 'package:lux_chain/screens/watch_screen.dart';
 import 'package:lux_chain/screens/home_screen.dart';
-import 'package:lux_chain/screens/setting_screen.dart';
+import 'package:lux_chain/screens/bottom_bar/setting_screen.dart';
 import 'package:lux_chain/screens/wallet_timeline_screen.dart';
 import 'package:lux_chain/screens/watch_tinder_screen.dart';
 import 'package:lux_chain/utilities/frame.dart';
