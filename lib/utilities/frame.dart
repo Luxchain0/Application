@@ -23,7 +23,7 @@ class _FrameScreenState extends State<FrameScreen> {
     MarketScreen(),
     WatchScreen(watchID: 1), //Le quote che hai in vendita
     WatchTinderScreen(), //Ultime quote che hai comprato o venduto
-    BuyScreen(), //Preferiti
+    // BuyScreen(), //Preferiti
     SellScreen()
   ];
 

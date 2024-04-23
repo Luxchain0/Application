@@ -1,26 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lux_chain/utilities/models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 
 class BuyScreen extends StatefulWidget {
   static const String id = 'BuyScreen';
-  const BuyScreen({super.key});
+  final BuyInfo buyInfo;
+  const BuyScreen({required this.buyInfo, super.key});
 
   @override
-  State<BuyScreen> createState() => _BuyScreenState();
+  State<BuyScreen> createState() => _BuyScreenState(buyInfo: buyInfo);
 }
 
 class _BuyScreenState extends State<BuyScreen> {
-  final double _sellPrice = 800.0;
-  final int _shareOnSale = 5;
-  final int _shareSelected = 36;
+  final BuyInfo buyInfo;
+  int _shareSelected = 0;
   final double _moneyInTheWallet = 6345.45;
+
+  _BuyScreenState({required this.buyInfo});
 
   var formatter = NumberFormat("#,##0.00", "en_US");
 
   doesTheUserHaveEnoughMoney() {
-    return (_shareSelected <= _shareOnSale &&
-            (_shareSelected * _sellPrice) <= _moneyInTheWallet)
+    return (_shareSelected <= buyInfo.numberOfShares &&
+            (_shareSelected * buyInfo.proposalPrice) <= _moneyInTheWallet)
         ? true
         : false;
   }
@@ -64,15 +67,15 @@ class _BuyScreenState extends State<BuyScreen> {
                   alignment: Alignment.center, // This is needed
                   child: Padding(
                     padding: EdgeInsets.all(heigh * 0.02),
-                    child: Image.asset(
-                      'assets/images/o1.jpg',
+                    child: Image.network(
+                      buyInfo.image,
                       fit: BoxFit.contain,
                       height: heigh * 0.27,
                     ),
                   ),
                 ),
                 Text(
-                  'model_name'.toUpperCase(),
+                  buyInfo.brandName,
                   style: TextStyle(
                       color: Colors.black38,
                       height: 1,
@@ -80,7 +83,7 @@ class _BuyScreenState extends State<BuyScreen> {
                       fontFamily: 'Bebas'),
                 ),
                 Text(
-                  'brand_name'.toUpperCase(),
+                  buyInfo.modelName,
                   style: TextStyle(
                       color: Colors.black87,
                       height: 1,
@@ -97,11 +100,11 @@ class _BuyScreenState extends State<BuyScreen> {
                 SizedBox(
                   height: heigh * 0.02,
                 ),
-                const Text('Prezzo di listino: 119 990€'),
-                const Text('Numero di quote: 200'),
-                const Text('Prezzo medio: 780€'),
-                const Text('Miglior prezzo di vendita: 800€'),
-                const Text('Numero di quote in vendita: 5'),
+                const Text('Prezzo di listino: boh'),
+                Text('Numero di quote: ${buyInfo.totalNumberOfShares}'),
+                const Text('Prezzo medio: -€'),
+                Text('Prezzo di vendita: ${buyInfo.proposalPrice}'),
+                Text('Numero di quote in vendita: ${buyInfo.numberOfShares}'),
                 SizedBox(
                   height: heigh * 0.03,
                 ),
@@ -112,22 +115,30 @@ class _BuyScreenState extends State<BuyScreen> {
                       width: width * 0.4,
                       height: heigh * 0.04,
                       child: TextFormField(
-                        keyboardType: TextInputType.emailAddress,
-                        autofocus: false,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.normal,
-                            color: Colors.black87),
-                        decoration: InputDecoration(
-                          hintText: 'N° di quote',
-                          contentPadding:
-                              const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(32.0)),
-                        ),
-                      ),
+                          keyboardType: TextInputType.number,
+                          autofocus: false,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.normal,
+                              color: Colors.black87),
+                          decoration: InputDecoration(
+                            hintText: 'N° di quote',
+                            contentPadding: const EdgeInsets.fromLTRB(
+                                20.0, 10.0, 20.0, 10.0),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(32.0)),
+                          ),
+                          onChanged: (value) => {
+                                setState(() {
+                                  if (value.isEmpty) {
+                                    _shareSelected = 0;
+                                  } else {
+                                    _shareSelected = int.parse(value);
+                                  }
+                                })
+                              }),
                     ),
                     Text(
-                      'Totale: ${formatter.format(_shareSelected * _sellPrice)}',
+                      'Totale: ${formatter.format(_shareSelected * buyInfo.proposalPrice)}',
                       style: TextStyle(
                           fontSize: heigh * 0.023, fontWeight: FontWeight.bold),
                     ),

@@ -5,11 +5,11 @@ import 'package:lux_chain/screens/bottom%20bar/sell_screen.dart';
 import 'package:lux_chain/screens/bottom%20bar/wallet_screen.dart';
 import 'package:lux_chain/screens/bottom%20bar/watch_screen.dart';
 import 'package:lux_chain/screens/home_screen.dart';
-import 'package:lux_chain/screens/model_page.dart';
 import 'package:lux_chain/screens/setting_screen.dart';
 import 'package:lux_chain/screens/wallet_timeline_screen.dart';
 import 'package:lux_chain/screens/watch_tinder_screen.dart';
 import 'package:lux_chain/utilities/frame.dart';
+import 'package:lux_chain/utilities/models.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -24,15 +24,18 @@ class RouteGenerator {
       case WatchTinderScreen.id:
         return MaterialPageRoute(builder: (_) => const WatchTinderScreen());
       case BuyScreen.id:
-        return MaterialPageRoute(builder: (_) => const BuyScreen());
+        if (args is BuyInfo) {
+          return MaterialPageRoute(builder: (_) => BuyScreen(buyInfo: args));
+        }
+        break;
       case SellScreen.id:
         return MaterialPageRoute(builder: (_) => const SellScreen());
       case WalletScreen.id:
         return MaterialPageRoute(builder: (_) => const WalletScreen());
       case WalletTimelineScreen.id:
         return MaterialPageRoute(builder: (_) => const WalletTimelineScreen());
-      case ModelScreen.id:
-        return MaterialPageRoute(builder: (_) => const ModelScreen());
+      // case ModelScreen.id:
+      //   return MaterialPageRoute(builder: (_) => const ModelScreen());
       case MarketScreen.id:
         return MaterialPageRoute(builder: (_) => const MarketScreen());
       case FrameScreen.id:

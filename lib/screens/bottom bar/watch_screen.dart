@@ -1,7 +1,9 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:lux_chain/screens/bottom%20bar/buy_screen.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/api_models.dart';
+import 'package:lux_chain/utilities/models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 
 class WatchScreen extends StatefulWidget {
@@ -210,16 +212,36 @@ class _WatchScreenState extends State<WatchScreen> {
                                     child: CircularProgressIndicator());
                               } else if (snapshot.hasData) {
                                 List<ShareOnSale> sharesOnSale = snapshot.data!;
-                                return sharesOnSale.isNotEmpty ? Column(
-                                  children: sharesOnSale.map(
-                                    (share) {
-                                      return CustomRowForQuote(
-                                          width: width,
-                                          numberOfQuotes: share.shareCount,
-                                          quotePrice: share.price);
-                                    },
-                                  ).toList(),
-                                ) : const Text('Ooops, there aren\'t any quote on sell');
+                                return sharesOnSale.isNotEmpty
+                                    ? Column(
+                                        children: sharesOnSale.map(
+                                          (share) {
+                                            return CustomRowForQuote(
+                                                width: width,
+                                                numberOfQuotes:
+                                                    share.shareCount,
+                                                quotePrice: share.price,
+                                                buyInfo: BuyInfo(
+                                                  watchid: widget.watchID,
+                                                  brandName: watch.modelType
+                                                      .model.brandname,
+                                                  modelName: watch.modelType
+                                                      .model.modelname,
+                                                  actualPrice:
+                                                      watch.actualPrice,
+                                                  totalNumberOfShares:
+                                                      watch.numberOfShares,
+                                                  image:
+                                                      watch.modelType.imageuri,
+                                                  proposalPrice: share.price,
+                                                  numberOfShares:
+                                                      share.shareCount,
+                                                ));
+                                          },
+                                        ).toList(),
+                                      )
+                                    : const Text(
+                                        'Ooops, there aren\'t any quote on sell');
                               } else if (snapshot.hasError) {
                                 // Gestisci il caso in cui si verifica un errore
                                 return Text('Error: ${snapshot.error}');
@@ -246,16 +268,18 @@ class _WatchScreenState extends State<WatchScreen> {
 }
 
 class CustomRowForQuote extends StatelessWidget {
+  final double width;
+  final double quotePrice;
+  final int numberOfQuotes;
+  final BuyInfo buyInfo;
+
   const CustomRowForQuote({
     super.key,
     required this.width,
     required this.numberOfQuotes,
     required this.quotePrice,
+    required this.buyInfo,
   });
-
-  final double width;
-  final double quotePrice;
-  final int numberOfQuotes;
 
   @override
   Widget build(BuildContext context) {
@@ -264,11 +288,11 @@ class CustomRowForQuote extends StatelessWidget {
         Expanded(
           flex: 2,
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Column(
               children: [
                 Text(
-                  "${quotePrice} €",
+                  "$quotePrice €",
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
@@ -291,6 +315,7 @@ class CustomRowForQuote extends StatelessWidget {
             backgorundColor: const Color.fromARGB(255, 17, 45, 68),
             textColor: Colors.white,
             text: 'Buy',
+            buyInfo: buyInfo,
           ),
         ),
       ],
@@ -299,22 +324,26 @@ class CustomRowForQuote extends StatelessWidget {
 }
 
 class CustomButton extends StatelessWidget {
+  final double screenWidth;
+  final Color backgorundColor;
+  final Color textColor;
+  final String text;
+  final BuyInfo buyInfo;
+
   const CustomButton(
       {super.key,
       required this.screenWidth,
       required this.backgorundColor,
       required this.textColor,
-      required this.text});
-
-  final double screenWidth;
-  final Color backgorundColor;
-  final Color textColor;
-  final String text;
+      required this.text,
+      required this.buyInfo});
 
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
-      onPressed: () => {},
+      onPressed: () => {
+        Navigator.pushNamed(context, BuyScreen.id, arguments: buyInfo),
+      },
       style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all<Color>(backgorundColor),
           foregroundColor: MaterialStateProperty.all<Color>(textColor),
