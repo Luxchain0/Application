@@ -34,152 +34,175 @@ class _WalletScreenState extends State<WalletScreen> {
       body: SafeArea(
         bottom: false,
         child: Padding(
-          padding: EdgeInsets.only(
-              right: width * 0.05, left: width * 0.05, top: height * 0.01),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                children: [
-                  Text(
-                    'Wallet value',
-                    style: TextStyle(fontSize: width * 0.05),
-                  ),
-                  SizedBox(
-                    width: width * 0.02,
-                  ),
-                  const Icon(Icons.visibility),
-                ],
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const WalletSpecsScreen()),
-                  );
-                },
-                child: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 3),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
+            padding: EdgeInsets.only(
+                right: width * 0.05, left: width * 0.05, top: height * 0.01),
+            child: FutureBuilder<WalletData>(
+              future: futureWalletData,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasData) {
+                  WalletData walletData = snapshot.data!;
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        children: [
+                          Text(
+                            'Wallet value',
+                            style: TextStyle(fontSize: width * 0.05),
+                          ),
+                          SizedBox(
+                            width: width * 0.02,
+                          ),
+                          const Icon(Icons.visibility),
+                        ],
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const WalletSpecsScreen()),
+                          );
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(vertical: 3),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                (walletData.inShares + walletData.liquidity)
+                                    .toString(),
+                                style: TextStyle(
+                                    color: Colors.black87,
+                                    height: 1,
+                                    fontSize: width * 0.1,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(
+                                width: width * 0.01,
+                              ),
+                              Text(
+                                '€',
+                                style: TextStyle(
+                                  fontSize: width * 0.06,
+                                  height: 1,
+                                ),
+                              ),
+                              Expanded(
+                                  child: SizedBox(
+                                width: width * 0.01,
+                              )),
+                              Container(
+                                padding: const EdgeInsets.all(5),
+                                decoration: const BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(3)),
+                                    color: Colors.lightGreen),
+                                child: Text('${walletData.rate}%'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                       Text(
-                        '134 456.43',
-                        style: TextStyle(
-                            color: Colors.black87,
-                            height: 1,
-                            fontSize: width * 0.1,
-                            fontWeight: FontWeight.bold),
+                        'In collezioni: ${walletData.inShares} €',
+                        style: TextStyle(fontSize: width * 0.04),
+                      ),
+                      Text(
+                        'Liquidi: ${walletData.liquidity} €',
+                        style: TextStyle(fontSize: width * 0.04),
                       ),
                       SizedBox(
-                        width: width * 0.01,
+                        height: height * 0.04,
                       ),
-                      Text(
-                        '€',
-                        style: TextStyle(
-                          fontSize: width * 0.06,
-                          height: 1,
+                      Container(
+                        margin: EdgeInsets.symmetric(vertical: height * 0.02),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.archive,
+                              size: width * 0.08,
+                            ),
+                            Icon(
+                              Icons.timelapse,
+                              size: width * 0.08,
+                            ),
+                            Icon(
+                              Icons.store,
+                              size: width * 0.08,
+                            ),
+                            Icon(
+                              Icons.star,
+                              size: width * 0.08,
+                            ),
+                            Expanded(child: SizedBox(width: width * 0.08)),
+                            Icon(Icons.arrow_outward_rounded,
+                                size: width * 0.08),
+                            Icon(Icons.filter, size: width * 0.08),
+                            Icon(Icons.search, size: width * 0.08),
+                          ],
                         ),
                       ),
                       Expanded(
-                          child: SizedBox(
-                        width: width * 0.01,
-                      )),
-                      Container(
-                        padding: const EdgeInsets.all(5),
-                        decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(3)),
-                            color: Colors.lightGreen),
-                        child: const Text('+ 2.3%'),
+                        child: SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            child: FutureBuilder<List<WalletWatch>>(
+                                future: futureWatches,
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const Center(
+                                        child: CircularProgressIndicator());
+                                  } else if (snapshot.hasData) {
+                                    List<WalletWatch> walletWatches =
+                                        snapshot.data!;
+                                    return Column(
+                                      children: walletWatches.map(
+                                        (watch) {
+                                          return CustomBottomBigCard(
+                                            watchID: watch.watchid,
+                                            screenWidth: width,
+                                            imgUrl: watch.modeltype.imageuri,
+                                            modelName: watch.watchid.toString(),
+                                            brandName:
+                                                watch.modeltype.model.modelname,
+                                            serialNumber:
+                                                watch.watchid.toString(),
+                                            valoreAttuale: 0,
+                                            valoreDiAcquisto:
+                                                watch.initialprice,
+                                            quotePossedute: watch.owned,
+                                            quoteTotali: watch.numberofshares,
+                                            controvalore: 0,
+                                            incremento: 0,
+                                          );
+                                        },
+                                      ).toList(),
+                                    );
+                                  } else if (snapshot.hasError) {
+                                    // Gestisci il caso in cui si verifica un errore
+                                    return Text('Error: ${snapshot.error}');
+                                  } else {
+                                    // Gestisci il caso in cui non ci sono dati disponibili
+                                    return const SizedBox(); // Placeholder widget when no data is available
+                                  }
+                                })),
                       ),
                     ],
-                  ),
-                ),
-              ),
-              Text(
-                'In collezioni: 100 000.00 €',
-                style: TextStyle(fontSize: width * 0.04),
-              ),
-              Text(
-                'Liquidi: 34 456.43 €',
-                style: TextStyle(fontSize: width * 0.04),
-              ),
-              SizedBox(
-                height: height * 0.04,
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: height * 0.02),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.archive,
-                      size: width * 0.08,
-                    ),
-                    Icon(
-                      Icons.timelapse,
-                      size: width * 0.08,
-                    ),
-                    Icon(
-                      Icons.store,
-                      size: width * 0.08,
-                    ),
-                    Icon(
-                      Icons.star,
-                      size: width * 0.08,
-                    ),
-                    Expanded(child: SizedBox(width: width * 0.08)),
-                    Icon(Icons.arrow_outward_rounded, size: width * 0.08),
-                    Icon(Icons.filter, size: width * 0.08),
-                    Icon(Icons.search, size: width * 0.08),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: FutureBuilder<List<WalletWatch>>(
-                        future: futureWatches,
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          } else if (snapshot.hasData) {
-                            List<WalletWatch> walletWatches = snapshot.data!;
-                            return Column(
-                              children: walletWatches.map(
-                                (watch) {
-                                  return CustomBottomBigCard(
-                                    watchID: watch.watchid,
-                                    screenWidth: width,
-                                    imgUrl: watch.modeltype.imageuri,
-                                    modelName: watch.watchid.toString(),
-                                    brandName: watch.modeltype.model.modelname,
-                                    serialNumber: watch.watchid.toString(),
-                                    valoreAttuale: 0,
-                                    valoreDiAcquisto: watch.initialprice,
-                                    quotePossedute: watch.owned,
-                                    quoteTotali: watch.numberofshares,
-                                    controvalore: 0,
-                                    incremento: 0,
-                                  );
-                                },
-                              ).toList(),
-                            );
-                          } else if (snapshot.hasError) {
-                            // Gestisci il caso in cui si verifica un errore
-                            return Text('Error: ${snapshot.error}');
-                          } else {
-                            // Gestisci il caso in cui non ci sono dati disponibili
-                            return const SizedBox(); // Placeholder widget when no data is available
-                          }
-                        })),
-              ),
-            ],
-          ),
-        ),
+                  );
+                } else if (snapshot.hasError) {
+                  // Gestisci il caso in cui si verifica un errore
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  // Gestisci il caso in cui non ci sono dati disponibili
+                  return const SizedBox(); // Placeholder widget when no data is available
+                }
+              },
+            )),
       ),
     );
   }
@@ -218,10 +241,8 @@ class CustomBottomBigCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => {
-        Navigator.of(context).pushNamed(WatchScreen.id,
-            arguments: watchID)
-      },
+      onTap: () =>
+          {Navigator.of(context).pushNamed(WatchScreen.id, arguments: watchID)},
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 7),
         padding: const EdgeInsets.only(top: 10, bottom: 10),
