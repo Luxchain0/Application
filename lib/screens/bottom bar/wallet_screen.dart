@@ -218,8 +218,10 @@ class CustomBottomBigCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () =>
-          {print(watchID),   Navigator.pushNamed(context, WatchScreen.id, arguments: WatchScreen(watchID: watchID))},
+      onTap: () => {
+        Navigator.of(context).pushNamed(WatchScreen.id,
+            arguments: watchID)
+      },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 7),
         padding: const EdgeInsets.only(top: 10, bottom: 10),
@@ -261,7 +263,7 @@ class CustomBottomBigCard extends StatelessWidget {
               ),
             ]),
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

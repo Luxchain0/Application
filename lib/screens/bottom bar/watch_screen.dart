@@ -19,9 +19,7 @@ class _WatchScreenState extends State<WatchScreen> {
   @override
   void initState() {
     super.initState();
-    print(widget.watchID);
     futureWatchData = getWatchByWatchId(widget.watchID);
-    print(futureWatchData);
   }
 
   @override
