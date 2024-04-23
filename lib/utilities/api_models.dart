@@ -99,22 +99,20 @@ class OnSale {
   }
 }
 
-class Share {
-  final int shareid;
-  final int watchid;
-  final int userid;
 
-  const Share({
-    required this.shareid,
-    required this.watchid,
-    required this.userid,
+class ShareOnSale {
+  final double price;
+  final int shareCount;
+
+  const ShareOnSale({
+    required this.price,
+    required this.shareCount,
   });
 
-  factory Share.fromJson(Map<String, dynamic> json) {
-    return Share(
-      shareid: json['shareid'] as int,
-      watchid: json['watchid'] as int,
-      userid: json['userid'] as int,
+  factory ShareOnSale.fromJson(Map<String, dynamic> json) {
+    return ShareOnSale(
+      price: json['price'] as double,
+      shareCount: json['shareCount'] as int,
     );
   }
 }

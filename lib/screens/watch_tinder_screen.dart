@@ -55,7 +55,7 @@ class _WatchTinderScreenState extends State<WatchTinderScreen> {
                   ),
                 ),
                 Text(
-                  'Nome corto'.toUpperCase(),
+                  'model_name'.toUpperCase(),
                   style: TextStyle(
                     color: Colors.black38,
                     height: 1,
@@ -64,7 +64,7 @@ class _WatchTinderScreenState extends State<WatchTinderScreen> {
                   ),
                 ),
                 Text(
-                  'Nome lungo con descrizione'.toUpperCase(),
+                  'brand_name'.toUpperCase(),
                   style: TextStyle(
                     color: Colors.black87,
                     height: 1,

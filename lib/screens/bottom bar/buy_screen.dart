@@ -72,7 +72,7 @@ class _BuyScreenState extends State<BuyScreen> {
                   ),
                 ),
                 Text(
-                  'Nome corto'.toUpperCase(),
+                  'model_name'.toUpperCase(),
                   style: TextStyle(
                       color: Colors.black38,
                       height: 1,
@@ -80,7 +80,7 @@ class _BuyScreenState extends State<BuyScreen> {
                       fontFamily: 'Bebas'),
                 ),
                 Text(
-                  'Nome lungo con descrizione'.toUpperCase(),
+                  'brand_name'.toUpperCase(),
                   style: TextStyle(
                       color: Colors.black87,
                       height: 1,

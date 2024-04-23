@@ -155,8 +155,8 @@ class _WalletScreenState extends State<WalletScreen> {
                                     watchID: watch.watchid,
                                     screenWidth: width,
                                     imgUrl: watch.modeltype.imageuri,
-                                    shortName: watch.watchid.toString(),
-                                    longName: watch.modeltype.model.modelname,
+                                    modelName: watch.watchid.toString(),
+                                    brandName: watch.modeltype.model.modelname,
                                     serialNumber: watch.watchid.toString(),
                                     valoreAttuale: 0,
                                     valoreDiAcquisto: watch.initialprice,
@@ -191,8 +191,8 @@ class CustomBottomBigCard extends StatelessWidget {
     required this.watchID,
     required this.screenWidth, //
     required this.imgUrl, //
-    required this.shortName, //
-    required this.longName, //
+    required this.modelName, //
+    required this.brandName, //
     required this.serialNumber, //
     required this.valoreAttuale, //
     required this.valoreDiAcquisto, //
@@ -204,8 +204,8 @@ class CustomBottomBigCard extends StatelessWidget {
 
   final int watchID;
   final double screenWidth;
-  final String shortName;
-  final String longName;
+  final String modelName;
+  final String brandName;
   final String imgUrl;
   final String serialNumber;
   final int quotePossedute;
@@ -268,7 +268,7 @@ class CustomBottomBigCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                shortName,
+                modelName,
                 style: TextStyle(
                     color: Colors.black38,
                     height: 1,
@@ -276,7 +276,7 @@ class CustomBottomBigCard extends StatelessWidget {
                     fontFamily: 'Bebas'),
               ),
               Text(
-                longName,
+                brandName,
                 style: TextStyle(
                     color: Colors.black87,
                     height: 1,

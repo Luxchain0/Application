@@ -65,8 +65,8 @@ class _HomeScreenState extends State<HomeScreen> {
             CustomBottomBigCard(
                 screenWidth: width,
                 img: 'assets/images/o1.jpg',
-                shortName: 'nome corto'.toUpperCase(),
-                longName: 'nome lungo con descrizi'.toUpperCase(),
+                modelName: 'nome corto'.toUpperCase(),
+                brandName: 'nome lungo con descrizi'.toUpperCase(),
                 serialNumber: '34XX7WZY',
                 prezzoDiListino: 230000,
                 quoteTotali: 300,
@@ -77,8 +77,8 @@ class _HomeScreenState extends State<HomeScreen> {
             CustomBottomBigCard(
                 screenWidth: width,
                 img: 'assets/images/o2.jpg',
-                shortName: 'nome corto'.toUpperCase(),
-                longName: 'nome lungo con descrine'.toUpperCase(),
+                modelName: 'nome corto'.toUpperCase(),
+                brandName: 'nome lungo con descrine'.toUpperCase(),
                 serialNumber: '34X4dWZY',
                 prezzoDiListino: 250000,
                 quoteTotali: 400,
@@ -89,8 +89,8 @@ class _HomeScreenState extends State<HomeScreen> {
             CustomBottomBigCard(
                 screenWidth: width,
                 img: 'assets/images/o3.jpg',
-                shortName: 'nome corto'.toUpperCase(),
-                longName: 'nome lungo con descione'.toUpperCase(),
+                modelName: 'nome corto'.toUpperCase(),
+                brandName: 'nome lungo con descione'.toUpperCase(),
                 serialNumber: '34ZS8WZY',
                 prezzoDiListino: 130000,
                 quoteTotali: 100,
@@ -116,8 +116,8 @@ class CustomBottomBigCard extends StatelessWidget {
     super.key,
     required this.screenWidth,
     required this.img,
-    required this.shortName,
-    required this.longName,
+    required this.modelName,
+    required this.brandName,
     required this.serialNumber,
     required this.prezzoDiListino,
     required this.quoteTotali,
@@ -128,8 +128,8 @@ class CustomBottomBigCard extends StatelessWidget {
   });
 
   final double screenWidth;
-  final String shortName;
-  final String longName;
+  final String modelName;
+  final String brandName;
   final String img;
   final String serialNumber;
   final int prezzoDiListino;
@@ -182,7 +182,7 @@ class CustomBottomBigCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              shortName,
+              modelName,
               style: TextStyle(
                   color: Colors.black38,
                   height: 1,
@@ -190,7 +190,7 @@ class CustomBottomBigCard extends StatelessWidget {
                   fontFamily: 'Bebas'),
             ),
             Text(
-              longName,
+              brandName,
               style: TextStyle(
                   color: Colors.black87,
                   height: 1,
