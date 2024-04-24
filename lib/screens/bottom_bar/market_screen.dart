@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lux_chain/screens/watch_screen.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
@@ -88,6 +89,7 @@ class _MarketScreenState extends State<MarketScreen> {
                       children: marketWatchesList
                           .map((watch) => CustomBottomBigCard(
                               screenWidth: width,
+                              watchid: watch.watchId,
                               img: watch.modelType.imageuri,
                               modelName: watch.modelType.model.modelname,
                               brandName: watch.modelType.model.brandname,
@@ -117,6 +119,7 @@ class CustomBottomBigCard extends StatelessWidget {
   const CustomBottomBigCard({
     super.key,
     required this.screenWidth,
+    required this.watchid,
     required this.img,
     required this.modelName,
     required this.brandName,
@@ -128,6 +131,7 @@ class CustomBottomBigCard extends StatelessWidget {
   });
 
   final double screenWidth;
+  final int watchid;
   final String modelName;
   final String brandName;
   final String img;
@@ -210,6 +214,10 @@ class CustomBottomBigCard extends StatelessWidget {
                   backgorundColor: const Color.fromARGB(255, 17, 45, 68),
                   textColor: Colors.white,
                   text: 'Vedi i dettagli',
+                  onPressed: () => {
+                    Navigator.pushNamed(context, WatchScreen.id, arguments: watchid),
+
+                  },
                 ),
               ],
             )
@@ -221,22 +229,26 @@ class CustomBottomBigCard extends StatelessWidget {
 }
 
 class CustomButton extends StatelessWidget {
+  final double screenWidth;
+  final Color backgorundColor;
+  final Color textColor;
+  final String text;
+  final Function onPressed;
+
   const CustomButton(
       {super.key,
       required this.screenWidth,
       required this.backgorundColor,
       required this.textColor,
-      required this.text});
+      required this.text,
+      required this.onPressed
+      });
 
-  final double screenWidth;
-  final Color backgorundColor;
-  final Color textColor;
-  final String text;
 
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
-      onPressed: () => {},
+      onPressed: () => onPressed(),
       style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all<Color>(backgorundColor),
           foregroundColor: MaterialStateProperty.all<Color>(textColor),
