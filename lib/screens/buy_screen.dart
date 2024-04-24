@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
-import 'package:lux_chain/utilities/api_models.dart';
+import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 
@@ -27,7 +27,7 @@ class _BuyScreenState extends State<BuyScreen> {
     super.initState();
     getWalletData(2).then((walletData) {
       setState(() {
-        _moneyInTheWallet = walletData.liquidity; 
+        _moneyInTheWallet = walletData.liquidity;
       });
     });
   }
@@ -55,6 +55,7 @@ class _BuyScreenState extends State<BuyScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: appBar(width),
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
