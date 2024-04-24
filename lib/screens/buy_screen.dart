@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lux_chain/utilities/api_calls.dart';
+import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 
@@ -9,15 +11,26 @@ class BuyScreen extends StatefulWidget {
   const BuyScreen({required this.buyInfo, super.key});
 
   @override
+  // ignore: no_logic_in_create_state
   State<BuyScreen> createState() => _BuyScreenState(buyInfo: buyInfo);
 }
 
 class _BuyScreenState extends State<BuyScreen> {
   final BuyInfo buyInfo;
   int _shareSelected = 0;
-  final double _moneyInTheWallet = 6345.45;
+  double _moneyInTheWallet = 0.0;
 
   _BuyScreenState({required this.buyInfo});
+
+  @override
+  void initState() {
+    super.initState();
+    getWalletData(2).then((walletData) {
+      setState(() {
+        _moneyInTheWallet = walletData.liquidity; 
+      });
+    });
+  }
 
   var formatter = NumberFormat("#,##0.00", "en_US");
 
@@ -28,7 +41,11 @@ class _BuyScreenState extends State<BuyScreen> {
         : false;
   }
 
-  buyShares() {}
+  handleBuy() {
+    // ignore: avoid_print
+    print("BUY");
+    buyShares(2, buyInfo.watchid, _shareSelected, buyInfo.proposalPrice);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +166,7 @@ class _BuyScreenState extends State<BuyScreen> {
                   children: [
                     OutlinedButton(
                       onPressed: doesTheUserHaveEnoughMoney()
-                          ? () => buyShares()
+                          ? () => handleBuy()
                           : null,
                       style: ButtonStyle(
                           backgroundColor:

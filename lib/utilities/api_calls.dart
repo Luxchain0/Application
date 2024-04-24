@@ -203,6 +203,34 @@ Future<APIStatus> sellShares(int userID, int watchID, int numberOfShares, double
   }
 }
 
+Future<APIStatus> buyShares(int userID, int watchID, int numberOfShares, double priceOfOneShare) async {
+  try {
+    Map<String, dynamic> requestBody = {
+      'price': priceOfOneShare.toString(),
+      'numberOfShares': numberOfShares,
+    };
+
+    final response = await http.post(
+      Uri.parse('https://luxchain-flame.vercel.app/api/trade/buy/$watchID/$userID'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(requestBody),
+    );
+
+    if (response.statusCode == 200) {
+      // ignore: avoid_print
+      print("SUCCESS BUY");
+      return APIStatus.success;
+    } else {
+      throw Exception('[FLUTTER] Failed to buy $numberOfShares shares of watch $watchID');
+    }
+  } catch (e) {
+    throw Exception('[FLUTTER] Error buying shares: $e');
+  }
+
+}
+
 Future<List<MarketPlaceWatch>> getMarketPlaceWatches() async {
   try {
     // Effettua la chiamata per ottenere tutte le azioni in vendita

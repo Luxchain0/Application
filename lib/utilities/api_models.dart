@@ -2,6 +2,7 @@ enum APIStatus {
   success,
   error,
 }
+
 class Favorite {
   final int favoriteid;
   final int watchid;
@@ -322,7 +323,9 @@ class WalletData {
 
   factory WalletData.fromJson(Map<String, dynamic> json) {
     return WalletData(
-      liquidity: json['liquidity'] as double,
+      liquidity: (json['liquidity'] is int)
+          ? (json['liquidity'] as int).toDouble()
+          : json['liquidity'] as double,
       inShares: json['inShares'] as int,
       rate: json['rate'] as int,
     );
