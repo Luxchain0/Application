@@ -19,8 +19,8 @@ class RouteGenerator {
     switch (settings.name) {
       case HomeScreen.id:
         return MaterialPageRoute(builder: (_) => const HomeScreen());
-      case SettingScreen.id:
-        return MaterialPageRoute(builder: (_) => const SettingScreen());
+      case SettingsScreen.id:
+        return MaterialPageRoute(builder: (_) => const SettingsScreen());
       case WatchTinderScreen.id:
         return MaterialPageRoute(builder: (_) => const WatchTinderScreen());
       case BuyScreen.id:
