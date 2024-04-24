@@ -6,6 +6,7 @@ import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
+import 'package:lux_chain/utilities/frame.dart';
 
 class WatchScreen extends StatefulWidget {
   static const String id = 'WatchScreen';
@@ -46,6 +47,7 @@ class _WatchScreenState extends State<WatchScreen> {
     ];
 
     return Scaffold(
+      appBar: appBar(width),
       body: SafeArea(
         bottom: false,
         child: SingleChildScrollView(

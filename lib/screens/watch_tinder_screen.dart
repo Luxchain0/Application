@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lux_chain/utilities/size_config.dart';
+import 'package:lux_chain/utilities/frame.dart';
 
 class WatchTinderScreen extends StatefulWidget {
   static const String id = 'WatchTinderScreen';
@@ -17,11 +18,13 @@ class _WatchTinderScreenState extends State<WatchTinderScreen> {
     double width = SizeConfig.screenW!;
 
     return Scaffold(
+      appBar: appBar(width),
       body: SafeArea(
         bottom: false,
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: width*0.05, vertical: heigh*0.02),
+            padding: EdgeInsets.symmetric(
+                horizontal: width * 0.05, vertical: heigh * 0.02),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -32,21 +35,20 @@ class _WatchTinderScreenState extends State<WatchTinderScreen> {
                       color: Colors.black87,
                       height: 1,
                       fontSize: width * 0.1,
-                      fontFamily: 'Bebas'
-                  ),
+                      fontFamily: 'Bebas'),
                 ),
                 Container(
-                  margin: EdgeInsets.symmetric(vertical: heigh*0.02),
+                  margin: EdgeInsets.symmetric(vertical: heigh * 0.02),
                   decoration: BoxDecoration(
-            color: Colors.white,
-              border: Border.all(
-                color: Colors.black26,
-                width: 1,
-              ),
-              borderRadius: const BorderRadius.all(Radius.circular(7))),
+                      color: Colors.white,
+                      border: Border.all(
+                        color: Colors.black26,
+                        width: 1,
+                      ),
+                      borderRadius: const BorderRadius.all(Radius.circular(7))),
                   alignment: Alignment.center, // This is needed
                   child: Padding(
-                    padding: EdgeInsets.all(heigh*0.02),
+                    padding: EdgeInsets.all(heigh * 0.02),
                     child: Image.asset(
                       'assets/images/o1.jpg',
                       fit: BoxFit.contain,
@@ -57,33 +59,33 @@ class _WatchTinderScreenState extends State<WatchTinderScreen> {
                 Text(
                   'model_name'.toUpperCase(),
                   style: TextStyle(
-                    color: Colors.black38,
-                    height: 1,
-                    fontSize: width * 0.07,
-                    fontFamily: 'Bebas'
-                  ),
+                      color: Colors.black38,
+                      height: 1,
+                      fontSize: width * 0.07,
+                      fontFamily: 'Bebas'),
                 ),
                 Text(
                   'brand_name'.toUpperCase(),
                   style: TextStyle(
-                    color: Colors.black87,
-                    height: 1,
-                    fontSize: width * 0.08,
-                    fontFamily: 'Bebas'
-                  ),
+                      color: Colors.black87,
+                      height: 1,
+                      fontSize: width * 0.08,
+                      fontFamily: 'Bebas'),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: heigh*0.03),
+                  padding: EdgeInsets.symmetric(vertical: heigh * 0.03),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       OutlinedButton(
-                        onPressed: () => {}, 
+                        onPressed: () => {},
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 17, 45, 68)),
-                          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                          minimumSize: MaterialStateProperty.all<Size>(Size(width*0.25, width*0.1))
-                        ),
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                const Color.fromARGB(255, 17, 45, 68)),
+                            foregroundColor:
+                                MaterialStateProperty.all<Color>(Colors.white),
+                            minimumSize: MaterialStateProperty.all<Size>(
+                                Size(width * 0.25, width * 0.1))),
                         child: const Text(
                           'Nahh',
                         ),
@@ -91,10 +93,12 @@ class _WatchTinderScreenState extends State<WatchTinderScreen> {
                       OutlinedButton(
                         onPressed: () => {},
                         style: ButtonStyle(
-                          backgroundColor: const MaterialStatePropertyAll(Colors.blueAccent),
-                          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                          minimumSize: MaterialStateProperty.all<Size>(Size(width*0.25, width*0.1))
-                        ),
+                            backgroundColor: const MaterialStatePropertyAll(
+                                Colors.blueAccent),
+                            foregroundColor:
+                                MaterialStateProperty.all<Color>(Colors.white),
+                            minimumSize: MaterialStateProperty.all<Size>(
+                                Size(width * 0.25, width * 0.1))),
                         child: const Text(
                           'I like it!',
                         ),
@@ -108,14 +112,12 @@ class _WatchTinderScreenState extends State<WatchTinderScreen> {
                       color: Colors.black87,
                       height: 1,
                       fontSize: width * 0.1,
-                      fontFamily: 'Bebas'
-                  ),
+                      fontFamily: 'Bebas'),
                 ),
                 TextFormField(
                   decoration: const InputDecoration(
-                    alignLabelWithHint: true,
-                    labelText: 'Insert the name of the watch'
-                  ),
+                      alignLabelWithHint: true,
+                      labelText: 'Insert the name of the watch'),
                 ),
               ],
             ),

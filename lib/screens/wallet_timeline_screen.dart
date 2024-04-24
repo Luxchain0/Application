@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lux_chain/utilities/size_config.dart';
+import 'package:lux_chain/utilities/frame.dart';
 
 class WalletTimelineScreen extends StatefulWidget {
   static const String id = 'WalletTimelineScreen';
@@ -17,6 +18,7 @@ class _WalletTimelineScreenState extends State<WalletTimelineScreen> {
     double width = SizeConfig.screenW!;
 
     return Scaffold(
+      appBar: appBar(width),
       body: SafeArea(
         bottom: false,
         child: Padding(
