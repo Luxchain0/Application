@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 
-class SettingScreen extends StatefulWidget {
-  static const String id = 'SettingScreen';
-  const SettingScreen({super.key});
+class SettingsScreen extends StatefulWidget {
+  static const String id = 'SettingsScreen';
+  const SettingsScreen({super.key});
 
   @override
-  State<SettingScreen> createState() => _SettingScreenState();
+  State<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _SettingScreenState extends State<SettingScreen> {
+class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
