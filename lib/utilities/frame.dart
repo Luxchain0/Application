@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 //import 'package:lux_chain/screens/home_screen.dart';
-import 'package:lux_chain/screens/bottom_bar/market_screen.dart';
-import 'package:lux_chain/screens/bottom_bar/wallet_screen.dart';
-import 'package:lux_chain/screens/bottom_bar/bookmarks_screen.dart';
-import 'package:lux_chain/screens/bottom_bar/settings_screen.dart';
+import 'package:lux_chain/screens/market_screen.dart';
+import 'package:lux_chain/screens/wallet_screen.dart';
+import 'package:lux_chain/screens/bookmarks_screen.dart';
+import 'package:lux_chain/screens/settings_screen.dart';
 import 'package:lux_chain/screens/watch_screen.dart';
 import 'package:lux_chain/screens/watch_tinder_screen.dart';
 //import 'package:lux_chain/screens/bottom_bar/buy_screen.dart';
