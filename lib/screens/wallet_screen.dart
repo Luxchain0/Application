@@ -166,7 +166,8 @@ class _WalletScreenState extends State<WalletScreen> {
                                           return CustomBottomBigCard(
                                             watchID: watch.watchid,
                                             screenWidth: width,
-                                            imgUrl: watch.modeltype.imageuri,
+                                            imgUrl: watch.imageuri,
+                                            reference: watch.modeltype.reference,
                                             modelName: watch.modeltype.model.modelname,
                                             brandName:
                                                 watch.modeltype.model.brandname,
@@ -214,6 +215,7 @@ class CustomBottomBigCard extends StatelessWidget {
     required this.watchID,
     required this.screenWidth, //
     required this.imgUrl, //
+    required this.reference,
     required this.modelName, //
     required this.brandName, //
     required this.serialNumber, //
@@ -227,6 +229,7 @@ class CustomBottomBigCard extends StatelessWidget {
 
   final int watchID;
   final double screenWidth;
+  final String reference;
   final String modelName;
   final String brandName;
   final String imgUrl;
@@ -304,7 +307,7 @@ class CustomBottomBigCard extends StatelessWidget {
                     fontSize: screenWidth * 0.055,
                     fontFamily: 'Bebas'),
               ),
-              Text('Serial: $serialNumber'),
+              Text('Reference: $reference'),
               SizedBox(height: screenWidth * 0.02),
               Text('Quote Possedute: $quotePossedute/$quoteTotali'),
               Text('Controvalore: $controvalore €'),

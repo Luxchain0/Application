@@ -59,7 +59,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                                   return CustomBottomBigCard(
                                     watchID: watch.watchid,
                                     screenWidth: width,
-                                    imgUrl: watch.modeltype.imageuri,
+                                    imgUrl: watch.imageuri,
                                     modelName: watch.watchid.toString(),
                                     brandName: watch.modeltype.model.modelname,
                                     serialNumber: watch.watchid.toString(),

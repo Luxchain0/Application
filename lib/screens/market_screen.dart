@@ -90,7 +90,7 @@ class _MarketScreenState extends State<MarketScreen> {
                           .map((watch) => CustomBottomBigCard(
                               screenWidth: width,
                               watchid: watch.watchId,
-                              img: watch.modelType.imageuri,
+                              img: watch.imageuri,
                               modelName: watch.modelType.model.modelname,
                               brandName: watch.modelType.model.brandname,
                               serialNumber: watch.watchId.toString(),

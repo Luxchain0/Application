@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:lux_chain/utilities/api_models.dart';
 
+const String apiURL = 'https://luxchain-flame.vercel.app/api';
+
 Future<List<WalletWatch>> getUserWalletWatches(int userID) async {
   try {
     // The call for retrieving all the watches whose some shares are owned by the user
     final response = await http.get(
-      Uri.parse('https://luxchain-flame.vercel.app/api/wallet/watches/$userID'),
+      Uri.parse('$apiURL/wallet/watches/$userID'),
     );
 
     if (response.statusCode == 200) {
@@ -26,7 +28,7 @@ Future<Watch> getWatchByWatchId(int watchID) async {
   try {
     // Retrieving all the information about the watch
     final response = await http.get(
-      Uri.parse('https://luxchain-flame.vercel.app/api/watch/$watchID'),
+      Uri.parse('$apiURL/watch/$watchID'),
     );
 
     if (response.statusCode == 200) {
@@ -45,7 +47,7 @@ Future<List<WalletWatch>> getSharesByUser(int userID) async {
   try {
     //Retrieving all the shares owned by the user
     final response = await http.get(
-      Uri.parse('https://luxchain-flame.vercel.app/api/shares/$userID'),
+      Uri.parse('$apiURL/shares/$userID'),
     );
 
     if (response.statusCode == 200) {
@@ -64,7 +66,7 @@ Future<List<WalletWatch>> getSharesByWatch(int watchID) async {
   try {
     //Retreieving watch's shares
     final response = await http.get(
-      Uri.parse('https://luxchain-flame.vercel.app/api/watches/shares/$watchID'),
+      Uri.parse('$apiURL/watches/shares/$watchID'),
     );
 
     if (response.statusCode == 200) {
@@ -83,7 +85,7 @@ Future<List<WalletWatch>> getSharesByWatch(int watchID) async {
 //   try {
 //     // Effettua la chiamata per ottenere le azioni associate all'utente
 //     final response = await http.get(
-//       Uri.parse('https://luxchain-flame.vercel.app/api/shares/traded/$userID'),
+//       Uri.parse('$apiURL/shares/traded/$userID'),
 //     );
 
 //     if (response.statusCode == 200) {
@@ -102,7 +104,7 @@ Future<List<WalletWatch>> getSharesOfUserOnSale(int userID) async {
   try {
     // Retreieving user's on sale shares
     final response = await http.get(
-      Uri.parse('https://luxchain-flame.vercel.app/api/shares/onSale/$userID'),
+      Uri.parse('$apiURL/shares/onSale/$userID'),
     );
 
     if (response.statusCode == 200) {
@@ -121,7 +123,7 @@ Future<List<WalletWatch>> getSharesOfUserOnSale(int userID) async {
 //   try {
 //     // Effettua la chiamata per ottenere le azioni associate all'utente
 //     final response = await http.get(
-//       Uri.parse('https://luxchain-flame.vercel.app/api/shares/favourites/$userID'),
+//       Uri.parse('$apiURL/shares/favourites/$userID'),
 //     );
 
 //     if (response.statusCode == 200) {
@@ -140,7 +142,7 @@ Future<List<ShareOnSale>> getSharesOfTheWatchOnSell(int watchID) async {
   try {
     // Retrieving all the on sale shares of a watch
     final response = await http.get(
-      Uri.parse('https://luxchain-flame.vercel.app/api/marketplace/watch/$watchID'),
+      Uri.parse('$apiURL/marketplace/watch/$watchID'),
     );
 
     if (response.statusCode == 200) {
@@ -158,7 +160,7 @@ Future<WalletData> getWalletData(int userID) async {
   try {
     // Retrieiving wallet data
     final response = await http.get(
-      Uri.parse('https://luxchain-flame.vercel.app/api/wallet/data/$userID'),
+      Uri.parse('$apiURL/wallet/data/$userID'),
     );
 
     if (response.statusCode == 200) {
@@ -183,7 +185,7 @@ Future<APIStatus> sellShares(int userID, int watchID, int numberOfShares, double
 
     // Effettua la richiesta HTTP POST con i parametri nel body
     final response = await http.post(
-      Uri.parse('https://luxchain-flame.vercel.app/api/trade/sell/$watchID/$userID'),
+      Uri.parse('$apiURL/trade/sell/$watchID/$userID'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -211,7 +213,7 @@ Future<APIStatus> buyShares(int userID, int watchID, int numberOfShares, double 
     };
 
     final response = await http.post(
-      Uri.parse('https://luxchain-flame.vercel.app/api/trade/buy/$watchID/$userID'),
+      Uri.parse('$apiURL/trade/buy/$watchID/$userID'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -235,7 +237,7 @@ Future<List<MarketPlaceWatch>> getMarketPlaceWatches() async {
   try {
     // Effettua la chiamata per ottenere tutte le azioni in vendita
     final response = await http.get(
-      Uri.parse('https://luxchain-flame.vercel.app/api/marketplace/watches'),
+      Uri.parse('$apiURL/marketplace/watches'),
     );
 
     if (response.statusCode == 200) {

@@ -66,7 +66,7 @@ class _WatchScreenState extends State<WatchScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          watch.watchId.toString(),
+                          watch.modelType.model.brandname,
                           style: TextStyle(
                               color: Colors.black38,
                               height: 1,
@@ -95,14 +95,15 @@ class _WatchScreenState extends State<WatchScreen> {
                           child: Padding(
                             padding: EdgeInsets.all(heigh * 0.02),
                             child: Image.network(
-                              watch.modelType.imageuri,
+                              watch.imageuri,
                               fit: BoxFit.cover,
                               height: heigh * 0.3,
                             ),
                           ),
                         ),
-                        Text("Referenza: ${watch.modelType.modelid}"),
-                        Text("Anno: ${watch.modelType.year}"),
+                        Text("Referenza: ${watch.modelType.reference}"),
+                        Text("Seriale: ${watch.watchId}"),
+                        Text("Anno: ${watch.year}"),
                         Text(
                             "Materiale cassa: ${watch.modelType.casematerial}"),
                         Text(
@@ -131,8 +132,8 @@ class _WatchScreenState extends State<WatchScreen> {
                           'Descrizione: ',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        const Text(
-                          'Questa è una descrizione lunga e noiosa che mai nessuno leggerà. Questa è una descrizione lunga e noiosa che mai nessuno leggerà. Questa è una descrizione lunga e noiosa che mai nessuno leggerà. Questa è una descrizione lunga e noiosa che mai nessuno leggerà. Questa è una descrizione lunga e noiosa che mai nessuno leggerà. Questa è una descrizione lunga e noiosa che mai nessuno leggerà. Questa è una descrizione lunga e noiosa che mai nessuno leggerà. Questa è una descrizione lunga e noiosa che mai nessuno leggerà. Questa è una descrizione lunga e noiosa che mai nessuno leggerà.',
+                        Text(
+                          watch.description,
                           textAlign: TextAlign.justify,
                         ),
                         SizedBox(
@@ -167,7 +168,7 @@ class _WatchScreenState extends State<WatchScreen> {
                                           watch.modelType.model.modelname,
                                       actualPrice: watch.actualPrice,
                                       totalNumberOfShares: watch.numberOfShares,
-                                      image: watch.modelType.imageuri,
+                                      image: watch.imageuri,
                                       proposalPrice: watch.actualPrice,
                                       numberOfShares: watch
                                           .numberOfShares, // TODO: Change this
@@ -250,7 +251,7 @@ class _WatchScreenState extends State<WatchScreen> {
                                                   totalNumberOfShares:
                                                       watch.numberOfShares,
                                                   image:
-                                                      watch.modelType.imageuri,
+                                                      watch.imageuri,
                                                   proposalPrice: share.price,
                                                   numberOfShares:
                                                       share.shareCount,

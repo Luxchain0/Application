@@ -168,7 +168,7 @@ class _MySharesScreenState extends State<HistoryScreen> {
                                           return CustomBottomBigCard(
                                             watchID: watch.watchid,
                                             screenWidth: width,
-                                            imgUrl: watch.modeltype.imageuri,
+                                            imgUrl: watch.imageuri,
                                             modelName: watch.watchid.toString(),
                                             brandName:
                                                 watch.modeltype.model.modelname,

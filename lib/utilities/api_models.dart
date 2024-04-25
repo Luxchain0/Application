@@ -45,23 +45,20 @@ class Model {
 
 class ModelType {
   final int modeltypeid;
+  final String reference;
   final String braceletmaterial;
   final String casematerial;
-  final String dialcolor;
-  final int diameter;
-  final int year;
-  final String imageuri;
+  final String diameter;
+  
   final int modelid;
   final Model model;
 
   const ModelType({
     required this.modeltypeid,
+    required this.reference,
     required this.braceletmaterial,
     required this.casematerial,
-    required this.dialcolor,
     required this.diameter,
-    required this.year,
-    required this.imageuri,
     required this.modelid,
     required this.model,
   });
@@ -69,12 +66,10 @@ class ModelType {
   factory ModelType.fromJson(Map<String, dynamic> json) {
     return ModelType(
       modeltypeid: json['modeltypeid'] as int,
+      reference: json['reference'] as String,
       braceletmaterial: json['braceletmaterial'] as String,
       casematerial: json['casematerial'] as String,
-      dialcolor: json['dialcolor'] as String,
-      diameter: json['diameter'] as int,
-      year: json['year'] as int,
-      imageuri: json['imageuri'] as String,
+      diameter: json['diameter'] as String,
       modelid: json['modelid'] as int,
       model: Model.fromJson(json['model'] as Map<String, dynamic>),
     );
@@ -249,6 +244,10 @@ class WalletWatch {
   final int numberofshares;
   final double initialprice;
   final double actualprice;
+  final String dialcolor;
+  final int year;
+  final String imageuri;
+  final String description;
   final int modeltypeid;
   final ModelType modeltype;
   final int owned;
@@ -259,6 +258,10 @@ class WalletWatch {
     required this.numberofshares,
     required this.initialprice,
     required this.actualprice,
+    required this.dialcolor,
+    required this.year,
+    required this.imageuri,
+    required this.description,
     required this.modeltypeid,
     required this.modeltype,
     required this.owned,
@@ -271,6 +274,10 @@ class WalletWatch {
       numberofshares: json['numberofshares'] as int,
       initialprice: double.parse(json['initialprice'] as String),
       actualprice: double.parse(json['actualprice'] as String),
+      dialcolor: json['dialcolor'] as String,
+      year: json['year'] as int,
+      imageuri: json['imageuri'] as String,
+      description: json['description'] as String,
       modeltypeid: json['modeltypeid'] as int,
       modeltype: ModelType.fromJson(json['modeltype'] as Map<String, dynamic>),
       owned: json['owned'] as int,
@@ -284,6 +291,10 @@ class Watch {
   final int numberOfShares;
   final double initialPrice;
   final double actualPrice;
+  final String dialcolor;
+  final int year;
+  final String imageuri;
+  final String description;
   final int modelTypeId;
   final ModelType modelType;
 
@@ -293,6 +304,10 @@ class Watch {
     required this.numberOfShares,
     required this.initialPrice,
     required this.actualPrice,
+    required this.dialcolor,
+    required this.year,
+    required this.imageuri,
+    required this.description,
     required this.modelTypeId,
     required this.modelType,
   });
@@ -304,6 +319,10 @@ class Watch {
       numberOfShares: json['numberofshares'] as int,
       initialPrice: double.parse(json['initialprice'] as String),
       actualPrice: double.parse(json['actualprice'] as String),
+      dialcolor: json['dialcolor'] as String,
+      year: json['year'] as int,
+      imageuri: json['imageuri'] as String,
+      description: json['description'] as String,
       modelTypeId: json['modeltypeid'] as int,
       modelType: ModelType.fromJson(json['modeltype'] as Map<String, dynamic>),
     );
@@ -341,6 +360,10 @@ class MarketPlaceWatch extends Watch {
     required int numberOfShares,
     required double initialPrice,
     required double actualPrice,
+    required String dialcolor,
+    required int year,
+    required String imageuri,
+    required String description,
     required int modelTypeId,
     required ModelType modelType,
     required this.shareOnSale,
@@ -350,6 +373,10 @@ class MarketPlaceWatch extends Watch {
           numberOfShares: numberOfShares,
           initialPrice: initialPrice,
           actualPrice: actualPrice,
+          dialcolor: dialcolor,
+          year: year,
+          imageuri: imageuri,
+          description: description,
           modelTypeId: modelTypeId,
           modelType: modelType,
         );
@@ -361,6 +388,10 @@ class MarketPlaceWatch extends Watch {
       numberOfShares: json['numberofshares'] as int,
       initialPrice: double.parse(json['initialprice'] as String),
       actualPrice: double.parse(json['actualprice'] as String),
+      dialcolor: json['dialcolor'] as String,
+      year: json['year'] as int,
+      imageuri: json['imageuri'] as String,
+      description: json['description'] as String,
       modelTypeId: json['modeltypeid'] as int,
       modelType: ModelType.fromJson(json['modeltype'] as Map<String, dynamic>),
       shareOnSale: json['shareOnSale'] as int,
