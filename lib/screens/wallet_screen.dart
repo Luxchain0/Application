@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:lux_chain/screens/wallet_specs_screen.dart';
 import 'package:lux_chain/screens/watch_screen.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
@@ -16,6 +17,8 @@ class WalletScreen extends StatefulWidget {
 class _WalletScreenState extends State<WalletScreen> {
   late Future<List<WalletWatch>> futureWatches;
   late Future<WalletData> futureWalletData;
+
+  var formatter = NumberFormat("# ###0,00", "it_IT");
 
   @override
   void initState() {
@@ -74,8 +77,8 @@ class _WalletScreenState extends State<WalletScreen> {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                (walletData.inShares + walletData.liquidity)
-                                    .toString(),
+                                formatter.format(
+                                    walletData.inShares + walletData.liquidity),
                                 style: TextStyle(
                                     color: Colors.black87,
                                     height: 1,
@@ -109,11 +112,11 @@ class _WalletScreenState extends State<WalletScreen> {
                         ),
                       ),
                       Text(
-                        'In collezioni: ${walletData.inShares} €',
+                        'In collezioni: ${formatter.format(walletData.inShares)} €',
                         style: TextStyle(fontSize: width * 0.04),
                       ),
                       Text(
-                        'Liquidi: ${walletData.liquidity} €',
+                        'Liquidi: ${formatter.format(walletData.liquidity)} €',
                         style: TextStyle(fontSize: width * 0.04),
                       ),
                       SizedBox(
@@ -167,8 +170,10 @@ class _WalletScreenState extends State<WalletScreen> {
                                             watchID: watch.watchid,
                                             screenWidth: width,
                                             imgUrl: watch.imageuri,
-                                            reference: watch.modeltype.reference,
-                                            modelName: watch.modeltype.model.modelname,
+                                            reference:
+                                                watch.modeltype.reference,
+                                            modelName:
+                                                watch.modeltype.model.modelname,
                                             brandName:
                                                 watch.modeltype.model.brandname,
                                             serialNumber:

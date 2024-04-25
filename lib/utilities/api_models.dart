@@ -352,7 +352,7 @@ class WalletData {
 }
 
 class MarketPlaceWatch extends Watch {
-  final int shareOnSale;
+  final int sharesOnSale;
 
   const MarketPlaceWatch({
     required int watchId,
@@ -366,7 +366,7 @@ class MarketPlaceWatch extends Watch {
     required String description,
     required int modelTypeId,
     required ModelType modelType,
-    required this.shareOnSale,
+    required this.sharesOnSale,
   }) : super(
           watchId: watchId,
           condition: condition,
@@ -394,7 +394,7 @@ class MarketPlaceWatch extends Watch {
       description: json['description'] as String,
       modelTypeId: json['modeltypeid'] as int,
       modelType: ModelType.fromJson(json['modeltype'] as Map<String, dynamic>),
-      shareOnSale: json['shareOnSale'] as int,
+      sharesOnSale: json['sharesOnSale'] as int,
     );
   }
 }

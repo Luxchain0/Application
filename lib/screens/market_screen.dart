@@ -96,7 +96,7 @@ class _MarketScreenState extends State<MarketScreen> {
                               serialNumber: watch.watchId.toString(),
                               prezzoDiListino: watch.initialPrice.toInt(),
                               quoteTotali: watch.numberOfShares,
-                              pezziDisponibili: watch.shareOnSale,
+                              pezziDisponibili: watch.sharesOnSale,
                               incremento: 0))
                           .toList(),
                     );
