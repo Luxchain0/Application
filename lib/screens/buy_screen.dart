@@ -32,7 +32,6 @@ class _BuyScreenState extends State<BuyScreen> {
     });
   }
 
-
   doesTheUserHaveEnoughMoney() {
     return (_shareSelected <= buyInfo.numberOfShares &&
             (_shareSelected * buyInfo.proposalPrice) <= _moneyInTheWallet)
@@ -82,13 +81,25 @@ class _BuyScreenState extends State<BuyScreen> {
                       ),
                       borderRadius: const BorderRadius.all(Radius.circular(7))),
                   alignment: Alignment.center, // This is needed
-                  child: Padding(
-                    padding: EdgeInsets.all(heigh * 0.02),
-                    child: Image.network(
-                      buyInfo.image,
-                      fit: BoxFit.contain,
-                      height: heigh * 0.27,
-                    ),
+                  child: FutureBuilder<String>(
+                    future: buyInfo.image,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      } else if (snapshot.hasData) {
+                        return ClipRRect(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(7)),
+                          child: Image.network(
+                            snapshot.data!,
+                            fit: BoxFit
+                                .cover, // L'immagine si espanderà per riempire il contenitore
+                          ),
+                        );
+                      } else {
+                        return const Icon(Icons.error);
+                      }
+                    },
                   ),
                 ),
                 Text(

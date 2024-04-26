@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "63030829917",
+    "project_id": "luxchain-68dbe",
+    "storage_bucket": "luxchain-68dbe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:63030829917:android:ca3b046188575bcebebeb4",
+        "android_client_info": {
+          "package_name": "com.example.lux_chain"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAthlGAZfKlbFpYgOIHS5DuJHh2qKea_oI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

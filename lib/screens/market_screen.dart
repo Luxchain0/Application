@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lux_chain/screens/watch_screen.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/api_models.dart';
+import 'package:lux_chain/utilities/firestore.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 
 class MarketScreen extends StatefulWidget {
@@ -90,7 +91,7 @@ class _MarketScreenState extends State<MarketScreen> {
                           .map((watch) => CustomBottomBigCard(
                               screenWidth: width,
                               watchid: watch.watchId,
-                              img: watch.imageuri,
+                              imgFuture: getDownloadURL(watch.imageuri),
                               modelName: watch.modelType.model.modelname,
                               brandName: watch.modelType.model.brandname,
                               serialNumber: watch.watchId.toString(),
@@ -117,10 +118,10 @@ class _MarketScreenState extends State<MarketScreen> {
 
 class CustomBottomBigCard extends StatelessWidget {
   const CustomBottomBigCard({
-    super.key,
+    Key? key,
     required this.screenWidth,
     required this.watchid,
-    required this.img,
+    required this.imgFuture,
     required this.modelName,
     required this.brandName,
     required this.serialNumber,
@@ -128,13 +129,13 @@ class CustomBottomBigCard extends StatelessWidget {
     required this.quoteTotali,
     required this.pezziDisponibili,
     required this.incremento,
-  });
+  }) : super(key: key);
 
   final double screenWidth;
   final int watchid;
   final String modelName;
   final String brandName;
-  final String img;
+  final Future<String> imgFuture;
   final String serialNumber;
   final int prezzoDiListino;
   final int quoteTotali;
@@ -147,83 +148,98 @@ class CustomBottomBigCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 7),
       padding: const EdgeInsets.only(left: 15, right: 20, top: 10, bottom: 10),
       decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(
-            color: Colors.black26,
-            width: 1,
+        color: Colors.white,
+        border: Border.all(
+          color: Colors.black26,
+          width: 1,
+        ),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 2,
+            offset: Offset(3, 3), // Shadow position
           ),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 2,
-              offset: Offset(3, 3), // Shadow position
-            ),
-          ],
-          borderRadius: const BorderRadius.all(Radius.circular(7))),
-      child: Row(children: [
-        Column(children: [
+        ],
+        borderRadius: BorderRadius.circular(7),
+      ),
+      child: Row(
+        children: [
           Container(
-            margin: const EdgeInsets.only(right: 15),
-            alignment: Alignment.center, // This is needed
-            child: Image.network(
-              img,
-              fit: BoxFit.contain,
-              width: screenWidth * 0.19,
+            width: screenWidth * 0.25,
+            height: screenWidth * 0.25,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                color: Colors.black26,
+                width: 1,
+              ),
+              borderRadius: BorderRadius.circular(7),
+            ),
+            alignment: Alignment.center,
+            child: FutureBuilder<String>(
+              future: imgFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasData) {
+                  return ClipRRect(
+                    borderRadius: BorderRadius.circular(7),
+                    child: Image.network(
+                      snapshot.data!,
+                      fit: BoxFit.cover,
+                    ),
+                  );
+                } else {
+                  return const Icon(Icons.error);
+                }
+              },
             ),
           ),
-          SizedBox(height: screenWidth * 0.05),
-          Container(
-            padding: const EdgeInsets.all(5),
-            decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(3)),
-                color: Colors.lightGreen),
-            child: Text('$incremento%'),
-          ),
-        ]),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              modelName,
-              style: TextStyle(
+          SizedBox(width: screenWidth * 0.05),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                modelName,
+                style: TextStyle(
                   color: Colors.black38,
                   height: 1,
                   fontSize: screenWidth * 0.05,
-                  fontFamily: 'Bebas'),
-            ),
-            Text(
-              brandName,
-              style: TextStyle(
+                  fontFamily: 'Bebas',
+                ),
+              ),
+              Text(
+                brandName,
+                style: TextStyle(
                   color: Colors.black87,
                   height: 1,
                   fontSize: screenWidth * 0.055,
-                  fontFamily: 'Bebas'),
-            ),
-            Text('Serial: $serialNumber'),
-            SizedBox(height: screenWidth * 0.02),
-            Text('Prezzo di listino: $prezzoDiListino €'),
-            Text('Quote totali: $quoteTotali'),
-            Text('Quote disponibili: $pezziDisponibili'),
-            SizedBox(
-              height: screenWidth * 0.02,
-            ),
-            Row(
-              children: [
-                CustomButton(
-                  screenWidth: screenWidth,
-                  backgorundColor: const Color.fromARGB(255, 17, 45, 68),
-                  textColor: Colors.white,
-                  text: 'Vedi i dettagli',
-                  onPressed: () => {
-                    Navigator.pushNamed(context, WatchScreen.id, arguments: watchid),
-
-                  },
+                  fontFamily: 'Bebas',
                 ),
-              ],
-            )
-          ],
-        )
-      ]),
+              ),
+              Text('Serial: $serialNumber'),
+              SizedBox(height: screenWidth * 0.02),
+              Text('Prezzo di listino: $prezzoDiListino €'),
+              Text('Quote totali: $quoteTotali'),
+              Text('Quote disponibili: $pezziDisponibili'),
+              SizedBox(height: screenWidth * 0.02),
+              Row(
+                children: [
+                  CustomButton(
+                    screenWidth: screenWidth,
+                    backgorundColor: const Color.fromARGB(255, 17, 45, 68),
+                    textColor: Colors.white,
+                    text: 'Vedi i dettagli',
+                    onPressed: () => Navigator.pushNamed(
+                        context, WatchScreen.id,
+                        arguments: watchid),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -241,9 +257,7 @@ class CustomButton extends StatelessWidget {
       required this.backgorundColor,
       required this.textColor,
       required this.text,
-      required this.onPressed
-      });
-
+      required this.onPressed});
 
   @override
   Widget build(BuildContext context) {

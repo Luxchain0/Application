@@ -4,6 +4,7 @@ import 'package:lux_chain/screens/buy_screen.dart';
 import 'package:lux_chain/screens/sell_screen.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/api_models.dart';
+import 'package:lux_chain/utilities/firestore.dart';
 import 'package:lux_chain/utilities/models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:lux_chain/utilities/frame.dart';
@@ -85,21 +86,37 @@ class _WatchScreenState extends State<WatchScreen> {
                         Container(
                           margin: EdgeInsets.symmetric(vertical: heigh * 0.02),
                           decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(
-                                color: Colors.black26,
-                                width: 1,
-                              ),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(7))),
-                          alignment: Alignment.center, // This is needed
-                          child: Padding(
-                            padding: EdgeInsets.all(heigh * 0.02),
-                            child: Image.network(
-                              watch.imageuri,
-                              fit: BoxFit.cover,
-                              height: heigh * 0.3,
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Colors.black26,
+                              width: 1,
                             ),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(7)),
+                          ),
+                          alignment: Alignment.center,
+                          child: FutureBuilder<String>(
+                            future: getDownloadURL(watch.imageuri),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const CircularProgressIndicator();
+                              } else if (snapshot.hasData) {
+                                return ClipRRect(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(7)),
+                                  child: Image.network(
+                                    snapshot.data!,
+                                    fit: BoxFit
+                                        .cover, // L'immagine si espanderà per riempire il contenitore
+                                  ),
+                                );
+                              } else if (snapshot.hasError) {
+                                return const Icon(Icons.error);
+                              } else {
+                                return const SizedBox();
+                              }
+                            },
                           ),
                         ),
                         Text("Referenza: ${watch.modelType.reference}"),
@@ -169,7 +186,7 @@ class _WatchScreenState extends State<WatchScreen> {
                                           watch.modelType.model.modelname,
                                       actualPrice: watch.actualPrice,
                                       totalNumberOfShares: watch.numberOfShares,
-                                      image: watch.imageuri,
+                                      image: getDownloadURL(watch.imageuri),
                                       proposalPrice: watch.actualPrice,
                                       numberOfShares: watch
                                           .numberOfShares, // TODO: Change this
@@ -251,8 +268,8 @@ class _WatchScreenState extends State<WatchScreen> {
                                                       watch.actualPrice,
                                                   totalNumberOfShares:
                                                       watch.numberOfShares,
-                                                  image:
-                                                      watch.imageuri,
+                                                  image: getDownloadURL(
+                                                      watch.imageuri),
                                                   proposalPrice: share.price,
                                                   numberOfShares:
                                                       share.shareCount,

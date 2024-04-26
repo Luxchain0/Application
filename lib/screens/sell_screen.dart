@@ -56,13 +56,25 @@ class _SellScreenState extends State<SellScreen> {
                       ),
                       borderRadius: const BorderRadius.all(Radius.circular(7))),
                   alignment: Alignment.center, // This is needed
-                  child: Padding(
-                    padding: EdgeInsets.all(heigh * 0.02),
-                    child: Image.network(
-                      sellInfo.image,
-                      fit: BoxFit.contain,
-                      height: heigh * 0.27,
-                    ),
+                  child: FutureBuilder<String>(
+                    future: sellInfo.image,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      } else if (snapshot.hasData) {
+                        return ClipRRect(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(7)),
+                          child: Image.network(
+                            snapshot.data!,
+                            fit: BoxFit
+                                .cover, // L'immagine si espanderà per riempire il contenitore
+                          ),
+                        );
+                      } else {
+                        return const Icon(Icons.error);
+                      }
+                    },
                   ),
                 ),
                 Text(

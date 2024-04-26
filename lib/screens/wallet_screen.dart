@@ -3,6 +3,7 @@ import 'package:lux_chain/screens/wallet_specs_screen.dart';
 import 'package:lux_chain/screens/watch_screen.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/api_models.dart';
+import 'package:lux_chain/utilities/firestore.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:lux_chain/utilities/utils.dart';
 
@@ -167,7 +168,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                           return CustomBottomBigCard(
                                             watchID: watch.watchid,
                                             screenWidth: width,
-                                            imgUrl: watch.imageuri,
+                                            imgUrl: getDownloadURL(watch.imageuri),
                                             reference:
                                                 watch.modeltype.reference,
                                             modelName:
@@ -214,28 +215,28 @@ class _WalletScreenState extends State<WalletScreen> {
 
 class CustomBottomBigCard extends StatelessWidget {
   const CustomBottomBigCard({
-    super.key,
+    Key? key,
     required this.watchID,
-    required this.screenWidth, //
-    required this.imgUrl, //
+    required this.screenWidth,
+    required this.imgUrl,
     required this.reference,
-    required this.modelName, //
-    required this.brandName, //
-    required this.serialNumber, //
-    required this.valoreAttuale, //
-    required this.initialPrice, //
-    required this.quotePossedute, //
-    required this.quoteTotali, //
-    required this.controvalore, //
-    required this.increaseRate, //
-  });
+    required this.modelName,
+    required this.brandName,
+    required this.serialNumber,
+    required this.valoreAttuale,
+    required this.initialPrice,
+    required this.quotePossedute,
+    required this.quoteTotali,
+    required this.controvalore,
+    required this.increaseRate,
+  }) : super(key: key);
 
   final int watchID;
   final double screenWidth;
+  final Future<String> imgUrl;
   final String reference;
   final String modelName;
   final String brandName;
-  final String imgUrl;
   final String serialNumber;
   final int quotePossedute;
   final int quoteTotali;
@@ -247,79 +248,99 @@ class CustomBottomBigCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () =>
-          {Navigator.of(context).pushNamed(WatchScreen.id, arguments: watchID)},
+      onTap: () => Navigator.of(context).pushNamed(WatchScreen.id, arguments: watchID),
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 7),
         padding: const EdgeInsets.only(top: 10, bottom: 10),
         decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(
-              color: Colors.black26,
-              width: 1,
-            ),
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 2,
-                offset: Offset(3, 3), // Shadow position
-              ),
-            ],
-            borderRadius: const BorderRadius.all(Radius.circular(7))),
-        child: Row(children: [
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
-            child: Column(children: [
-              Container(
-                margin: const EdgeInsets.only(right: 0),
-                alignment: Alignment.center, // This is needed
-                child: Image.network(
-                  // Utilizzo di Image.network per caricare l'immagine da un URL
-                  imgUrl, // Utilizzo dell'URL dell'immagine
-                  fit: BoxFit.contain,
-                  width: screenWidth * 0.22,
-                ),
-              ),
-              SizedBox(height: screenWidth * 0.07),
-              Container(
-                padding: const EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(3)),
-                    color: (increaseRate > 0) ? Colors.lightGreen : Colors.red),
-                child: Text('$increaseRate%'),
-              ),
-            ]),
+          color: Colors.white,
+          border: Border.all(
+            color: Colors.black26,
+            width: 1,
           ),
-          const SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                brandName,
-                style: TextStyle(
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 2,
+              offset: Offset(3, 3), // Shadow position
+            ),
+          ],
+          borderRadius: const BorderRadius.all(Radius.circular(7)),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+              child: Column(
+                children: [
+                  FutureBuilder<String>(
+                    future: imgUrl,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      } else if (snapshot.hasData) {
+                        return Container(
+                          margin: const EdgeInsets.only(right: 0),
+                          alignment: Alignment.center,
+                          child: Image.network(
+                            snapshot.data!,
+                            fit: BoxFit.contain,
+                            width: screenWidth * 0.22,
+                          ),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        return const Text('Image not found');
+                      }
+                    },
+                  ),
+                  SizedBox(height: screenWidth * 0.07),
+                  Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(3)),
+                      color: (increaseRate > 0) ? Colors.lightGreen : Colors.red,
+                    ),
+                    child: Text('$increaseRate%'),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  brandName,
+                  style: TextStyle(
                     color: Colors.black38,
                     height: 1,
                     fontSize: screenWidth * 0.05,
-                    fontFamily: 'Bebas'),
-              ),
-              Text(
-                modelName,
-                style: TextStyle(
+                    fontFamily: 'Bebas',
+                  ),
+                ),
+                Text(
+                  modelName,
+                  style: TextStyle(
                     color: Colors.black87,
                     height: 1,
                     fontSize: screenWidth * 0.055,
-                    fontFamily: 'Bebas'),
-              ),
-              Text('Reference: $reference'),
-              SizedBox(height: screenWidth * 0.02),
-              Text('Quote Possedute: $quotePossedute/$quoteTotali'),
-              Text('Controvalore: $controvalore €'),
-              Text('Valore iniziale: $initialPrice €'),
-              Text('Valore attuale: $valoreAttuale €'),
-            ],
-          )
-        ]),
+                    fontFamily: 'Bebas',
+                  ),
+                ),
+                Text('Reference: $reference'),
+                SizedBox(height: screenWidth * 0.02),
+                Text('Quote Possedute: $quotePossedute/$quoteTotali'),
+                Text('Controvalore: $controvalore €'),
+                Text('Valore iniziale: $initialPrice €'),
+                Text('Valore attuale: $valoreAttuale €'),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
 }
+

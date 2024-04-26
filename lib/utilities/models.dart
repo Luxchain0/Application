@@ -6,7 +6,7 @@ class BuyInfo {
   final double proposalPrice;
   final int totalNumberOfShares;
   final int numberOfShares;
-  final String image;
+  final Future<String> image;
 
   const BuyInfo({
     required this.watchid,
@@ -29,7 +29,7 @@ class SellInfo {
   final double proposalPrice;
   final int totalNumberOfShares;
   final int numberOfShares;
-  final String image;
+  final Future<String> image;
 
   const SellInfo({
     required this.watchid,

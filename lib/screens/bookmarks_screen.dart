@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:lux_chain/screens/watch_screen.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/api_models.dart';
+import 'package:lux_chain/utilities/firestore.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 
 class BookmarksScreen extends StatefulWidget {
@@ -59,7 +60,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                                   return CustomBottomBigCard(
                                     watchID: watch.watchid,
                                     screenWidth: width,
-                                    imgUrl: watch.imageuri,
+                                    imgUrl: getDownloadURL(watch.imageuri),
                                     modelName: watch.watchid.toString(),
                                     brandName: watch.modeltype.model.modelname,
                                     serialNumber: watch.watchid.toString(),
@@ -111,7 +112,7 @@ class CustomBottomBigCard extends StatelessWidget {
   final double screenWidth;
   final String modelName;
   final String brandName;
-  final String imgUrl;
+  final Future<String> imgUrl;
   final String serialNumber;
   final int quotePossedute;
   final int quoteTotali;
@@ -146,16 +147,28 @@ class CustomBottomBigCard extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
             child: Column(children: [
-              Container(
-                margin: const EdgeInsets.only(right: 0),
-                alignment: Alignment.center, // This is needed
-                child: Image.network(
-                  // Utilizzo di Image.network per caricare l'immagine da un URL
-                  imgUrl, // Utilizzo dell'URL dell'immagine
-                  fit: BoxFit.contain,
-                  width: screenWidth * 0.22,
-                ),
-              ),
+              FutureBuilder<String>(
+                  future: imgUrl,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshot.hasData) {
+                      return Container(
+                        margin: const EdgeInsets.only(right: 0),
+                        alignment: Alignment.center, // This is needed
+                        child: Image.network(
+                          // Utilizzo di Image.network per caricare l'immagine da un URL
+                          snapshot.data!, // Utilizzo dell'URL dell'immagine
+                          fit: BoxFit.contain,
+                          width: screenWidth * 0.22,
+                        ),
+                      );
+                    } else if (snapshot.hasError) {
+                      return const Icon(Icons.error);
+                    } else {
+                      return const SizedBox();
+                    }
+                  }),
               SizedBox(height: screenWidth * 0.07),
               Container(
                 padding: const EdgeInsets.all(5),

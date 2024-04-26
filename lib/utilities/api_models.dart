@@ -285,7 +285,7 @@ class WalletWatch {
       modeltypeid: json['modeltypeid'] as int,
       modeltype: ModelType.fromJson(json['modeltype'] as Map<String, dynamic>),
       owned: json['owned'] as int,
-      increaseRate: customDoubleParser(['increaseRate'] as num),
+      increaseRate: json['increaseRate'] as double,
     );
   }
 }
