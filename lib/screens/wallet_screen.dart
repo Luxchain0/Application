@@ -178,13 +178,13 @@ class _WalletScreenState extends State<WalletScreen> {
                                                 watch.modeltype.model.brandname,
                                             serialNumber:
                                                 watch.watchid.toString(),
-                                            valoreAttuale: 0,
-                                            valoreDiAcquisto:
+                                            valoreAttuale: watch.actualprice,
+                                            initialPrice:
                                                 watch.initialprice,
                                             quotePossedute: watch.owned,
                                             quoteTotali: watch.numberofshares,
                                             controvalore: 0,
-                                            incremento: 0,
+                                            increaseRate: watch.increaseRate,
                                           );
                                         },
                                       ).toList(),
@@ -225,11 +225,11 @@ class CustomBottomBigCard extends StatelessWidget {
     required this.brandName, //
     required this.serialNumber, //
     required this.valoreAttuale, //
-    required this.valoreDiAcquisto, //
+    required this.initialPrice, //
     required this.quotePossedute, //
     required this.quoteTotali, //
     required this.controvalore, //
-    required this.incremento, //
+    required this.increaseRate, //
   });
 
   final int watchID;
@@ -242,9 +242,9 @@ class CustomBottomBigCard extends StatelessWidget {
   final int quotePossedute;
   final int quoteTotali;
   final double controvalore;
-  final double valoreDiAcquisto;
+  final double initialPrice;
   final double valoreAttuale;
-  final double incremento;
+  final double increaseRate;
 
   @override
   Widget build(BuildContext context) {
@@ -285,10 +285,10 @@ class CustomBottomBigCard extends StatelessWidget {
               SizedBox(height: screenWidth * 0.07),
               Container(
                 padding: const EdgeInsets.all(5),
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(3)),
-                    color: Colors.lightGreen),
-                child: Text('$incremento%'),
+                decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(3)),
+                    color: (increaseRate > 0) ? Colors.lightGreen : Colors.red),
+                child: Text('$increaseRate%'),
               ),
             ]),
           ),
@@ -316,7 +316,7 @@ class CustomBottomBigCard extends StatelessWidget {
               SizedBox(height: screenWidth * 0.02),
               Text('Quote Possedute: $quotePossedute/$quoteTotali'),
               Text('Controvalore: $controvalore €'),
-              Text('Valore di acquisto: $valoreDiAcquisto €'),
+              Text('Valore iniziale: $initialPrice €'),
               Text('Valore attuale: $valoreAttuale €'),
             ],
           )

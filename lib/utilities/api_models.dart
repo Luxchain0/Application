@@ -251,6 +251,7 @@ class WalletWatch {
   final int modeltypeid;
   final ModelType modeltype;
   final int owned;
+  final double increaseRate;
 
   const WalletWatch({
     required this.watchid,
@@ -265,6 +266,7 @@ class WalletWatch {
     required this.modeltypeid,
     required this.modeltype,
     required this.owned,
+    required this.increaseRate,
   });
 
   factory WalletWatch.fromJson(Map<String, dynamic> json) {
@@ -281,6 +283,7 @@ class WalletWatch {
       modeltypeid: json['modeltypeid'] as int,
       modeltype: ModelType.fromJson(json['modeltype'] as Map<String, dynamic>),
       owned: json['owned'] as int,
+      increaseRate: json['increaseRate'] as double,
     );
   }
 }
