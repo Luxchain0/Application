@@ -7,6 +7,7 @@ import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:lux_chain/utilities/frame.dart';
+import 'package:lux_chain/utilities/utils.dart';
 
 class WatchScreen extends StatefulWidget {
   static const String id = 'WatchScreen';
@@ -311,7 +312,7 @@ class CustomRowForQuote extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  "$quotePrice €",
+                  "${formatter.format(quotePrice)} €",
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.black,

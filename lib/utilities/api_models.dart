@@ -1,3 +1,5 @@
+import 'package:lux_chain/utilities/utils.dart';
+
 enum APIStatus {
   success,
   error,
@@ -49,7 +51,7 @@ class ModelType {
   final String braceletmaterial;
   final String casematerial;
   final String diameter;
-  
+
   final int modelid;
   final Model model;
 
@@ -110,7 +112,7 @@ class ShareOnSale {
 
   factory ShareOnSale.fromJson(Map<String, dynamic> json) {
     return ShareOnSale(
-      price: json['price'] as double,
+      price: customDoubleParser(json['price']),
       shareCount: json['shareCount'] as int,
     );
   }
@@ -283,7 +285,7 @@ class WalletWatch {
       modeltypeid: json['modeltypeid'] as int,
       modeltype: ModelType.fromJson(json['modeltype'] as Map<String, dynamic>),
       owned: json['owned'] as int,
-      increaseRate: json['increaseRate'] as double,
+      increaseRate: customDoubleParser(['increaseRate'] as num),
     );
   }
 }
@@ -334,8 +336,8 @@ class Watch {
 
 class WalletData {
   final double liquidity;
-  final int inShares; // TODO: modify this to be a double
-  final int rate;
+  final double inShares;
+  final double rate;
 
   const WalletData({
     required this.liquidity,
@@ -345,11 +347,9 @@ class WalletData {
 
   factory WalletData.fromJson(Map<String, dynamic> json) {
     return WalletData(
-      liquidity: (json['liquidity'] is int)
-          ? (json['liquidity'] as int).toDouble()
-          : json['liquidity'] as double,
-      inShares: json['inShares'] as int,
-      rate: json['rate'] as int,
+      liquidity: customDoubleParser(json['liquidity'] as num),
+      inShares: customDoubleParser(json['inShares'] as num),
+      rate: customDoubleParser(json['rate'] as num),
     );
   }
 }

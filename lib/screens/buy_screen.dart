@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
+import 'package:lux_chain/utilities/utils.dart';
 
 class BuyScreen extends StatefulWidget {
   static const String id = 'BuyScreen';
@@ -32,7 +32,6 @@ class _BuyScreenState extends State<BuyScreen> {
     });
   }
 
-  var formatter = NumberFormat("#,##0.00", "en_US");
 
   doesTheUserHaveEnoughMoney() {
     return (_shareSelected <= buyInfo.numberOfShares &&
