@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lux_chain/screens/buy_screen.dart';
 import 'package:lux_chain/screens/market_screen.dart';
+import 'package:lux_chain/screens/modify_on_sale_share.dart';
 import 'package:lux_chain/screens/sell_screen.dart';
 import 'package:lux_chain/screens/wallet_screen.dart';
 import 'package:lux_chain/screens/watch_screen.dart';
@@ -43,6 +44,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const MarketScreen());
       case FrameScreen.id:
         return MaterialPageRoute(builder: (_) => const FrameScreen());
+      case ModifyOnSaleShareScreen.id:
+        return MaterialPageRoute(builder: (_) => const ModifyOnSaleShareScreen());
       case WatchScreen.id:
         if (args is int) {
           return MaterialPageRoute(builder: (_) => WatchScreen(watchID: args));

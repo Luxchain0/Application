@@ -4,6 +4,7 @@ import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/firestore.dart';
 import 'package:lux_chain/utilities/size_config.dart';
+import 'package:lux_chain/utilities/utils.dart';
 
 class MarketScreen extends StatefulWidget {
   static const String id = 'MarketScreen';
@@ -219,7 +220,7 @@ class CustomBottomBigCard extends StatelessWidget {
               ),
               Text('Serial: $serialNumber'),
               SizedBox(height: screenWidth * 0.02),
-              Text('Prezzo di listino: $prezzoDiListino €'),
+              Text('Prezzo di listino: ' + formatAmountFromInt(prezzoDiListino) + '€'),
               Text('Quote totali: $quoteTotali'),
               Text('Quote disponibili: $pezziDisponibili'),
               SizedBox(height: screenWidth * 0.02),

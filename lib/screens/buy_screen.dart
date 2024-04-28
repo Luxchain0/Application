@@ -166,7 +166,7 @@ class _BuyScreenState extends State<BuyScreen> {
                               }),
                     ),
                     Text(
-                      'Totale: ${formatter.format(_shareSelected * buyInfo.proposalPrice)}',
+                      'Totale: ' + formatAmountFromDouble(_shareSelected * buyInfo.proposalPrice) + " €",
                       style: TextStyle(
                           fontSize: heigh * 0.023, fontWeight: FontWeight.bold),
                     ),

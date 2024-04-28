@@ -67,21 +67,35 @@ class _WatchScreenState extends State<WatchScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-                        Text(
-                          watch.modelType.model.brandname,
-                          style: TextStyle(
-                              color: Colors.black38,
-                              height: 1,
-                              fontSize: width * 0.07,
-                              fontFamily: 'Bebas'),
-                        ),
-                        Text(
-                          watch.modelType.model.modelname,
-                          style: TextStyle(
-                              color: Colors.black87,
-                              height: 1,
-                              fontSize: width * 0.08,
-                              fontFamily: 'Bebas'),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  watch.modelType.model.brandname,
+                                  style: TextStyle(
+                                    color: Colors.black38,
+                                    height: 1,
+                                    fontSize: width * 0.07,
+                                    fontFamily: 'Bebas'),
+                                ),
+                                Text(
+                                  watch.modelType.model.modelname,
+                                  style: TextStyle(
+                                    color: Colors.black87,
+                                    height: 1,
+                                    fontSize: width * 0.08,
+                                    fontFamily: 'Bebas'),
+                                ),
+                              ],
+                            ),
+                            IconButton(
+                              onPressed: () => {}, 
+                              icon: Icon(Icons.favorite_border_outlined)
+                            )
+                          ],
                         ),
                         Container(
                           margin: EdgeInsets.symmetric(vertical: heigh * 0.02),
@@ -329,7 +343,7 @@ class CustomRowForQuote extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  "${formatter.format(quotePrice)} €",
+                  formatAmountFromDouble(quotePrice),
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.black,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lux_chain/screens/history_screen.dart';
 //import 'package:lux_chain/screens/home_screen.dart';
 import 'package:lux_chain/screens/market_screen.dart';
+import 'package:lux_chain/screens/my_shares_screen.dart';
 import 'package:lux_chain/screens/wallet_screen.dart';
 import 'package:lux_chain/screens/bookmarks_screen.dart';
 import 'package:lux_chain/screens/settings_screen.dart';
@@ -22,8 +24,8 @@ class _FrameScreenState extends State<FrameScreen> {
   List<Widget> pages = const [
     WalletScreen(),
     MarketScreen(),
-    WatchScreen(watchID: 1), //Le quote che hai in vendita //TODO
-    WatchTinderScreen(), //Ultime quote che hai comprato o venduto
+    MySharesScreen(), //Le quote che hai in vendita //TODO
+    HistoryScreen(), //Ultime quote che hai comprato o venduto
     BookmarksScreen(), //Preferiti
     SettingsScreen(),
   ];
@@ -49,7 +51,7 @@ class _FrameScreenState extends State<FrameScreen> {
             NavigationDestination(
                 icon: Icon(Icons.alarm_outlined), label: 'History'),
             NavigationDestination(
-                icon: Icon(Icons.star_rounded), label: 'Favourites'),
+                icon: Icon(Icons.favorite_rounded), label: 'Favourites'),
             NavigationDestination(
                 icon: Icon(Icons.settings_rounded), label: 'Settings'),
           ],

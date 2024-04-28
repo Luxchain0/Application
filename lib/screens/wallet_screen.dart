@@ -76,8 +76,7 @@ class _WalletScreenState extends State<WalletScreen> {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                formatter.format(
-                                    walletData.inShares + walletData.liquidity),
+                                formatAmountFromDouble(walletData.inShares + walletData.liquidity),
                                 style: TextStyle(
                                     color: Colors.black87,
                                     height: 1,
@@ -111,11 +110,11 @@ class _WalletScreenState extends State<WalletScreen> {
                         ),
                       ),
                       Text(
-                        'In collezioni: ${formatter.format(walletData.inShares)} €',
+                        'In collezioni: ' + formatAmountFromDouble(walletData.inShares) + ' €',
                         style: TextStyle(fontSize: width * 0.04),
                       ),
                       Text(
-                        'Liquidi: ${formatter.format(walletData.liquidity)} €',
+                        'Liquidi: ' + formatAmountFromDouble(walletData.liquidity) + ' €',
                         style: TextStyle(fontSize: width * 0.04),
                       ),
                       SizedBox(
@@ -285,7 +284,7 @@ class CustomBottomBigCard extends StatelessWidget {
                           child: Image.network(
                             snapshot.data!,
                             fit: BoxFit.contain,
-                            width: screenWidth * 0.22,
+                            width: screenWidth * 0.27,
                           ),
                         );
                       } else if (snapshot.hasError) {
@@ -295,7 +294,7 @@ class CustomBottomBigCard extends StatelessWidget {
                       }
                     },
                   ),
-                  SizedBox(height: screenWidth * 0.07),
+                  SizedBox(height: screenWidth * 0.05),
                   Container(
                     padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
@@ -333,8 +332,8 @@ class CustomBottomBigCard extends StatelessWidget {
                 SizedBox(height: screenWidth * 0.02),
                 Text('Quote Possedute: $quotePossedute/$quoteTotali'),
                 Text('Controvalore: $controvalore €'),
-                Text('Valore iniziale: $initialPrice €'),
-                Text('Valore attuale: $valoreAttuale €'),
+                Text('Prezzo di listino: ' + formatAmountFromDouble(initialPrice) + '€'),
+                Text('Prezzo di listino: ' + formatAmountFromDouble(valoreAttuale) + '€'),
               ],
             ),
           ],

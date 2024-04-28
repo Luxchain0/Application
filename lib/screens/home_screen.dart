@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lux_chain/utilities/size_config.dart';
+import 'package:lux_chain/utilities/utils.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'HomeScreen';
@@ -199,9 +200,9 @@ class CustomBottomBigCard extends StatelessWidget {
             ),
             Text('Serial: $serialNumber'),
             SizedBox(height: screenWidth * 0.02),
-            Text('Prezzo di listino: $prezzoDiListino €'),
-            Text('Quotazione attuale: $quotazioneAttuale €'),
-            Text('Valore quota attuale: $valoreQuotaAttuale €'),
+            Text('Prezzo di listino: ' + formatAmountFromInt(prezzoDiListino) + '€'),
+            Text('Quotazione attuale: ' + formatAmountFromInt(quotazioneAttuale) + '€'),
+            Text('Valore quota attuale: ' + formatAmountFromInt(valoreQuotaAttuale) + '€'),
             Text('Quote totali: $quoteTotali'),
             Text('Quote disponibili: $quoteDisponibili'),
             SizedBox(
