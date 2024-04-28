@@ -6,8 +6,6 @@ import 'package:lux_chain/screens/my_shares_screen.dart';
 import 'package:lux_chain/screens/wallet_screen.dart';
 import 'package:lux_chain/screens/bookmarks_screen.dart';
 import 'package:lux_chain/screens/settings_screen.dart';
-import 'package:lux_chain/screens/watch_screen.dart';
-import 'package:lux_chain/screens/watch_tinder_screen.dart';
 //import 'package:lux_chain/screens/bottom_bar/buy_screen.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 
