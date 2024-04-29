@@ -10,7 +10,6 @@ import 'package:http/http.dart' as http;
 import 'sign_in/sign_in_button.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/size_config.dart';
-import 'package:fl_chart/fl_chart.dart';
 
 /// The scopes required by this application.
 // #docregion Initialize
