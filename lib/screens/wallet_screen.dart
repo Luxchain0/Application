@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lux_chain/screens/wallet_specs_screen.dart';
+import 'package:lux_chain/screens/login.dart';
+//import 'package:lux_chain/screens/wallet_specs_screen.dart';
 import 'package:lux_chain/screens/watch_screen.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/api_models.dart';
@@ -66,8 +67,8 @@ class _WalletScreenState extends State<WalletScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    const WalletSpecsScreen()),
+                              builder: (context) => const Login(),
+                            ),
                           );
                         },
                         child: Container(
@@ -76,7 +77,8 @@ class _WalletScreenState extends State<WalletScreen> {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                formatAmountFromDouble(walletData.inShares + walletData.liquidity),
+                                formatAmountFromDouble(
+                                    walletData.inShares + walletData.liquidity),
                                 style: TextStyle(
                                     color: Colors.black87,
                                     height: 1,
@@ -110,11 +112,15 @@ class _WalletScreenState extends State<WalletScreen> {
                         ),
                       ),
                       Text(
-                        'In collezioni: ' + formatAmountFromDouble(walletData.inShares) + ' €',
+                        'In collezioni: ' +
+                            formatAmountFromDouble(walletData.inShares) +
+                            ' €',
                         style: TextStyle(fontSize: width * 0.04),
                       ),
                       Text(
-                        'Liquidi: ' + formatAmountFromDouble(walletData.liquidity) + ' €',
+                        'Liquidi: ' +
+                            formatAmountFromDouble(walletData.liquidity) +
+                            ' €',
                         style: TextStyle(fontSize: width * 0.04),
                       ),
                       SizedBox(
@@ -167,7 +173,8 @@ class _WalletScreenState extends State<WalletScreen> {
                                           return CustomBottomBigCard(
                                             watchID: watch.watchid,
                                             screenWidth: width,
-                                            imgUrl: getDownloadURL(watch.imageuri),
+                                            imgUrl:
+                                                getDownloadURL(watch.imageuri),
                                             reference:
                                                 watch.modeltype.reference,
                                             modelName:
@@ -177,8 +184,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                             serialNumber:
                                                 watch.watchid.toString(),
                                             valoreAttuale: watch.actualprice,
-                                            initialPrice:
-                                                watch.initialprice,
+                                            initialPrice: watch.initialprice,
                                             quotePossedute: watch.owned,
                                             quoteTotali: watch.numberofshares,
                                             controvalore: 0,
@@ -247,7 +253,8 @@ class CustomBottomBigCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.of(context).pushNamed(WatchScreen.id, arguments: watchID),
+      onTap: () =>
+          Navigator.of(context).pushNamed(WatchScreen.id, arguments: watchID),
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 7),
         padding: const EdgeInsets.only(top: 10, bottom: 10),
@@ -299,7 +306,8 @@ class CustomBottomBigCard extends StatelessWidget {
                     padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(3)),
-                      color: (increaseRate > 0) ? Colors.lightGreen : Colors.red,
+                      color:
+                          (increaseRate > 0) ? Colors.lightGreen : Colors.red,
                     ),
                     child: Text('$increaseRate%'),
                   ),
@@ -332,8 +340,12 @@ class CustomBottomBigCard extends StatelessWidget {
                 SizedBox(height: screenWidth * 0.02),
                 Text('Quote Possedute: $quotePossedute/$quoteTotali'),
                 Text('Controvalore: $controvalore €'),
-                Text('Prezzo di listino: ' + formatAmountFromDouble(initialPrice) + '€'),
-                Text('Prezzo di listino: ' + formatAmountFromDouble(valoreAttuale) + '€'),
+                Text('Prezzo di listino: ' +
+                    formatAmountFromDouble(initialPrice) +
+                    '€'),
+                Text('Prezzo di listino: ' +
+                    formatAmountFromDouble(valoreAttuale) +
+                    '€'),
               ],
             ),
           ],
@@ -342,4 +354,3 @@ class CustomBottomBigCard extends StatelessWidget {
     );
   }
 }
-
