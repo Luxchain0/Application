@@ -7,8 +7,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
-
 import 'sign_in/sign_in_button.dart';
+import 'package:lux_chain/utilities/frame.dart';
+import 'package:lux_chain/utilities/size_config.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 /// The scopes required by this application.
 // #docregion Initialize
@@ -215,10 +217,11 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
+    double width = SizeConfig.screenW!;
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Google Sign In'),
-      ),
+      appBar: appBar(width),
       body: ConstrainedBox(
         constraints: const BoxConstraints.expand(),
         child: _buildBody(),
