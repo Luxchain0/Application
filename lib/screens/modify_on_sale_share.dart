@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
@@ -9,17 +10,53 @@ class ModifyOnSaleShareScreen extends StatefulWidget {
   const ModifyOnSaleShareScreen({required this.modifySharesOnSale, super.key});
 
   @override
-  // ignore: no_logic_in_create_state
-  State<ModifyOnSaleShareScreen> createState() => _ModifyOnSaleShareScreenState(modifySharesOnSale: modifySharesOnSale);
+  State<ModifyOnSaleShareScreen> createState() =>
+      _ModifyOnSaleShareScreenState();
 }
 
 class _ModifyOnSaleShareScreenState extends State<ModifyOnSaleShareScreen> {
-  final ModifySharesOnSale modifySharesOnSale;
+  late ModifySharesOnSale modifySharesOnSale;
 
-  _ModifyOnSaleShareScreenState({required this.modifySharesOnSale});
   @override
   void initState() {
     super.initState();
+    modifySharesOnSale = widget.modifySharesOnSale;
+  }
+
+  Future<void> _saveChanges() async {
+    try {
+      await updateSharesOnSale(
+        modifySharesOnSale.watchid, // watchId
+        1, // TODO: get this
+        modifySharesOnSale.proposalPrice, // oldPrice
+        modifySharesOnSale.proposalPrice, // newPrice
+        modifySharesOnSale.onSaleAtPrice, // numberOfShares
+      );
+
+      setState(() {});
+
+    } catch (e) {
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Errore'),
+              content: const Text(
+                  'Si è verificato un errore durante il salvataggio delle modifiche.'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Chiudi'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    }
   }
 
   @override
@@ -27,7 +64,6 @@ class _ModifyOnSaleShareScreenState extends State<ModifyOnSaleShareScreen> {
     SizeConfig().init(context);
     double heigh = SizeConfig.screenH!;
     double width = SizeConfig.screenW!;
-    
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -59,25 +95,25 @@ class _ModifyOnSaleShareScreenState extends State<ModifyOnSaleShareScreen> {
                     borderRadius: const BorderRadius.all(Radius.circular(7))),
                 alignment: Alignment.center, // This is needed
                 child: FutureBuilder<String>(
-                    future: modifySharesOnSale.image,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator();
-                      } else if (snapshot.hasData) {
-                        return ClipRRect(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(7)),
-                          child: Image.network(
-                            snapshot.data!,
-                            fit: BoxFit
-                                .cover, // L'immagine si espanderà per riempire il contenitore
-                          ),
-                        );
-                      } else {
-                        return const Icon(Icons.error);
-                      }
-                    },
-                  ),
+                  future: modifySharesOnSale.image,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshot.hasData) {
+                      return ClipRRect(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(7)),
+                        child: Image.network(
+                          snapshot.data!,
+                          fit: BoxFit
+                              .cover, // L'immagine si espanderà per riempire il contenitore
+                        ),
+                      );
+                    } else {
+                      return const Icon(Icons.error);
+                    }
+                  },
+                ),
               ),
               Text(
                 modifySharesOnSale.brandName,
@@ -105,52 +141,57 @@ class _ModifyOnSaleShareScreenState extends State<ModifyOnSaleShareScreen> {
               SizedBox(
                 height: heigh * 0.02,
               ),
-              Text('Quote possedute: ${modifySharesOnSale.ownedShares}'),
+              Text('Quote possedute: ${modifySharesOnSale.sharesOwned}'),
+              Text(
+                  'Quote possedute in vendita: ${modifySharesOnSale.sharesOnSale}'),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text("Quote in vendita:"),
                   CircleAvatar(
-              radius: width*0.05,
-              backgroundColor: const Color.fromARGB(228, 118, 196, 241),
-              child: IconButton(
-                icon: const Icon(
-                  Icons.remove,
-                  color: Colors.black,
-                ),
-                onPressed: () {
-                  //TODO: controllo che il minimo raggiungibile sia 0
-                },
-              ),
-            ),
-            Text("${modifySharesOnSale.onSaleShares}"),
-            CircleAvatar(
-              radius: width * 0.05,
-              backgroundColor: const Color.fromARGB(226, 102, 176, 255),
-              child: IconButton(
-                icon: const Icon(
-                  Icons.add,
-                  color: Colors.black,
-                ),
-                onPressed: () {
-                  //TODO: inserire controllo che il massimo non superi le quote possedute
-                  //TODO: come gestire i diversi prezzi sullo stesso orologio? Bisogna trovare un modo per controllare tutte le quote
-                },
-              ),
-            ),
+                    radius: width * 0.05,
+                    backgroundColor: const Color.fromARGB(228, 118, 196, 241),
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.remove,
+                        color: Colors.black,
+                      ),
+                      onPressed: modifySharesOnSale.sharesOnSale > 0 ? () {
+                        modifySharesOnSale.decreaseShareOnSale();
+                        _saveChanges();
+                      } : null,
+                    ),
+                  ),
+                  Text("${modifySharesOnSale.onSaleAtPrice}"),
+                  CircleAvatar(
+                    radius: width * 0.05,
+                    backgroundColor: const Color.fromARGB(226, 102, 176, 255),
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.add,
+                        color: Colors.black,
+                      ),
+                      onPressed: modifySharesOnSale.sharesOnSale < modifySharesOnSale.sharesOwned ? () {
+                        modifySharesOnSale.increaseShareOnSale();
+                        _saveChanges();
+                      } : null,
+                    ),
+                  ),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Prezzo di vendita: ${modifySharesOnSale.proposalPrice} €"),
+                  Text(
+                      "Prezzo di vendita: ${modifySharesOnSale.proposalPrice} €"),
                   OutlinedButton(
                     //TODO: migliorare look and feel
                     //TODO: quando viene cliccato il tasto edit, dove si inserisce la cifra?¯
                     onPressed: () => {},
                     style: ButtonStyle(
-                        backgroundColor:
-                            const MaterialStatePropertyAll(Color.fromARGB(226, 102, 176, 255),),
+                        backgroundColor: const MaterialStatePropertyAll(
+                          Color.fromARGB(226, 102, 176, 255),
+                        ),
                         foregroundColor:
                             MaterialStateProperty.all<Color>(Colors.white),
                         minimumSize: MaterialStateProperty.all<Size>(
@@ -160,7 +201,7 @@ class _ModifyOnSaleShareScreenState extends State<ModifyOnSaleShareScreen> {
                     ),
                   ),
                 ],
-              ), 
+              ),
               SizedBox(
                 height: heigh * 0.03,
               ),

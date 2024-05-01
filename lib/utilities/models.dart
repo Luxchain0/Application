@@ -48,17 +48,37 @@ class ModifySharesOnSale {
   final String brandName;
   final String modelName;
   final double proposalPrice;
-  final int ownedShares;
-  final int onSaleShares;
+  int onSaleAtPrice;
+  final int sharesOwned;
+  int sharesOnSale;
   final Future<String> image;
 
-  const ModifySharesOnSale({
+  ModifySharesOnSale({
     required this.watchid,
     required this.brandName,
     required this.modelName,
     required this.proposalPrice,
-    required this.ownedShares,
-    required this.onSaleShares,
+    required this.onSaleAtPrice,
+    required this.sharesOwned,
+    required this.sharesOnSale,
     required this.image,
   });
+
+  increaseShareOnSale() {
+    if (sharesOnSale < sharesOwned) {
+      onSaleAtPrice++;
+      sharesOnSale++;
+    } else {
+      throw ArgumentError('Non puoi mettere in vendita più azioni di quante ne possiedi.');
+    }
+  }
+
+  decreaseShareOnSale() {
+    if (sharesOnSale > 0) {
+      onSaleAtPrice--;
+      sharesOnSale--;
+    } else {
+      throw ArgumentError('Non puoi mettere in vendita meno di 0 azioni.');
+    }
+  }
 }

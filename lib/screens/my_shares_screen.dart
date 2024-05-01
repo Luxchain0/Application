@@ -1,5 +1,7 @@
 //TODO
 
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:lux_chain/screens/modify_on_sale_share.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
@@ -64,6 +66,8 @@ class _MySharesScreenState extends State<MySharesScreen> {
                                   modelName: myShare.modelName,
                                   brandName: myShare.brandName,
                                   reference: myShare.reference,
+                                  onSaleAtPrice: myShare.onSaleAtPrice,
+                                  sharesOwned: myShare.sharesOwned,
                                   sharesOnSale: myShare.sharesOnSale,
                                   price: myShare.price.toString(),
                                 ))
@@ -95,6 +99,8 @@ class CustomCard extends StatelessWidget {
     required this.modelName,
     required this.brandName,
     required this.reference,
+    required this.onSaleAtPrice,
+    required this.sharesOwned,
     required this.sharesOnSale,
     required this.price,
   });
@@ -105,7 +111,9 @@ class CustomCard extends StatelessWidget {
   final String brandName;
   final Future<String> imgUrl;
   final String reference;
-  final int sharesOnSale;
+  final int onSaleAtPrice; // Shares on sale at this price
+  final int sharesOwned; // Shares owned by the user
+  final int sharesOnSale; // Shares on sale owned by the user
   final String price;
 
   @override
@@ -118,8 +126,9 @@ class CustomCard extends StatelessWidget {
             brandName: brandName,
             modelName: modelName,
             proposalPrice: double.parse(price),
-            ownedShares: 0,
-            onSaleShares: sharesOnSale,
+            onSaleAtPrice: onSaleAtPrice,
+            sharesOwned: sharesOwned,
+            sharesOnSale: sharesOnSale,
             image: imgUrl,
           ))},
       child: Container(
@@ -185,7 +194,7 @@ class CustomCard extends StatelessWidget {
               Text('Reference: $reference'),
               Text('Serial: $watchID'),
               SizedBox(height: screenWidth * 0.02),
-              Text('Quote in vendita: $sharesOnSale'),
+              Text('Quote in vendita a questo prezzo: $onSaleAtPrice'),
               Text('Prezzo quota: $price €'),
             ],
           )

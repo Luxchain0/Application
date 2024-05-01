@@ -357,6 +357,8 @@ class MySharesOnSale {
   final String modelName;
   final String brandName;
   final double price;
+  final int onSaleAtPrice;
+  final int sharesOwned;
   final int sharesOnSale;
 
   MySharesOnSale({
@@ -378,6 +380,8 @@ class MySharesOnSale {
     required this.modelName,
     required this.brandName,
     required this.price,
+    required this.onSaleAtPrice,
+    required this.sharesOwned,
     required this.sharesOnSale,
   });
 
@@ -401,6 +405,8 @@ class MySharesOnSale {
       modelName: json['modelname'] as String,
       brandName: json['brandname'] as String,
       price: double.parse(json['price'] as String),
+      onSaleAtPrice: json['onsaleatprice'] as int,
+      sharesOwned: json['sharesowned'] as int,
       sharesOnSale: json['sharesonsale'] as int,
     );
   }

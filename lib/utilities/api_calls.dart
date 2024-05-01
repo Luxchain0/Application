@@ -264,3 +264,31 @@ Future<List<Favorite>> getFavorites(int userID) async {
     throw Exception('[FLUTTER] Error retrieving favorites: $e');
   }
 }
+
+Future<APIStatus> updateSharesOnSale(
+    int watchId, int userId, double oldPrice, double newPrice, int numberOfShares) async {
+  try {
+    Map<String, dynamic> requestBody = {
+      'oldPrice': oldPrice.toString(),
+      'newPrice': newPrice.toString(),
+      'numberOfShares': numberOfShares,
+    };
+
+    final response = await http.put(
+      Uri.parse('$apiURL/trade/onsale/$watchId/$userId'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(requestBody),
+    );
+
+    if (response.statusCode == 200) {
+      return APIStatus.success;
+    } else {
+      throw Exception('[FLUTTER] Failed to update shares on sale');
+    }
+  } catch (e) {
+
+    throw Exception('[FLUTTER] Error updating shares on sale: $e');
+  }
+}
