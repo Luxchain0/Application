@@ -45,7 +45,10 @@ class RouteGenerator {
       case FrameScreen.id:
         return MaterialPageRoute(builder: (_) => const FrameScreen());
       case ModifyOnSaleShareScreen.id:
-        return MaterialPageRoute(builder: (_) => const ModifyOnSaleShareScreen());
+        if (args is ModifySharesOnSale) {
+          return MaterialPageRoute(builder: (_) => ModifyOnSaleShareScreen(modifySharesOnSale: args));
+        }
+        break;
       case WatchScreen.id:
         if (args is int) {
           return MaterialPageRoute(builder: (_) => WatchScreen(watchID: args));

@@ -42,3 +42,23 @@ class SellInfo {
     required this.image,
   });
 }
+
+class ModifySharesOnSale {
+  final int watchid;
+  final String brandName;
+  final String modelName;
+  final double proposalPrice;
+  final int ownedShares;
+  final int onSaleShares;
+  final Future<String> image;
+
+  const ModifySharesOnSale({
+    required this.watchid,
+    required this.brandName,
+    required this.modelName,
+    required this.proposalPrice,
+    required this.ownedShares,
+    required this.onSaleShares,
+    required this.image,
+  });
+}

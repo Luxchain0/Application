@@ -2,6 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:lux_chain/screens/watch_screen.dart';
+import 'package:lux_chain/utilities/api_calls.dart';
+import 'package:lux_chain/utilities/api_models.dart';
+import 'package:lux_chain/utilities/firestore.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -13,9 +16,12 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _MySharesScreenState extends State<HistoryScreen> {
+  late Future<List<Trade>> futureTradeHistory;
+
   @override
   void initState() {
     super.initState();
+    futureTradeHistory = getTradeHistory(1);
   }
 
   @override
@@ -43,11 +49,35 @@ class _MySharesScreenState extends State<HistoryScreen> {
                       fontSize: width * 0.1,
                       fontFamily: 'Bebas'),
                 ),
-                CustomCard(watchID: 1, screenWidth: width, imgUrl: "assets/images/o1.jpg", modelName: "ModelName", brandName: "BrandName", serialNumber: "0x32wxx", quote: 3, buySell: "Buy", price: "- 34 543,98 €"),
-                CustomCard(watchID: 1, screenWidth: width, imgUrl: "assets/images/o2.jpg", modelName: "ModelName", brandName: "BrandName", serialNumber: "0x32wxx", quote: 3, buySell: "Sell", price: "+ 31 123,18 €"),
-                CustomCard(watchID: 1, screenWidth: width, imgUrl: "assets/images/o3.jpg", modelName: "ModelName", brandName: "BrandName", serialNumber: "0x32wxx", quote: 3, buySell: "Sell", price: "+ 31 123,18 €"),
-                CustomCard(watchID: 1, screenWidth: width, imgUrl: "assets/images/o1.jpg", modelName: "ModelName", brandName: "BrandName", serialNumber: "0x32wxx", quote: 3, buySell: "Sell", price: "+ 31 123,18 €"),
-                CustomCard(watchID: 1, screenWidth: width, imgUrl: "assets/images/o2.jpg", modelName: "ModelName", brandName: "BrandName", serialNumber: "0x32wxx", quote: 3, buySell: "Sell", price: "+ 31 123,18 €"),
+                FutureBuilder<List<Trade>>(
+                  future: futureTradeHistory,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasData) {
+                      return Column(
+                        children: snapshot.data!
+                            .map((trade) => CustomCard(
+                                  watchID: trade.watchId,
+                                  screenWidth: width,
+                                  imgUrl: getDownloadURL(trade.imageuri),
+                                  modelName: trade.modelName,
+                                  brandName: trade.brandName,
+                                  reference: trade.reference,
+                                  shareTraded: trade.sharesTraded,
+                                  buySell: trade.type,
+                                  price: trade.price.toString(),
+                                ))
+                            .toList(),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text('${snapshot.error}');
+                    }
+                    else {
+                      return const SizedBox(); // Placeholder widget when no data is available
+                    }
+                  },
+                ),
               ],
             ),
           ),
@@ -61,12 +91,12 @@ class CustomCard extends StatelessWidget {
   const CustomCard({
     super.key,
     required this.watchID,
-    required this.screenWidth, //
-    required this.imgUrl, //
-    required this.modelName, //
-    required this.brandName, //
-    required this.serialNumber, //
-    required this.quote,
+    required this.screenWidth,
+    required this.imgUrl,
+    required this.modelName,
+    required this.brandName,
+    required this.reference,
+    required this.shareTraded,
     required this.buySell,
     required this.price,
   });
@@ -75,9 +105,9 @@ class CustomCard extends StatelessWidget {
   final double screenWidth;
   final String modelName;
   final String brandName;
-  final String imgUrl;
-  final String serialNumber;
-  final int quote;
+  final Future<String> imgUrl;
+  final String reference;
+  final int shareTraded;
   final String buySell;
   final String price;
 
@@ -103,17 +133,30 @@ class CustomCard extends StatelessWidget {
               ),
             ],
             borderRadius: const BorderRadius.all(Radius.circular(7))),
-        child: Row(children: [
-          Container(
-                margin: const EdgeInsets.only(right: 0),
-                alignment: Alignment.center, // This is needed
-                child: Image.asset(
-                  // Utilizzo di Image.network per caricare l'immagine da un URL
-                  imgUrl, // Utilizzo dell'URL dell'immagine
-                  fit: BoxFit.contain,
-                  width: screenWidth * 0.22,
-                ),
-              ),
+        child: Row(
+          children: [
+          FutureBuilder<String>(
+            future: imgUrl,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              } else if (snapshot.hasData) {
+                return ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(7)),
+                  child: Image.network(
+                    snapshot.data!,
+                    width: screenWidth * 0.3,
+                    height: screenWidth * 0.3,
+                    fit: BoxFit.cover,
+                  ),
+                );
+              } else if (snapshot.hasError) {
+                return const Icon(Icons.error);
+              } else {
+                return const SizedBox();
+              }
+            },
+          ),
           const SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,11 +177,12 @@ class CustomCard extends StatelessWidget {
                     fontSize: screenWidth * 0.055,
                     fontFamily: 'Bebas'),
               ),
-              Text('Serial: $serialNumber'),
+              Text('Reference: $reference'),
+              Text('Serial: $watchID'),
               SizedBox(height: screenWidth * 0.02),
-              Text('Quote: $quote'),
-              Text('Azione: $buySell'),
-              Text('Variazione liquidità: $price €'),
+              Text('Quote scambiate: $shareTraded'),
+              Text('Tipologia: $buySell'),
+              Text('Valore della transazione: ${price*shareTraded} €'),
             ],
           )
         ]),

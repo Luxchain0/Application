@@ -5,26 +5,6 @@ enum APIStatus {
   error,
 }
 
-class Favorite {
-  final int favoriteid;
-  final int watchid;
-  final int userid;
-
-  const Favorite({
-    required this.favoriteid,
-    required this.watchid,
-    required this.userid,
-  });
-
-  factory Favorite.fromJson(Map<String, dynamic> json) {
-    return Favorite(
-      favoriteid: json['favoriteid'] as int,
-      watchid: json['watchid'] as int,
-      userid: json['userid'] as int,
-    );
-  }
-}
-
 class Model {
   final int modelid;
   final String modelname;
@@ -118,127 +98,6 @@ class ShareOnSale {
   }
 }
 
-class Trade {
-  final int tradeid;
-  final int price;
-  final DateTime tradetime;
-  final int shareid;
-  final int buyerid;
-  final int sellerid;
-
-  const Trade({
-    required this.tradeid,
-    required this.price,
-    required this.tradetime,
-    required this.shareid,
-    required this.buyerid,
-    required this.sellerid,
-  });
-
-  factory Trade.fromJson(Map<String, dynamic> json) {
-    return Trade(
-      tradeid: json['tradeid'] as int,
-      price: json['price'] as int,
-      tradetime: DateTime.parse(json['tradetime'] as String),
-      shareid: json['shareid'] as int,
-      buyerid: json['buyerid'] as int,
-      sellerid: json['sellerid'] as int,
-    );
-  }
-}
-
-class UserProfile {
-  final int userid;
-  final String username;
-  final String firstname;
-  final String lastname;
-  final DateTime birthdate;
-  final String birthcountry;
-  final String nationality;
-  final String address;
-  final String phonenr;
-  final String email;
-  final DateTime registrationtime;
-  final String govid;
-
-  const UserProfile({
-    required this.userid,
-    required this.username,
-    required this.firstname,
-    required this.lastname,
-    required this.birthdate,
-    required this.birthcountry,
-    required this.nationality,
-    required this.address,
-    required this.phonenr,
-    required this.email,
-    required this.registrationtime,
-    required this.govid,
-  });
-
-  factory UserProfile.fromJson(Map<String, dynamic> json) {
-    return UserProfile(
-      userid: json['userid'] as int,
-      username: json['username'] as String,
-      firstname: json['firstname'] as String,
-      lastname: json['lastname'] as String,
-      birthdate: DateTime.parse(json['birthdate'] as String),
-      birthcountry: json['birthcountry'] as String,
-      nationality: json['nationality'] as String,
-      address: json['address'] as String,
-      phonenr: json['phonenr'] as String,
-      email: json['email'] as String,
-      registrationtime: DateTime.parse(json['registrationtime'] as String),
-      govid: json['govid'] as String,
-    );
-  }
-}
-
-class WalletHistory {
-  final int wallethistoryid;
-  final DateTime wallettime;
-  final int amount;
-  final int userid;
-
-  const WalletHistory({
-    required this.wallethistoryid,
-    required this.wallettime,
-    required this.amount,
-    required this.userid,
-  });
-
-  factory WalletHistory.fromJson(Map<String, dynamic> json) {
-    return WalletHistory(
-      wallethistoryid: json['wallethistoryid'] as int,
-      wallettime: DateTime.parse(json['wallettime'] as String),
-      amount: json['amount'] as int,
-      userid: json['userid'] as int,
-    );
-  }
-}
-
-class WantToBuy {
-  final int wanttobuyid;
-  final int price;
-  final int shareid;
-  final int userid;
-
-  const WantToBuy({
-    required this.wanttobuyid,
-    required this.price,
-    required this.shareid,
-    required this.userid,
-  });
-
-  factory WantToBuy.fromJson(Map<String, dynamic> json) {
-    return WantToBuy(
-      wanttobuyid: json['wanttobuyid'] as int,
-      price: json['price'] as int,
-      shareid: json['shareid'] as int,
-      userid: json['userid'] as int,
-    );
-  }
-}
 
 class WalletWatch {
   final int watchid;
@@ -398,6 +257,174 @@ class MarketPlaceWatch extends Watch {
       modelTypeId: json['modeltypeid'] as int,
       modelType: ModelType.fromJson(json['modeltype'] as Map<String, dynamic>),
       sharesOnSale: json['sharesOnSale'] as int,
+    );
+  }
+}
+
+class Trade {
+  final int watchId;
+  final String condition;
+  final int numberOfShares;
+  final double initialPrice;
+  final double actualPrice;
+  final String dialColor;
+  final int year;
+  final String imageuri;
+  final String description;
+  final int modelTypeId;
+  final String reference;
+  final String braceletMaterial;
+  final String caseMaterial;
+  final String diameter;
+  final int modelId;
+  final String modelName;
+  final String brandName;
+  final double price;
+  final int sharesTraded;
+  final int yearOfTrade;
+  final int dayOfTrade;
+  final String type;
+
+  Trade({
+    required this.watchId,
+    required this.condition,
+    required this.numberOfShares,
+    required this.initialPrice,
+    required this.actualPrice,
+    required this.dialColor,
+    required this.year,
+    required this.imageuri,
+    required this.description,
+    required this.modelTypeId,
+    required this.reference,
+    required this.braceletMaterial,
+    required this.caseMaterial,
+    required this.diameter,
+    required this.modelId,
+    required this.modelName,
+    required this.brandName,
+    required this.price,
+    required this.sharesTraded,
+    required this.yearOfTrade,
+    required this.dayOfTrade,
+    required this.type,
+  });
+
+  factory Trade.fromJson(Map<String, dynamic> json) {
+    return Trade(
+      watchId: json['watchid'] as int,
+      condition: json['condition'] as String,
+      numberOfShares: json['numberofshares'] as int,
+      initialPrice: double.parse(json['initialprice'] as String),
+      actualPrice: double.parse(json['actualprice'] as String),
+      dialColor: json['dialcolor'] as String,
+      year: json['year'] as int,
+      imageuri: json['imageuri'] as String,
+      description: json['description'] as String,
+      modelTypeId: json['modeltypeid'] as int,
+      reference: json['reference'] as String,
+      braceletMaterial: json['braceletmaterial'] as String,
+      caseMaterial: json['casematerial'] as String,
+      diameter: json['diameter'] as String,
+      modelId: json['modelid'] as int,
+      modelName: json['modelname'] as String,
+      brandName: json['brandname'] as String,
+      price: double.parse(json['price'] as String),
+      sharesTraded: json['sharestraded'] as int,
+      yearOfTrade: json['yearoftrade'] as int,
+      dayOfTrade: json['dayoftrade'] as int,
+      type: json['type'] as String,
+    );
+  }
+}
+
+class MySharesOnSale {
+  final int watchId;
+  final String condition;
+  final int numberOfShares;
+  final double initialPrice;
+  final double actualPrice;
+  final String dialColor;
+  final int year;
+  final String imageuri;
+  final String description;
+  final int modelTypeId;
+  final String reference;
+  final String braceletMaterial;
+  final String caseMaterial;
+  final String diameter;
+  final int modelId;
+  final String modelName;
+  final String brandName;
+  final double price;
+  final int sharesOnSale;
+
+  MySharesOnSale({
+    required this.watchId,
+    required this.condition,
+    required this.numberOfShares,
+    required this.initialPrice,
+    required this.actualPrice,
+    required this.dialColor,
+    required this.year,
+    required this.imageuri,
+    required this.description,
+    required this.modelTypeId,
+    required this.reference,
+    required this.braceletMaterial,
+    required this.caseMaterial,
+    required this.diameter,
+    required this.modelId,
+    required this.modelName,
+    required this.brandName,
+    required this.price,
+    required this.sharesOnSale,
+  });
+
+  factory MySharesOnSale.fromJson(Map<String, dynamic> json) {
+    return MySharesOnSale(
+      watchId: json['watchid'] as int,
+      condition: json['condition'] as String,
+      numberOfShares: json['numberofshares'] as int,
+      initialPrice: double.parse(json['initialprice'] as String),
+      actualPrice: double.parse(json['actualprice'] as String),
+      dialColor: json['dialcolor'] as String,
+      year: json['year'] as int,
+      imageuri: json['imageuri'] as String,
+      description: json['description'] as String,
+      modelTypeId: json['modeltypeid'] as int,
+      reference: json['reference'] as String,
+      braceletMaterial: json['braceletmaterial'] as String,
+      caseMaterial: json['casematerial'] as String,
+      diameter: json['diameter'] as String,
+      modelId: json['modelid'] as int,
+      modelName: json['modelname'] as String,
+      brandName: json['brandname'] as String,
+      price: double.parse(json['price'] as String),
+      sharesOnSale: json['sharesonsale'] as int,
+    );
+  }
+}
+
+class Favorite {
+  final int favoriteid;
+  final int watchid;
+  final int accountid;
+  final Watch watch;
+
+  const Favorite({
+    required this.favoriteid,
+    required this.watchid,
+    required this.accountid,
+    required this.watch,
+  });
+
+  factory Favorite.fromJson(Map<String, dynamic> json) {
+    return Favorite(
+      favoriteid: json['favoriteid'] as int,
+      watchid: json['watchid'] as int,
+      accountid: json['accountid'] as int,
+      watch: Watch.fromJson(json['watch'] as Map<String, dynamic>),
     );
   }
 }

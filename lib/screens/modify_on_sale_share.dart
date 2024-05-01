@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:lux_chain/utilities/frame.dart';
+import 'package:lux_chain/utilities/models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 
 class ModifyOnSaleShareScreen extends StatefulWidget {
   static const String id = 'ModifyOnSaleShareScreen';
-  const ModifyOnSaleShareScreen({super.key});
+  final ModifySharesOnSale modifySharesOnSale;
+  const ModifyOnSaleShareScreen({required this.modifySharesOnSale, super.key});
 
   @override
   // ignore: no_logic_in_create_state
-  State<ModifyOnSaleShareScreen> createState() => _ModifyOnSaleShareScreenState();
+  State<ModifyOnSaleShareScreen> createState() => _ModifyOnSaleShareScreenState(modifySharesOnSale: modifySharesOnSale);
 }
 
 class _ModifyOnSaleShareScreenState extends State<ModifyOnSaleShareScreen> {
+  final ModifySharesOnSale modifySharesOnSale;
 
+  _ModifyOnSaleShareScreenState({required this.modifySharesOnSale});
   @override
   void initState() {
     super.initState();
@@ -54,17 +58,29 @@ class _ModifyOnSaleShareScreenState extends State<ModifyOnSaleShareScreen> {
                     ),
                     borderRadius: const BorderRadius.all(Radius.circular(7))),
                 alignment: Alignment.center, // This is needed
-                child: Padding(
-                  padding: EdgeInsets.all(heigh * 0.02),
-                  child: Image.asset(
-                    'assets/images/o1.jpg',
-                    fit: BoxFit.contain,
-                    height: heigh * 0.3,
+                child: FutureBuilder<String>(
+                    future: modifySharesOnSale.image,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      } else if (snapshot.hasData) {
+                        return ClipRRect(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(7)),
+                          child: Image.network(
+                            snapshot.data!,
+                            fit: BoxFit
+                                .cover, // L'immagine si espanderà per riempire il contenitore
+                          ),
+                        );
+                      } else {
+                        return const Icon(Icons.error);
+                      }
+                    },
                   ),
-                ),
               ),
               Text(
-                "BrandName",
+                modifySharesOnSale.brandName,
                 style: TextStyle(
                     color: Colors.black38,
                     height: 1,
@@ -72,7 +88,7 @@ class _ModifyOnSaleShareScreenState extends State<ModifyOnSaleShareScreen> {
                     fontFamily: 'Bebas'),
               ),
               Text(
-                "ModelName",
+                modifySharesOnSale.modelName,
                 style: TextStyle(
                     color: Colors.black87,
                     height: 1,
@@ -89,16 +105,16 @@ class _ModifyOnSaleShareScreenState extends State<ModifyOnSaleShareScreen> {
               SizedBox(
                 height: heigh * 0.02,
               ),
-              const Text('Quote possedute: 5'),
+              Text('Quote possedute: ${modifySharesOnSale.ownedShares}'),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Quote in vendita:"),
+                  const Text("Quote in vendita:"),
                   CircleAvatar(
               radius: width*0.05,
-              backgroundColor: Color.fromARGB(228, 118, 196, 241),
+              backgroundColor: const Color.fromARGB(228, 118, 196, 241),
               child: IconButton(
-                icon: Icon(
+                icon: const Icon(
                   Icons.remove,
                   color: Colors.black,
                 ),
@@ -107,12 +123,12 @@ class _ModifyOnSaleShareScreenState extends State<ModifyOnSaleShareScreen> {
                 },
               ),
             ),
-            Text("4"),
+            Text("${modifySharesOnSale.onSaleShares}"),
             CircleAvatar(
               radius: width * 0.05,
-              backgroundColor: Color.fromARGB(226, 102, 176, 255),
+              backgroundColor: const Color.fromARGB(226, 102, 176, 255),
               child: IconButton(
-                icon: Icon(
+                icon: const Icon(
                   Icons.add,
                   color: Colors.black,
                 ),
@@ -127,7 +143,7 @@ class _ModifyOnSaleShareScreenState extends State<ModifyOnSaleShareScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Prezzo di vendita: 12 344,54 €"),
+                  Text("Prezzo di vendita: ${modifySharesOnSale.proposalPrice} €"),
                   OutlinedButton(
                     //TODO: migliorare look and feel
                     //TODO: quando viene cliccato il tasto edit, dove si inserisce la cifra?¯

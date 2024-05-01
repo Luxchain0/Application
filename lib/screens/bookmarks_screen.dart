@@ -16,14 +16,12 @@ class BookmarksScreen extends StatefulWidget {
 }
 
 class _BookmarksScreenState extends State<BookmarksScreen> {
-  late Future<List<WalletWatch>> futureWatches;
-  late Future<WalletData> futureWalletData;
+  late Future<List<Favorite>> futureFavorites;
 
   @override
   void initState() {
     super.initState();
-    futureWatches = getUserWalletWatches(1);
-    futureWalletData = getWalletData(1);
+    futureFavorites = getFavorites(2);
   }
 
   @override
@@ -45,29 +43,29 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
               Expanded(
                 child: SingleChildScrollView(
                     scrollDirection: Axis.vertical,
-                    child: FutureBuilder<List<WalletWatch>>(
-                        future: futureWatches,
+                    child: FutureBuilder<List<Favorite>>(
+                        future: futureFavorites,
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
                             return const Center(
                                 child: CircularProgressIndicator());
                           } else if (snapshot.hasData) {
-                            List<WalletWatch> walletWatches = snapshot.data!;
+                            List<Favorite> favorites = snapshot.data!;
                             return Column(
-                              children: walletWatches.map(
-                                (watch) {
+                              children: favorites.map(
+                                (favorite) {
                                   return CustomBottomBigCard(
-                                    watchID: watch.watchid,
+                                    watchID: favorite.watch.watchId,
                                     screenWidth: width,
-                                    imgUrl: getDownloadURL(watch.imageuri),
-                                    modelName: watch.watchid.toString(),
-                                    brandName: watch.modeltype.model.modelname,
-                                    serialNumber: watch.watchid.toString(),
+                                    imgUrl: getDownloadURL(favorite.watch.imageuri),
+                                    modelName: favorite.watch.watchId.toString(),
+                                    brandName: favorite.watch.modelType.model.modelname,
+                                    serialNumber: favorite.watch.watchId.toString(),
                                     valoreAttuale: 0,
-                                    valoreDiAcquisto: watch.initialprice,
-                                    quotePossedute: watch.owned,
-                                    quoteTotali: watch.numberofshares,
+                                    valoreDiAcquisto: favorite.watch.initialPrice,
+                                    quotePossedute: 0,
+                                    quoteTotali: favorite.watch.numberOfShares,
                                     controvalore: 0,
                                     incremento: 0,
                                   );
@@ -114,7 +112,7 @@ class CustomBottomBigCard extends StatelessWidget {
   final String brandName;
   final Future<String> imgUrl;
   final String serialNumber;
-  final int quotePossedute;
+  final int quotePossedute; // TODO: add this
   final int quoteTotali;
   final double controvalore;
   final double valoreDiAcquisto;

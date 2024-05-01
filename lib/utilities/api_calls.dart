@@ -81,25 +81,6 @@ Future<List<WalletWatch>> getSharesByWatch(int watchID) async {
   }
 }
 
-// Future<List<WalletWatch>> getTradedShares(int userID) async {
-//   try {
-//     // Effettua la chiamata per ottenere le azioni associate all'utente
-//     final response = await http.get(
-//       Uri.parse('$apiURL/shares/traded/$userID'),
-//     );
-
-//     if (response.statusCode == 200) {
-//       final List<dynamic> data = jsonDecode(response.body);     
-//       return data.map((e) => WalletWatch.fromJson(e)).toList();
-//     } else {
-//       throw Exception('[FLUTTER] Failed to load user shares');
-//     }
-//   } catch (e) {
-    
-//     throw Exception('[FLUTTER] Error retrieving user watches: $e');
-//   }
-// }
-
 Future<List<WalletWatch>> getSharesOfUserOnSale(int userID) async {
   try {
     // Retreieving user's on sale shares
@@ -118,25 +99,6 @@ Future<List<WalletWatch>> getSharesOfUserOnSale(int userID) async {
     throw Exception('[FLUTTER] Error retrieving user shares: $e');
   }
 }
-
-// Future<List<WalletWatch>> getFavouritesShared(int userID) async {
-//   try {
-//     // Effettua la chiamata per ottenere le azioni associate all'utente
-//     final response = await http.get(
-//       Uri.parse('$apiURL/shares/favourites/$userID'),
-//     );
-
-//     if (response.statusCode == 200) {
-//       final List<dynamic> data = jsonDecode(response.body);     
-//       return data.map((e) => WalletWatch.fromJson(e)).toList();
-//     } else {
-//       throw Exception('[FLUTTER] Failed to load user shares');
-//     }
-//   } catch (e) {
-    
-//     throw Exception('[FLUTTER] Error retrieving user watches: $e');
-//   }
-// }
 
 Future<List<ShareOnSale>> getSharesOfTheWatchOnSell(int watchID) async {
   try {
@@ -249,5 +211,56 @@ Future<List<MarketPlaceWatch>> getMarketPlaceWatches() async {
   } catch (e) {
     
     throw Exception('[FLUTTER] Error retrieving market place watches: $e');
+  }
+}
+
+Future<List<Trade>> getTradeHistory(int userID) async {
+  try {
+    final response = await http.get(
+      Uri.parse('$apiURL/trade/history/$userID'),
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data.map((e) => Trade.fromJson(e)).toList();
+    } else {
+      throw Exception('[FLUTTER] Failed to load trade history');
+    }
+  } catch (e) {
+    throw Exception('[FLUTTER] Error retrieving trade history: $e');
+  }
+}
+
+Future<List<MySharesOnSale>> getMySharesOnSale(int userID) async {
+  try {
+    final response = await http.get(
+      Uri.parse('$apiURL/trade/onsale/$userID'),
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data.map((e) => MySharesOnSale.fromJson(e)).toList();
+    } else {
+      throw Exception('[FLUTTER] Failed to load trade history');
+    }
+  } catch (e) {
+    throw Exception('[FLUTTER] Error retrieving trade history: $e');
+  }
+}
+
+Future<List<Favorite>> getFavorites(int userID) async {
+  try {
+    final response = await http.get(
+      Uri.parse('$apiURL/wallet/favorite/$userID'),
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data.map((e) => Favorite.fromJson(e)).toList();
+    } else {
+      throw Exception('[FLUTTER] Failed to load favorites');
+    }
+  } catch (e) {
+    throw Exception('[FLUTTER] Error retrieving favorites: $e');
   }
 }
