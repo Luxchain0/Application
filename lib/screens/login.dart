@@ -130,11 +130,33 @@ class _LoginState extends State<Login> {
       padding: const EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () => print('Login Button Pressed'),
+        onPressed: () async {
+          try {
+            final response = await http.post(
+              Uri.parse('$apiURL/auth/login'),
+              body: <String, String>{
+                'email': 'email',
+                'password': 'password',
+              },
+            );
+
+            if (response.statusCode == 200) {
+              // salva user + token e cambia pagina
+            } else {
+              throw Exception(
+                  '[FLUTTER] Login http Error: $response.statusMessage');
+            }
+          } catch (e) {
+            throw Exception('[FLUTTER] Login Error: $e');
+          }
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.blue,
+        ),
         child: const Text(
           'LOGIN',
           style: TextStyle(
-            color: Colors.blue,
+            color: Colors.white,
             letterSpacing: 1.5,
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
@@ -150,7 +172,6 @@ class _LoginState extends State<Login> {
         Text(
           '- OR -',
           style: TextStyle(
-            color: Colors.white,
             fontWeight: FontWeight.w400,
           ),
         ),
@@ -232,7 +253,7 @@ class _LoginState extends State<Login> {
             TextSpan(
               text: 'Don\'t have an Account? ',
               style: TextStyle(
-                color: Colors.white,
+                color: Colors.black,
                 fontSize: 18.0,
                 fontWeight: FontWeight.w400,
               ),
@@ -240,7 +261,7 @@ class _LoginState extends State<Login> {
             TextSpan(
               text: 'Sign Up',
               style: TextStyle(
-                color: Colors.white,
+                color: Colors.black,
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
               ),
@@ -283,7 +304,6 @@ class _LoginState extends State<Login> {
                     const Text(
                       'Sign In',
                       style: TextStyle(
-                        color: Colors.white,
                         fontSize: 30.0,
                         fontWeight: FontWeight.bold,
                       ),
@@ -316,7 +336,6 @@ const kHintTextStyle = TextStyle(
 );
 
 const kLabelStyle = TextStyle(
-  color: Colors.white,
   fontWeight: FontWeight.bold,
 );
 
