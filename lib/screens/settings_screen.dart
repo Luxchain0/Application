@@ -15,6 +15,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     SizeConfig().init(context);
     double width = SizeConfig.screenW!;
     double heigh = SizeConfig.screenH!;
+    bool _isok = true;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -55,7 +56,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
             CustomCard(
                 icon: Icons.notifications,
                 text: 'Notification',
-                onPressed: () => {}),
+                onPressed: () => {
+                      showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('Close'),
+                                  ),
+                                ],
+                                title: const Text('Messaggio di info'),
+                                contentPadding: const EdgeInsets.all(20.0),
+                                content: _isok
+                                    ? Text('tutto bene')
+                                    : Text('tutto male'),
+                              ))
+                    }),
             CustomCard(
                 icon: Icons.chat_bubble,
                 text: 'Assistance',

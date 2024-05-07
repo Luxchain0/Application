@@ -22,6 +22,7 @@ class WatchScreen extends StatefulWidget {
 class _WatchScreenState extends State<WatchScreen> {
   late Future<Watch> futureWatchData;
   late Future<List<ShareOnSale>> futureSharesData;
+  bool isFav = false;
 
   @override
   void initState() {
@@ -76,25 +77,35 @@ class _WatchScreenState extends State<WatchScreen> {
                                 Text(
                                   watch.modelType.model.brandname,
                                   style: TextStyle(
-                                    color: Colors.black38,
-                                    height: 1,
-                                    fontSize: width * 0.07,
-                                    fontFamily: 'Bebas'),
+                                      color: Colors.black38,
+                                      height: 1,
+                                      fontSize: width * 0.07,
+                                      fontFamily: 'Bebas'),
                                 ),
                                 Text(
                                   watch.modelType.model.modelname,
                                   style: TextStyle(
-                                    color: Colors.black87,
-                                    height: 1,
-                                    fontSize: width * 0.08,
-                                    fontFamily: 'Bebas'),
+                                      color: Colors.black87,
+                                      height: 1,
+                                      fontSize: width * 0.08,
+                                      fontFamily: 'Bebas'),
                                 ),
                               ],
                             ),
                             IconButton(
-                              onPressed: () => {}, 
-                              icon: Icon(Icons.favorite_border_outlined)
-                            )
+                                onPressed: () => {
+                                  if (isFav && removeFromFavourites(2, widget.watchID) == APIStatus.success) {
+                                    setState(() {
+                                      isFav = false;
+                                    }),
+                                  } else if (!isFav && addToFavourites(2, widget.watchID) == APIStatus.success){
+                                    setState(() {
+                                      isFav = true;
+                                    }),
+                                  }
+                                },
+                                icon: isFav ? Icon(Icons.favorite_rounded) : Icon(Icons.favorite_border_outlined)
+                              )
                           ],
                         ),
                         Container(
@@ -140,9 +151,15 @@ class _WatchScreenState extends State<WatchScreen> {
                             "Materiale cassa: ${watch.modelType.casematerial}"),
                         Text(
                             "Materiale bracciale: ${watch.modelType.braceletmaterial}"),
-                        Text("Prezzo di listino: ${watch.initialPrice}"),
-                        Text("Prezzo medio: ${watch.actualPrice}"),
-                        Text('Prezzo di vendita proposto: '),
+                        Text('Prezzo di listino: ' +
+                            formatAmountFromDouble(watch.initialPrice) +
+                            ' €'),
+                        Text('Prezzo medio: ' +
+                            formatAmountFromDouble(watch.actualPrice) +
+                            ' €'),
+                        Text('Prezzo di vendita proposto: ' +
+                            formatAmountFromDouble(watch.actualPrice) +
+                            ' €'),
                         Text("Numero di quote: ${watch.numberOfShares}"),
                         Text("Condizione orlogio: ${watch.condition}"),
                         Row(
@@ -343,7 +360,7 @@ class CustomRowForQuote extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  formatAmountFromDouble(quotePrice),
+                  formatAmountFromDouble(quotePrice) + ' €',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.black,

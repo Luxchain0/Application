@@ -73,7 +73,7 @@ class _MarketScreenState extends State<MarketScreen> {
                 child: Row(
                   children: [
                     Icon(
-                      Icons.star,
+                      Icons.favorite_border_outlined,
                       size: width * 0.08,
                     ),
                     Expanded(child: SizedBox(width: width * 0.08)),
@@ -170,10 +170,6 @@ class CustomBottomBigCard extends StatelessWidget {
             height: screenWidth * 0.25,
             decoration: BoxDecoration(
               color: Colors.white,
-              border: Border.all(
-                color: Colors.black26,
-                width: 1,
-              ),
               borderRadius: BorderRadius.circular(7),
             ),
             alignment: Alignment.center,

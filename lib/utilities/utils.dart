@@ -1,3 +1,5 @@
+import 'dart:math';
+
 String formatAmountFromInt(int number) {
   String stringNumber = number.toString();
   String numberCorrect = "";
@@ -27,6 +29,7 @@ String formatAmountFromInt(int number) {
 }
 
 String formatAmountFromDouble(double number) {
+  number = (number * pow(10, 2)).round().toDouble() / pow(10, 2);
   int x = number.toInt();
   int? y =
       int.tryParse(number.toString().split('.')[1]); //parte dopo la virgola
@@ -35,7 +38,7 @@ String formatAmountFromDouble(double number) {
   String numberCorrect = "";
 
   if (stringX.length == 4) {
-    numberCorrect = stringX[0] + " " + stringX.substring(1, 3);
+    numberCorrect = stringX[0] + " " + stringX.substring(1, 4);
   } else if (stringX.length == 5) {
     numberCorrect = stringX.substring(0, 2) + " " + stringX.substring(2, 5);
   } else if (stringX.length == 6) {
@@ -52,8 +55,18 @@ String formatAmountFromDouble(double number) {
         stringX.substring(2, 5) +
         " " +
         stringX.substring(5, 8);
+  } else {
+    numberCorrect = stringX;
   }
-  return numberCorrect + "," + y.toString();
+
+  if (y == 0) {
+    return numberCorrect + "," + '00';
+  } else if (y! / 10 < 1) {
+    y = y * 10;
+    return numberCorrect + "," + y.toString();
+  } else {
+    return numberCorrect + "," + y.toString();
+  }
 }
 
 double customDoubleParser(dynamic value) {

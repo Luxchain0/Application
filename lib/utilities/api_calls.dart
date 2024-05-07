@@ -251,7 +251,7 @@ Future<List<MySharesOnSale>> getMySharesOnSale(int userID) async {
 Future<List<Favorite>> getFavorites(int userID) async {
   try {
     final response = await http.get(
-      Uri.parse('$apiURL/wallet/favorite/$userID'),
+      Uri.parse('$apiURL/wallet/favorites/$userID'),
     );
 
     if (response.statusCode == 200) {
@@ -290,5 +290,52 @@ Future<APIStatus> updateSharesOnSale(
   } catch (e) {
 
     throw Exception('[FLUTTER] Error updating shares on sale: $e');
+  }
+}
+
+
+//TODO: finire correttamente questo metodo
+Future<APIStatus> addToFavourites(int userID, int watchID) async {
+  try {
+
+    final response = await http.post(
+      Uri.parse('$apiURL/wallet/favorite/$userID/$watchID'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // ignore: avoid_print
+      print("SUCCESS ADDING WATCH TO FAVOURITE");
+      return APIStatus.success;
+    } else {
+      throw Exception('[FLUTTER] Failed to adding watch $watchID to favourites');
+    }
+  } catch (e) {
+    throw Exception('[FLUTTER] Error adding to favourites');
+  }
+}
+
+//TODO: aggiunta io al volo, verificare
+Future<APIStatus> removeFromFavourites(int userID, int watchID) async {
+  try {
+
+    final response = await http.post(
+      Uri.parse('$apiURL/wallet/favorite/$userID/$watchID'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // ignore: avoid_print
+      print("SUCCESS REMOVING WATCH FROM FAVOURITE");
+      return APIStatus.success;
+    } else {
+      throw Exception('[FLUTTER] Failed removing watch $watchID from favourites');
+    }
+  } catch (e) {
+    throw Exception('[FLUTTER] Error removing from favourites');
   }
 }

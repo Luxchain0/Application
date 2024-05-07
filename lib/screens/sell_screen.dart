@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
+import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:lux_chain/utilities/frame.dart';
@@ -15,6 +16,53 @@ class SellScreen extends StatefulWidget {
 }
 
 class _SellScreenState extends State<SellScreen> {
+  canSell() {
+    return (_shareSelected <= sellInfo.numberOfShares && (_priceOfOneShare > 0))
+        ? true
+        : false;
+  }
+
+  handleSell() async {
+    print("SELLING");
+    var result =
+        await sellShares(1, sellInfo.watchid, _shareSelected, _priceOfOneShare);
+    if (result == APIStatus.success) {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      //Se va tutto bene si chiude il messaggio di avviso e si torna al waalet
+                      //TODO: bisognerebbe tornare alla scheramta delle proprie schare in vendita
+                      Navigator.pushNamed(context, FrameScreen.id);
+                    },
+                    child: const Text('Close'),
+                  ),
+                ],
+                title: const Text('Messaggio di info'),
+                contentPadding: const EdgeInsets.all(20.0),
+                content: Text('tutto bene'),
+              ));
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Close'),
+                  ),
+                ],
+                title: const Text('Messaggio di info'),
+                contentPadding: const EdgeInsets.all(20.0),
+                content: Text('tutto male'),
+              ));
+    }
+  }
+
   final SellInfo sellInfo;
   int _shareSelected = 0;
   double _priceOfOneShare = 0;
@@ -131,7 +179,9 @@ class _SellScreenState extends State<SellScreen> {
                         ),
                         onChanged: (value) {
                           if (value.isNotEmpty) {
-                            _shareSelected = int.parse(value);
+                            setState(() {
+                              _shareSelected = int.parse(value);
+                            });
                           } else {
                             _shareSelected = 0;
                           }
@@ -156,7 +206,9 @@ class _SellScreenState extends State<SellScreen> {
                         ),
                         onChanged: (value) {
                           if (value.isNotEmpty) {
-                            _priceOfOneShare = double.parse(value);
+                            setState(() {
+                              _priceOfOneShare = double.parse(value);
+                            });
                           } else {
                             _priceOfOneShare = 0;
                           }
@@ -169,10 +221,7 @@ class _SellScreenState extends State<SellScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     OutlinedButton(
-                      onPressed: () => {
-                        sellShares(1, sellInfo.watchid, _shareSelected,
-                            _priceOfOneShare)
-                      },
+                      onPressed: canSell() ? () => handleSell() : null,
                       style: ButtonStyle(
                           backgroundColor:
                               const MaterialStatePropertyAll(Colors.blueAccent),

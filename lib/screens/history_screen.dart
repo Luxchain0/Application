@@ -6,6 +6,7 @@ import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/firestore.dart';
 import 'package:lux_chain/utilities/size_config.dart';
+import 'package:lux_chain/utilities/utils.dart';
 
 class HistoryScreen extends StatefulWidget {
   static const String id = 'HistoryScreen';
@@ -66,7 +67,7 @@ class _MySharesScreenState extends State<HistoryScreen> {
                                   reference: trade.reference,
                                   shareTraded: trade.sharesTraded,
                                   buySell: trade.type,
-                                  price: trade.price.toString(),
+                                  price: trade.price,
                                 ))
                             .toList(),
                       );
@@ -109,7 +110,7 @@ class CustomCard extends StatelessWidget {
   final String reference;
   final int shareTraded;
   final String buySell;
-  final String price;
+  final double price;
 
   @override
   Widget build(BuildContext context) {
@@ -182,7 +183,7 @@ class CustomCard extends StatelessWidget {
               SizedBox(height: screenWidth * 0.02),
               Text('Quote scambiate: $shareTraded'),
               Text('Tipologia: $buySell'),
-              Text('Valore della transazione: ${price*shareTraded} €'),
+              Text('Totale: ' + formatAmountFromDouble(price*shareTraded) + '€'),
             ],
           )
         ]),

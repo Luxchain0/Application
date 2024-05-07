@@ -3,6 +3,7 @@ import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
+import 'package:lux_chain/utilities/utils.dart';
 
 class ModifyOnSaleShareScreen extends StatefulWidget {
   static const String id = 'ModifyOnSaleShareScreen';
@@ -183,7 +184,9 @@ class _ModifyOnSaleShareScreenState extends State<ModifyOnSaleShareScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                      "Prezzo di vendita: ${modifySharesOnSale.proposalPrice} €"),
+                      'Prezzo di vendita: ' +
+                    formatAmountFromDouble(modifySharesOnSale.proposalPrice) +
+                    '€'),
                   OutlinedButton(
                     //TODO: migliorare look and feel
                     //TODO: quando viene cliccato il tasto edit, dove si inserisce la cifra?¯

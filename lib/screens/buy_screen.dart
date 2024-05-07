@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lux_chain/screens/wallet_screen.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
+import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
@@ -39,10 +41,44 @@ class _BuyScreenState extends State<BuyScreen> {
         : false;
   }
 
-  handleBuy() {
+  handleBuy() async {
     // ignore: avoid_print
-    print("BUY");
-    buyShares(2, buyInfo.watchid, _shareSelected, buyInfo.proposalPrice);
+    print("BUYING");
+    var result =
+        await buyShares(2, buyInfo.watchid, _shareSelected, buyInfo.proposalPrice);
+    if (APIStatus.success == result) {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, FrameScreen.id);
+                    },
+                    child: const Text('Close'),
+                  ),
+                ],
+                title: const Text('Messaggio di info'),
+                contentPadding: const EdgeInsets.all(20.0),
+                content: Text('tutto bene'),
+              ));
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Close'),
+                  ),
+                ],
+                title: const Text('Messaggio di info'),
+                contentPadding: const EdgeInsets.all(20.0),
+                content: Text('tutto male'),
+              ));
+    }
   }
 
   @override
@@ -128,10 +164,12 @@ class _BuyScreenState extends State<BuyScreen> {
                 SizedBox(
                   height: heigh * 0.02,
                 ),
-                const Text('Prezzo di listino: boh'),
+                const Text('Prezzo di listino: -€'),
                 Text('Numero di quote: ${buyInfo.totalNumberOfShares}'),
                 const Text('Prezzo medio: -€'),
-                Text('Prezzo di vendita: ${buyInfo.proposalPrice}'),
+                Text('Prezzo di vendita: ' +
+                    formatAmountFromDouble(buyInfo.proposalPrice) +
+                    ' €'),
                 Text('Numero di quote in vendita: ${buyInfo.numberOfShares}'),
                 SizedBox(
                   height: heigh * 0.03,
@@ -166,7 +204,10 @@ class _BuyScreenState extends State<BuyScreen> {
                               }),
                     ),
                     Text(
-                      'Totale: ' + formatAmountFromDouble(_shareSelected * buyInfo.proposalPrice) + " €",
+                      'Totale: ' +
+                          formatAmountFromDouble(
+                              _shareSelected * buyInfo.proposalPrice) +
+                          " €",
                       style: TextStyle(
                           fontSize: heigh * 0.023, fontWeight: FontWeight.bold),
                     ),

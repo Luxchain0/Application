@@ -1,7 +1,5 @@
 //TODO
 
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:lux_chain/screens/modify_on_sale_share.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
@@ -9,6 +7,7 @@ import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/firestore.dart';
 import 'package:lux_chain/utilities/models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
+import 'package:lux_chain/utilities/utils.dart';
 
 class MySharesScreen extends StatefulWidget {
   static const String id = 'HistoryScreen';
@@ -69,7 +68,7 @@ class _MySharesScreenState extends State<MySharesScreen> {
                                   onSaleAtPrice: myShare.onSaleAtPrice,
                                   sharesOwned: myShare.sharesOwned,
                                   sharesOnSale: myShare.sharesOnSale,
-                                  price: myShare.price.toString(),
+                                  price: myShare.price,
                                 ))
                             .toList(),
                       );
@@ -114,7 +113,7 @@ class CustomCard extends StatelessWidget {
   final int onSaleAtPrice; // Shares on sale at this price
   final int sharesOwned; // Shares owned by the user
   final int sharesOnSale; // Shares on sale owned by the user
-  final String price;
+  final double price;
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +124,7 @@ class CustomCard extends StatelessWidget {
             watchid: watchID,
             brandName: brandName,
             modelName: modelName,
-            proposalPrice: double.parse(price),
+            proposalPrice: price,
             onSaleAtPrice: onSaleAtPrice,
             sharesOwned: sharesOwned,
             sharesOnSale: sharesOnSale,
@@ -194,8 +193,10 @@ class CustomCard extends StatelessWidget {
               Text('Reference: $reference'),
               Text('Serial: $watchID'),
               SizedBox(height: screenWidth * 0.02),
-              Text('Quote in vendita a questo prezzo: $onSaleAtPrice'),
-              Text('Prezzo quota: $price €'),
+              Text('Quote in vendita: $onSaleAtPrice'),
+              Text('Prezzo quota: ' +
+                    formatAmountFromDouble(price) +
+                    '€'),
             ],
           )
         ]),
