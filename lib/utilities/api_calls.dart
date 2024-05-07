@@ -293,19 +293,32 @@ Future<APIStatus> updateSharesOnSale(
   }
 }
 
+Future<bool> getFavorite(int userID, int watchID) async {
+  try {
+    final response = await http.get(
+      Uri.parse('$apiURL/wallet/favorite/$userID/$watchID'),
+    );
 
-//TODO: finire correttamente questo metodo
-Future<APIStatus> addToFavourites(int userID, int watchID) async {
+    if (response.statusCode == 200) {
+      final dynamic data = jsonDecode(response.body);
+      return data;
+    } else {
+      throw Exception('[FLUTTER] Failed to load favorite');
+    }
+  } catch (e) {
+    throw Exception('[FLUTTER] Error retrieving favorite: $e');
+  }
+}
+
+
+Future<APIStatus> addToFavourite(int userID, int watchID) async {
   try {
 
     final response = await http.post(
       Uri.parse('$apiURL/wallet/favorite/$userID/$watchID'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       // ignore: avoid_print
       print("SUCCESS ADDING WATCH TO FAVOURITE");
       return APIStatus.success;
@@ -317,15 +330,11 @@ Future<APIStatus> addToFavourites(int userID, int watchID) async {
   }
 }
 
-//TODO: aggiunta io al volo, verificare
-Future<APIStatus> removeFromFavourites(int userID, int watchID) async {
+Future<APIStatus> removeFromFavourite(int userID, int watchID) async {
   try {
 
-    final response = await http.post(
+    final response = await http.delete(
       Uri.parse('$apiURL/wallet/favorite/$userID/$watchID'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
     );
 
     if (response.statusCode == 200) {

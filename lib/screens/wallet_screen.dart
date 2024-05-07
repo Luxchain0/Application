@@ -101,15 +101,11 @@ class _WalletScreenState extends State<WalletScreen> {
                         ),
                       ),
                       Text(
-                        'In collezioni: ' +
-                            formatAmountFromDouble(walletData.inShares) +
-                            ' €',
+                        'In collezioni: ${formatAmountFromDouble(walletData.inShares)} €',
                         style: TextStyle(fontSize: width * 0.04),
                       ),
                       Text(
-                        'Liquidi: ' +
-                            formatAmountFromDouble(walletData.liquidity) +
-                            ' €',
+                        'Liquidi: ${formatAmountFromDouble(walletData.liquidity)} €',
                         style: TextStyle(fontSize: width * 0.04),
                       ),
                       SizedBox(

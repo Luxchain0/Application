@@ -22,13 +22,14 @@ class WatchScreen extends StatefulWidget {
 class _WatchScreenState extends State<WatchScreen> {
   late Future<Watch> futureWatchData;
   late Future<List<ShareOnSale>> futureSharesData;
-  bool isFav = false;
+  late Future<bool> isFavourite;
 
   @override
   void initState() {
     super.initState();
     futureWatchData = getWatchByWatchId(widget.watchID);
     futureSharesData = getSharesOfTheWatchOnSell(widget.watchID);
+    isFavourite = getFavorite(1, widget.watchID);
   }
 
   @override
@@ -93,20 +94,47 @@ class _WatchScreenState extends State<WatchScreen> {
                               ],
                             ),
                             IconButton(
-                                onPressed: () => {
-                                  if (isFav && removeFromFavourites(2, widget.watchID) == APIStatus.success) {
-                                    setState(() {
-                                      isFav = false;
-                                    }),
-                                  } else if (!isFav && addToFavourites(2, widget.watchID) == APIStatus.success){
-                                    setState(() {
-                                      isFav = true;
-                                    }),
+                                onPressed:  () async {
+                                  bool isFav = await isFavourite;
+                                  if (isFav) {
+                                    APIStatus removeStatus = await removeFromFavourite(1, widget.watchID);
+                                    if (removeStatus == APIStatus.success) {
+                                      setState(() {
+                                        isFavourite = Future.value(false);
+                                      });
+                                    }
+                                  } else {
+                                    APIStatus addStatus = await addToFavourite(1, widget.watchID);
+                                    if (addStatus == APIStatus.success) {
+                                      setState(() {
+                                        isFavourite = Future.value(true);
+                                      });
+                                    }
                                   }
                                 },
-                                icon: isFav ? Icon(Icons.favorite_rounded) : Icon(Icons.favorite_border_outlined)
+                                icon: FutureBuilder<bool>(
+                                  future: isFavourite,
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return const CircularProgressIndicator();
+                                    } else if (snapshot.hasData) {
+                                      bool isFav = snapshot.data!;
+                                      return Icon(
+                                        isFav
+                                            ? Icons.favorite_rounded
+                                            : Icons.favorite_border_outlined,
+                                        color: Colors.red,
+                                      );
+                                    } else if (snapshot.hasError) {
+                                      return const Icon(Icons.error);
+                                    } else {
+                                      return const SizedBox();
+                                    }
+                                  },
+                                )
                               )
-                          ],
+                          ], 
                         ),
                         Container(
                           margin: EdgeInsets.symmetric(vertical: heigh * 0.02),
@@ -151,15 +179,9 @@ class _WatchScreenState extends State<WatchScreen> {
                             "Materiale cassa: ${watch.modelType.casematerial}"),
                         Text(
                             "Materiale bracciale: ${watch.modelType.braceletmaterial}"),
-                        Text('Prezzo di listino: ' +
-                            formatAmountFromDouble(watch.initialPrice) +
-                            ' €'),
-                        Text('Prezzo medio: ' +
-                            formatAmountFromDouble(watch.actualPrice) +
-                            ' €'),
-                        Text('Prezzo di vendita proposto: ' +
-                            formatAmountFromDouble(watch.actualPrice) +
-                            ' €'),
+                        Text('Prezzo di listino: ${formatAmountFromDouble(watch.initialPrice)} €'),
+                        Text('Prezzo medio: ${formatAmountFromDouble(watch.actualPrice)} €'),
+                        Text('Prezzo di vendita proposto: ${formatAmountFromDouble(watch.actualPrice)} €'),
                         Text("Numero di quote: ${watch.numberOfShares}"),
                         Text("Condizione orlogio: ${watch.condition}"),
                         Row(
@@ -360,7 +382,7 @@ class CustomRowForQuote extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  formatAmountFromDouble(quotePrice) + ' €',
+                  '${formatAmountFromDouble(quotePrice)} €',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
