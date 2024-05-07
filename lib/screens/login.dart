@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/size_config.dart';
+import 'package:lux_chain/screens/signup_screen.dart';
 import 'package:http/http.dart' as http;
 
 const String apiURL = 'https://luxchain-flame.vercel.app/api';
@@ -15,15 +16,15 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool _rememberMe = false;
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  Widget _buildEmailTF() {
+  Widget _buildUsernameTF() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         const Text(
-          'Email',
+          'Username',
           style: kLabelStyle,
         ),
         const SizedBox(height: 10.0),
@@ -32,8 +33,7 @@ class _LoginState extends State<Login> {
           decoration: kBoxDecorationStyle,
           height: 60.0,
           child: TextField(
-            controller: emailController,
-            keyboardType: TextInputType.emailAddress,
+            controller: usernameController,
             style: const TextStyle(
               color: Colors.white,
             ),
@@ -41,10 +41,10 @@ class _LoginState extends State<Login> {
               border: InputBorder.none,
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
-                Icons.email,
+                Icons.account_box,
                 color: Colors.white,
               ),
-              hintText: 'Enter your Email',
+              hintText: 'Enter your username',
               hintStyle: kHintTextStyle,
             ),
           ),
@@ -140,7 +140,7 @@ class _LoginState extends State<Login> {
             final response = await http.post(
               Uri.parse('$apiURL/auth/login'),
               body: <String, String>{
-                'email': emailController.text,
+                'username': usernameController.text,
                 'password': passwordController.text,
               },
             );
@@ -151,7 +151,7 @@ class _LoginState extends State<Login> {
               print(jsonDecode(response.body));
             } else {
               throw Exception(
-                  '[FLUTTER] Login http Error: $response.statusMessage');
+                  '[FLUTTER] Login http Error: $response.statusCode');
             }
           } catch (e) {
             throw Exception('[FLUTTER] Login Error: $e');
@@ -235,7 +235,7 @@ class _LoginState extends State<Login> {
                   print(jsonDecode(response.body));
                 } else {
                   throw Exception(
-                      '[FLUTTER] Google Login http Error: $response.statusMessage');
+                      '[FLUTTER] Google Login http Error: $response.statusCode');
                 }
               } catch (e) {
                 throw Exception('[FLUTTER] Google Login Error: $e');
@@ -253,7 +253,12 @@ class _LoginState extends State<Login> {
   Widget _buildSignupBtn() {
     return GestureDetector(
       onTap: () {
-        // TODO
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const SignUpScreen(),
+          ),
+        );
       },
       child: RichText(
         text: const TextSpan(
@@ -283,7 +288,7 @@ class _LoginState extends State<Login> {
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    emailController.dispose();
+    usernameController.dispose();
     passwordController.dispose();
     super.dispose();
   }
@@ -325,7 +330,7 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                     const SizedBox(height: 30.0),
-                    _buildEmailTF(),
+                    _buildUsernameTF(),
                     const SizedBox(height: 30.0),
                     _buildPasswordTF(),
                     _buildForgotPasswordBtn(),
