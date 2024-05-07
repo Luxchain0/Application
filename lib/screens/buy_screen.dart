@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lux_chain/screens/wallet_screen.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/frame.dart';
