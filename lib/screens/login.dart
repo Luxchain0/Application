@@ -184,11 +184,9 @@ class _LoginState extends State<Login> {
     );
   }
 
-  Widget _buildSocialBtn(Function onTap, AssetImage logo) {
+  Widget _buildSocialBtn(VoidCallback onTap, AssetImage logo) {
     return GestureDetector(
-      onTap: () {
-        // TODO
-      },
+      onTap: onTap,
       child: Container(
         height: 60.0,
         width: 60.0,
@@ -218,6 +216,7 @@ class _LoginState extends State<Login> {
         children: <Widget>[
           _buildSocialBtn(
             () async {
+              print('Google Login Pressed');
               try {
                 final response = await http.get(
                   Uri.parse('$apiURL/auth/login/google'),
@@ -310,9 +309,7 @@ class _LoginState extends State<Login> {
                     ),
                     const SizedBox(height: 30.0),
                     _buildEmailTF(),
-                    const SizedBox(
-                      height: 30.0,
-                    ),
+                    const SizedBox(height: 30.0),
                     _buildPasswordTF(),
                     _buildForgotPasswordBtn(),
                     _buildRememberMeCheckbox(),
