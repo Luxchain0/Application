@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/size_config.dart';
@@ -14,6 +15,8 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool _rememberMe = false;
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   Widget _buildEmailTF() {
     return Column(
@@ -28,12 +31,13 @@ class _LoginState extends State<Login> {
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
           height: 60.0,
-          child: const TextField(
+          child: TextField(
+            controller: emailController,
             keyboardType: TextInputType.emailAddress,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
             ),
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               border: InputBorder.none,
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
@@ -62,12 +66,13 @@ class _LoginState extends State<Login> {
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
           height: 60.0,
-          child: const TextField(
+          child: TextField(
+            controller: passwordController,
             obscureText: true,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
             ),
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               border: InputBorder.none,
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
@@ -135,13 +140,15 @@ class _LoginState extends State<Login> {
             final response = await http.post(
               Uri.parse('$apiURL/auth/login'),
               body: <String, String>{
-                'email': 'email',
-                'password': 'password',
+                'email': emailController.text,
+                'password': passwordController.text,
               },
             );
 
+            print(response.statusCode);
             if (response.statusCode == 200) {
               // salva user + token e cambia pagina
+              print(jsonDecode(response.body));
             } else {
               throw Exception(
                   '[FLUTTER] Login http Error: $response.statusMessage');
@@ -222,8 +229,10 @@ class _LoginState extends State<Login> {
                   Uri.parse('$apiURL/auth/login/google'),
                 );
 
+                print(response.statusCode);
                 if (response.statusCode == 200) {
                   // salva user + token e cambia pagina
+                  print(jsonDecode(response.body));
                 } else {
                   throw Exception(
                       '[FLUTTER] Google Login http Error: $response.statusMessage');
@@ -269,6 +278,14 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
   }
 
   @override
