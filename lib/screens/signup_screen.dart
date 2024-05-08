@@ -19,6 +19,40 @@ class _SignUpState extends State<SignUpScreen> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  Widget _buildUsernameTF() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        const Text(
+          'Username',
+          style: kLabelStyle,
+        ),
+        const SizedBox(height: 10.0),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: kBoxDecorationStyle,
+          height: 60.0,
+          child: TextField(
+            controller: usernameController,
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(
+                Icons.account_box,
+                color: Colors.white,
+              ),
+              hintText: 'Enter your username',
+              hintStyle: kHintTextStyle,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildFirstNameTF() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,40 +158,6 @@ class _SignUpState extends State<SignUpScreen> {
     );
   }
 
-  Widget _buildUsernameTF() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        const Text(
-          'Username',
-          style: kLabelStyle,
-        ),
-        const SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
-          height: 60.0,
-          child: TextField(
-            controller: usernameController,
-            style: const TextStyle(
-              color: Colors.white,
-            ),
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.account_box,
-                color: Colors.white,
-              ),
-              hintText: 'Enter your username',
-              hintStyle: kHintTextStyle,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _buildPasswordTF() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -203,10 +203,10 @@ class _SignUpState extends State<SignUpScreen> {
             final response = await http.post(
               Uri.parse('$apiURL/auth/signup'),
               body: <String, String>{
+                'username': usernameController.text,
                 'firstname': firstnameController.text,
                 'lastname': lastnameController.text,
                 'email': emailController.text,
-                'username': usernameController.text,
                 'password': passwordController.text,
               },
             );
@@ -280,14 +280,14 @@ class _SignUpState extends State<SignUpScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    const SizedBox(height: 15.0),
+                    _buildUsernameTF(),
                     const SizedBox(height: 30.0),
                     _buildFirstNameTF(),
                     const SizedBox(height: 15.0),
                     _buildLastnameTF(),
                     const SizedBox(height: 15.0),
                     _buildEmailTF(),
-                    const SizedBox(height: 15.0),
-                    _buildUsernameTF(),
                     const SizedBox(height: 15.0),
                     _buildPasswordTF(),
                     const SizedBox(height: 15.0),

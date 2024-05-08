@@ -15,16 +15,16 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  bool _rememberMe = false;
-  final TextEditingController usernameController = TextEditingController();
+  bool _showPassword = false;
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  Widget _buildUsernameTF() {
+  Widget _buildEmailTF() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         const Text(
-          'Username',
+          'Email',
           style: kLabelStyle,
         ),
         const SizedBox(height: 10.0),
@@ -33,7 +33,7 @@ class _LoginState extends State<Login> {
           decoration: kBoxDecorationStyle,
           height: 60.0,
           child: TextField(
-            controller: usernameController,
+            controller: emailController,
             style: const TextStyle(
               color: Colors.white,
             ),
@@ -44,7 +44,7 @@ class _LoginState extends State<Login> {
                 Icons.account_box,
                 color: Colors.white,
               ),
-              hintText: 'Enter your username',
+              hintText: 'Enter your email',
               hintStyle: kHintTextStyle,
             ),
           ),
@@ -68,7 +68,7 @@ class _LoginState extends State<Login> {
           height: 60.0,
           child: TextField(
             controller: passwordController,
-            obscureText: true,
+            obscureText: !_showPassword,
             style: const TextStyle(
               color: Colors.white,
             ),
@@ -103,7 +103,7 @@ class _LoginState extends State<Login> {
     );
   }
 
-  Widget _buildRememberMeCheckbox() {
+  Widget _buildShowPasswordBox() {
     return SizedBox(
       height: 20.0,
       child: Row(
@@ -111,18 +111,18 @@ class _LoginState extends State<Login> {
           Theme(
             data: ThemeData(unselectedWidgetColor: Colors.white),
             child: Checkbox(
-              value: _rememberMe,
+              value: _showPassword,
               checkColor: Colors.green,
               activeColor: Colors.white,
               onChanged: (value) {
                 setState(() {
-                  _rememberMe = value!;
+                  _showPassword = value!;
                 });
               },
             ),
           ),
           const Text(
-            'Remember me',
+            'Show Password',
             style: kLabelStyle,
           ),
         ],
@@ -137,12 +137,14 @@ class _LoginState extends State<Login> {
       child: ElevatedButton(
         onPressed: () async {
           try {
+            Map<String, String> requestBody = {
+              'email': emailController.text,
+              'password': passwordController.text,
+            };
+
             final response = await http.post(
               Uri.parse('$apiURL/auth/login'),
-              body: <String, String>{
-                'username': usernameController.text,
-                'password': passwordController.text,
-              },
+              body: jsonEncode(requestBody),
             );
 
             print(response.statusCode);
@@ -288,7 +290,7 @@ class _LoginState extends State<Login> {
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    usernameController.dispose();
+    emailController.dispose();
     passwordController.dispose();
     super.dispose();
   }
@@ -330,11 +332,12 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                     const SizedBox(height: 30.0),
-                    _buildUsernameTF(),
+                    _buildEmailTF(),
                     const SizedBox(height: 30.0),
                     _buildPasswordTF(),
+                    const SizedBox(height: 10.0),
+                    _buildShowPasswordBox(),
                     _buildForgotPasswordBtn(),
-                    _buildRememberMeCheckbox(),
                     _buildLoginBtn(),
                     _buildSignInWithText(),
                     _buildSocialBtnRow(),
