@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/size_config.dart';
@@ -13,10 +14,11 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUpScreen> {
+  bool _showPassword = false;
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController firstnameController = TextEditingController();
   final TextEditingController lastnameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   Widget _buildUsernameTF() {
@@ -67,7 +69,7 @@ class _SignUpState extends State<SignUpScreen> {
           decoration: kBoxDecorationStyle,
           height: 60.0,
           child: TextField(
-            controller: emailController,
+            controller: firstnameController,
             keyboardType: TextInputType.emailAddress,
             style: const TextStyle(
               color: Colors.white,
@@ -102,7 +104,7 @@ class _SignUpState extends State<SignUpScreen> {
           decoration: kBoxDecorationStyle,
           height: 60.0,
           child: TextField(
-            controller: emailController,
+            controller: lastnameController,
             keyboardType: TextInputType.emailAddress,
             style: const TextStyle(
               color: Colors.white,
@@ -173,7 +175,7 @@ class _SignUpState extends State<SignUpScreen> {
           height: 60.0,
           child: TextField(
             controller: passwordController,
-            obscureText: true,
+            obscureText: !_showPassword,
             style: const TextStyle(
               color: Colors.white,
             ),
@@ -193,6 +195,33 @@ class _SignUpState extends State<SignUpScreen> {
     );
   }
 
+  Widget _buildShowPasswordBox() {
+    return SizedBox(
+      height: 20.0,
+      child: Row(
+        children: <Widget>[
+          Theme(
+            data: ThemeData(unselectedWidgetColor: Colors.white),
+            child: Checkbox(
+              value: _showPassword,
+              checkColor: Colors.green,
+              activeColor: Colors.white,
+              onChanged: (value) {
+                setState(() {
+                  _showPassword = value!;
+                });
+              },
+            ),
+          ),
+          const Text(
+            'Show Password',
+            style: kLabelStyle,
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildSignUpBtn() {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 25.0),
@@ -200,22 +229,36 @@ class _SignUpState extends State<SignUpScreen> {
       child: ElevatedButton(
         onPressed: () async {
           try {
+            Map<String, String> requestBody = {
+              'username': usernameController.text,
+              'firstname': firstnameController.text,
+              'lastname': lastnameController.text,
+              //
+              "birthdate": "1990-05-20",
+              "birthcountry": "Italia",
+              "nationality": "Italiana",
+              "address": "Via Roma 123",
+              "phonenr": "+39123456789",
+              "govid": "ABC123XYZ",
+              //
+              'email': emailController.text,
+              'password': passwordController.text,
+            };
+
             final response = await http.post(
               Uri.parse('$apiURL/auth/signup'),
-              body: <String, String>{
-                'username': usernameController.text,
-                'firstname': firstnameController.text,
-                'lastname': lastnameController.text,
-                'email': emailController.text,
-                'password': passwordController.text,
+              headers: <String, String>{
+                'Content-Type': 'application/json; charset=UTF-8',
               },
+              body: jsonEncode(requestBody),
             );
 
             if (response.statusCode == 200) {
               // salva user + token e cambia pagina
+              print('Response: ${jsonDecode(response.body)['token']}');
             } else {
               throw Exception(
-                  '[FLUTTER] SignUpScreen http Error: $response.statusCode');
+                  '[FLUTTER] SignUpScreen http Error: ${response.statusCode}');
             }
           } catch (e) {
             throw Exception('[FLUTTER] SignUpScreen Error: $e');

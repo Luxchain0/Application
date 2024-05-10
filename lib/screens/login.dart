@@ -153,7 +153,10 @@ class _LoginState extends State<Login> {
             print(response.statusCode);
             if (response.statusCode == 200) {
               // salva user + token e cambia pagina
-              print(jsonDecode(response.body));
+              print('user:');
+              print(jsonDecode(response.body)['user']);
+              print('token:');
+              print(jsonDecode(response.body)['token']);
             } else {
               throw Exception(
                   '[FLUTTER] Login http Error: $response.statusCode');
@@ -240,7 +243,7 @@ class _LoginState extends State<Login> {
                   print(jsonDecode(response.body));
                 } else {
                   throw Exception(
-                      '[FLUTTER] Google Login http Error: $response.statusCode');
+                      '[FLUTTER] Google Login http Error: ${response.statusCode}');
                 }
               } catch (e) {
                 throw Exception('[FLUTTER] Google Login Error: $e');
