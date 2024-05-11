@@ -1,5 +1,3 @@
-//TODO
-
 import 'package:flutter/material.dart';
 import 'package:lux_chain/screens/modify_on_sale_share.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
@@ -42,13 +40,16 @@ class _MySharesScreenState extends State<MySharesScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text(
-                  'Le mie quote in vendita',
-                  style: TextStyle(
-                      color: Colors.black87,
-                      height: 1,
-                      fontSize: width * 0.1,
-                      fontFamily: 'Bebas'),
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: heigh * 0.02),
+                  child: Text(
+                    'Le mie quote in vendita',
+                    style: TextStyle(
+                        color: Colors.black87,
+                        height: 1,
+                        fontSize: width * 0.1,
+                        fontFamily: 'Bebas'),
+                  ),
                 ),
                 FutureBuilder<List<MySharesOnSale>>(
                   future: futureMySharesOnSale,
@@ -74,8 +75,7 @@ class _MySharesScreenState extends State<MySharesScreen> {
                       );
                     } else if (snapshot.hasError) {
                       return Text('${snapshot.error}');
-                    }
-                    else {
+                    } else {
                       return const SizedBox(); // Placeholder widget when no data is available
                     }
                   },
@@ -117,89 +117,139 @@ class CustomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () =>
-          {Navigator.of(context).pushNamed(ModifyOnSaleShareScreen.id,
-          arguments: ModifySharesOnSale(
-            watchid: watchID,
-            brandName: brandName,
-            modelName: modelName,
-            proposalPrice: price,
-            onSaleAtPrice: onSaleAtPrice,
-            sharesOwned: sharesOwned,
-            sharesOnSale: sharesOnSale,
-            image: imgUrl,
-          ))},
-      child: Container(
+    return Container(
         margin: const EdgeInsets.symmetric(vertical: 7),
         padding: const EdgeInsets.only(top: 10, bottom: 10),
         decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(
-              color: Colors.black26,
-              width: 1,
+          color: Colors.white,
+          border: Border.all(
+            color: Colors.black26,
+            width: 1,
+          ),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 2,
+              offset: Offset(3, 3), // Shadow position
             ),
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 2,
-                offset: Offset(3, 3), // Shadow position
-              ),
-            ],
-            borderRadius: const BorderRadius.all(Radius.circular(7))),
-        child: Row(children: [
-          FutureBuilder<String>(
-            future: imgUrl,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
-              } else if (snapshot.hasData) {
-                return ClipRRect(
+          ],
+          borderRadius: const BorderRadius.all(Radius.circular(7)),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+              child: Column(
+                children: [
+                  FutureBuilder<String>(
+                    future: imgUrl,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      } else if (snapshot.hasData) {
+                        return ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(7)),
                   child: Image.network(
                     snapshot.data!,
-                    width: screenWidth * 0.3,
-                    height: screenWidth * 0.3,
+                    width: screenWidth * 0.25,
+                    height: screenWidth * 0.25,
                     fit: BoxFit.cover,
                   ),
                 );
-              } else if (snapshot.hasError) {
-                return const Icon(Icons.error);
-              } else {
-                return const SizedBox();
-              }
-            },
-          ),
-          const SizedBox(width: 10),
-          Column(
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        return const Text('Image not found');
+                      }
+                    },
+                  ),
+                  SizedBox(height: screenWidth * 0.02),
+                  CustomButton(
+                    screenWidth: screenWidth,
+                    backgorundColor: const Color.fromARGB(255, 17, 45, 68),
+                    textColor: Colors.white,
+                    text: 'Modifica',
+                    onPressed: () => {
+                      Navigator.of(context).pushNamed(ModifyOnSaleShareScreen.id,
+            arguments: ModifySharesOnSale(
+              watchid: watchID,
+              brandName: brandName,
+              modelName: modelName,
+              proposalPrice: price,
+              onSaleAtPrice: onSaleAtPrice,
+              sharesOwned: sharesOwned,
+              sharesOnSale: sharesOnSale,
+              image: imgUrl,
+            ))
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 10),
+            Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 modelName,
                 style: TextStyle(
-                    color: Colors.black38,
-                    height: 1,
-                    fontSize: screenWidth * 0.05,
-                    fontFamily: 'Bebas'),
+                  color: Colors.black38,
+                  height: 1,
+                  fontSize: screenWidth * 0.05,
+                  fontFamily: 'Bebas',
+                ),
               ),
               Text(
                 brandName,
                 style: TextStyle(
-                    color: Colors.black87,
-                    height: 1,
-                    fontSize: screenWidth * 0.055,
-                    fontFamily: 'Bebas'),
+                  color: Colors.black87,
+                  height: 1,
+                  fontSize: screenWidth * 0.055,
+                  fontFamily: 'Bebas',
+                ),
               ),
               Text('Reference: $reference'),
-              Text('Serial: $watchID'),
-              SizedBox(height: screenWidth * 0.02),
-              Text('Quote in vendita: $onSaleAtPrice'),
-              Text('Prezzo quota: ' +
-                    formatAmountFromDouble(price) +
-                    '€'),
+                  Text('Serial: $watchID'),
+                  SizedBox(height: screenWidth * 0.02),
+                  Text('Quote in vendita: $onSaleAtPrice'),
+                  Text('Prezzo quota: ' + formatAmountFromDouble(price) + '€'),
             ],
-          )
-        ]),
+          ),
+          ],
+        ),
+      );
+  }
+}
+
+class CustomButton extends StatelessWidget {
+  final double screenWidth;
+  final Color backgorundColor;
+  final Color textColor;
+  final String text;
+  final Function onPressed;
+
+  const CustomButton(
+      {super.key,
+      required this.screenWidth,
+      required this.backgorundColor,
+      required this.textColor,
+      required this.text,
+      required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton(
+      onPressed: () => onPressed(),
+      style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<Color>(backgorundColor),
+          foregroundColor: MaterialStateProperty.all<Color>(textColor),
+          minimumSize: MaterialStateProperty.all<Size>(
+              Size(screenWidth * 0.2, screenWidth * 0.08))),
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }

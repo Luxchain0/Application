@@ -270,15 +270,15 @@ class CustomBottomBigCard extends StatelessWidget {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const CircularProgressIndicator();
                       } else if (snapshot.hasData) {
-                        return Container(
-                          margin: const EdgeInsets.only(right: 0),
-                          alignment: Alignment.center,
-                          child: Image.network(
-                            snapshot.data!,
-                            fit: BoxFit.contain,
-                            width: screenWidth * 0.27,
-                          ),
-                        );
+                        return ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(7)),
+                  child: Image.network(
+                    snapshot.data!,
+                    width: screenWidth * 0.3,
+                    height: screenWidth * 0.3,
+                    fit: BoxFit.cover,
+                  ),
+                );
                       } else if (snapshot.hasError) {
                         return Text('Error: ${snapshot.error}');
                       } else {

@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/models.dart';
@@ -35,7 +37,6 @@ class _ModifyOnSaleShareScreenState extends State<ModifyOnSaleShareScreen> {
       );
 
       setState(() {});
-
     } catch (e) {
       if (mounted) {
         showDialog(
@@ -145,37 +146,54 @@ class _ModifyOnSaleShareScreenState extends State<ModifyOnSaleShareScreen> {
               Text('Quote possedute: ${modifySharesOnSale.sharesOwned}'),
               Text(
                   'Quote possedute in vendita: ${modifySharesOnSale.sharesOnSale}'),
+              SizedBox(
+                height: heigh * 0.02,
+              ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   const Text("Quote in vendita:"),
-                  CircleAvatar(
-                    radius: width * 0.05,
-                    backgroundColor: const Color.fromARGB(228, 118, 196, 241),
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.remove,
-                        color: Colors.black,
-                      ),
-                      onPressed: modifySharesOnSale.sharesOnSale > 0 ? () {
-                        modifySharesOnSale.decreaseShareOnSale();
-                        _saveChanges();
-                      } : null,
+                  SizedBox(
+                    width: width * 0.03,
+                  ),
+                  GestureDetector(
+                    onTap: () => {
+                      (modifySharesOnSale.sharesOnSale > 0)
+                          ? () => {
+                              print('siamo più interni'),
+                              modifySharesOnSale.decreaseShareOnSale(),
+                              _saveChanges(),
+                            }
+                          : null
+                    },
+                    child: CircleAvatar(
+                      radius: width * 0.04,
+                      backgroundColor: const Color.fromARGB(228, 118, 196, 241),
+                      child: Text('-'),
                     ),
                   ),
+                  SizedBox(
+                    width: width * 0.03,
+                  ),
                   Text("${modifySharesOnSale.onSaleAtPrice}"),
-                  CircleAvatar(
-                    radius: width * 0.05,
-                    backgroundColor: const Color.fromARGB(226, 102, 176, 255),
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.add,
-                        color: Colors.black,
-                      ),
-                      onPressed: modifySharesOnSale.sharesOnSale < modifySharesOnSale.sharesOwned ? () {
-                        modifySharesOnSale.increaseShareOnSale();
-                        _saveChanges();
-                      } : null,
+                  SizedBox(
+                    width: width * 0.03,
+                  ),
+                  GestureDetector(
+                    onTap: () => {
+                      print('siamo nel +'),
+                      modifySharesOnSale.sharesOnSale <
+                              modifySharesOnSale.sharesOwned
+                          ? () {
+                              modifySharesOnSale.increaseShareOnSale();
+                              _saveChanges();
+                            }
+                          : null,
+                    },
+                    child: CircleAvatar(
+                      radius: width * 0.04,
+                      backgroundColor: const Color.fromARGB(226, 102, 176, 255),
+                      child: Text('+'),
                     ),
                   ),
                 ],
@@ -183,10 +201,9 @@ class _ModifyOnSaleShareScreenState extends State<ModifyOnSaleShareScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                      'Prezzo di vendita: ' +
-                    formatAmountFromDouble(modifySharesOnSale.proposalPrice) +
-                    '€'),
+                  Text('Prezzo di vendita: ' +
+                      formatAmountFromDouble(modifySharesOnSale.proposalPrice) +
+                      '€'),
                   OutlinedButton(
                     //TODO: migliorare look and feel
                     //TODO: quando viene cliccato il tasto edit, dove si inserisce la cifra?¯

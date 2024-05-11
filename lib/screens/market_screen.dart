@@ -31,88 +31,87 @@ class _MarketScreenState extends State<MarketScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-          child: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-              vertical: heigh * 0.02, horizontal: width * 0.04),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                'MarketPlace',
-                style: TextStyle(
-                    color: Colors.black87,
-                    height: 1,
-                    fontSize: width * 0.1,
-                    fontFamily: 'Bebas'),
-              ),
-              SizedBox(
-                height: heigh * 0.02,
-              ),
-              TextFormField(
-                decoration: const InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                      borderSide: BorderSide(
-                        color: Colors.grey,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(color: Colors.grey),
-                    ),
-                    suffixIcon: Icon(Icons.search),
-                    alignLabelWithHint: true,
-                    labelText: 'Insert the name of the watch'),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: heigh * 0.02),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.favorite_border_outlined,
-                      size: width * 0.08,
-                    ),
-                    Expanded(child: SizedBox(width: width * 0.08)),
-                    Icon(Icons.arrow_outward_rounded, size: width * 0.08),
-                    Icon(Icons.filter, size: width * 0.08),
-                  ],
-                ),
-              ),
-              FutureBuilder<List<MarketPlaceWatch>>(
-                future: futureMarketPlaceWatches,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    List<MarketPlaceWatch> marketWatchesList = snapshot.data!;
-                    return Column(
-                      children: marketWatchesList
-                          .map((watch) => CustomBottomBigCard(
-                              screenWidth: width,
-                              watchid: watch.watchId,
-                              imgFuture: getDownloadURL(watch.imageuri),
-                              modelName: watch.modelType.model.modelname,
-                              brandName: watch.modelType.model.brandname,
-                              serialNumber: watch.watchId.toString(),
-                              prezzoDiListino: watch.initialPrice.toInt(),
-                              quoteTotali: watch.numberOfShares,
-                              pezziDisponibili: watch.sharesOnSale,
-                              incremento: 0))
-                          .toList(),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text('${snapshot.error}');
-                  }
-
-                  return const CircularProgressIndicator();
-                },
-              ),
-            ],
+      body: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Padding(
+      padding: EdgeInsets.symmetric(
+          vertical: heigh * 0.02, horizontal: width * 0.04),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'MarketPlace',
+            style: TextStyle(
+                color: Colors.black87,
+                height: 1,
+                fontSize: width * 0.1,
+                fontFamily: 'Bebas'),
           ),
-        ),
-      )),
+          SizedBox(
+            height: heigh * 0.02,
+          ),
+          TextFormField(
+            decoration: const InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  borderSide: BorderSide(
+                    color: Colors.grey,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                  borderSide: BorderSide(color: Colors.grey),
+                ),
+                suffixIcon: Icon(Icons.search),
+                alignLabelWithHint: true,
+                labelText: 'Insert the name of the watch'),
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: heigh * 0.02),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.favorite_border_outlined,
+                  size: width * 0.08,
+                ),
+                Expanded(child: SizedBox(width: width * 0.08)),
+                Icon(Icons.arrow_outward_rounded, size: width * 0.08),
+                Icon(Icons.filter, size: width * 0.08),
+              ],
+            ),
+          ),
+          FutureBuilder<List<MarketPlaceWatch>>(
+            future: futureMarketPlaceWatches,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                List<MarketPlaceWatch> marketWatchesList = snapshot.data!;
+                return Column(
+                  children: marketWatchesList
+                      .map((watch) => CustomBottomBigCard(
+                          screenWidth: width,
+                          watchid: watch.watchId,
+                          imgFuture: getDownloadURL(watch.imageuri),
+                          modelName: watch.modelType.model.modelname,
+                          brandName: watch.modelType.model.brandname,
+                          serialNumber: watch.watchId.toString(),
+                          prezzoDiListino: watch.initialPrice.toInt(),
+                          quoteTotali: watch.numberOfShares,
+                          pezziDisponibili: watch.sharesOnSale,
+                          incremento: 0))
+                      .toList(),
+                );
+              } else if (snapshot.hasError) {
+                return Text('${snapshot.error}');
+              }
+      
+              return const CircularProgressIndicator();
+            },
+          ),
+        ],
+      ),
+              ),
+            ),
     );
   }
 }
@@ -145,55 +144,70 @@ class CustomBottomBigCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 7),
-      padding: const EdgeInsets.only(left: 15, right: 20, top: 10, bottom: 10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(
-          color: Colors.black26,
-          width: 1,
+    return GestureDetector(
+      onTap: () =>
+          Navigator.of(context).pushNamed(WatchScreen.id, arguments: watchid),
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 7),
+        padding: const EdgeInsets.only(top: 10, bottom: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(
+            color: Colors.black26,
+            width: 1,
+          ),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 2,
+              offset: Offset(3, 3), // Shadow position
+            ),
+          ],
+          borderRadius: const BorderRadius.all(Radius.circular(7)),
         ),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 2,
-            offset: Offset(3, 3), // Shadow position
-          ),
-        ],
-        borderRadius: BorderRadius.circular(7),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: screenWidth * 0.25,
-            height: screenWidth * 0.25,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(7),
+        child: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+              child: Column(
+                children: [
+                  FutureBuilder<String>(
+                    future: imgFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      } else if (snapshot.hasData) {
+                        return ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(7)),
+                  child: Image.network(
+                    snapshot.data!,
+                    width: screenWidth * 0.25,
+                    height: screenWidth * 0.25,
+                    fit: BoxFit.cover,
+                  ),
+                );
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        return const Text('Image not found');
+                      }
+                    },
+                  ),
+                  SizedBox(height: screenWidth * 0.02),
+                  CustomButton(
+                    screenWidth: screenWidth,
+                    backgorundColor: const Color.fromARGB(255, 17, 45, 68),
+                    textColor: Colors.white,
+                    text: 'Dettagli',
+                    onPressed: () => Navigator.pushNamed(
+                        context, WatchScreen.id,
+                        arguments: watchid),
+                  ),
+                ],
+              ),
             ),
-            alignment: Alignment.center,
-            child: FutureBuilder<String>(
-              future: imgFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                } else if (snapshot.hasData) {
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(7),
-                    child: Image.network(
-                      snapshot.data!,
-                      fit: BoxFit.cover,
-                    ),
-                  );
-                } else {
-                  return const Icon(Icons.error);
-                }
-              },
-            ),
-          ),
-          SizedBox(width: screenWidth * 0.05),
-          Column(
+            const SizedBox(width: 10),
+            Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
@@ -220,22 +234,10 @@ class CustomBottomBigCard extends StatelessWidget {
               Text('Quote totali: $quoteTotali'),
               Text('Quote disponibili: $pezziDisponibili'),
               SizedBox(height: screenWidth * 0.02),
-              Row(
-                children: [
-                  CustomButton(
-                    screenWidth: screenWidth,
-                    backgorundColor: const Color.fromARGB(255, 17, 45, 68),
-                    textColor: Colors.white,
-                    text: 'Vedi i dettagli',
-                    onPressed: () => Navigator.pushNamed(
-                        context, WatchScreen.id,
-                        arguments: watchid),
-                  ),
-                ],
-              ),
             ],
           ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -1,21 +1,20 @@
-//TODO
-
 import 'package:flutter/material.dart';
 import 'package:lux_chain/screens/watch_screen.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/firestore.dart';
 import 'package:lux_chain/utilities/size_config.dart';
+import 'package:lux_chain/utilities/utils.dart';
 
-class BookmarksScreen extends StatefulWidget {
-  static const String id = 'BookmarksScreen';
-  const BookmarksScreen({super.key});
+class FavouritesScreen extends StatefulWidget {
+  static const String id = 'FavouritesScreen';
+  const FavouritesScreen({super.key});
 
   @override
-  State<BookmarksScreen> createState() => _BookmarksScreenState();
+  State<FavouritesScreen> createState() => _FavouritesScreenState();
 }
 
-class _BookmarksScreenState extends State<BookmarksScreen> {
+class _FavouritesScreenState extends State<FavouritesScreen> {
   late Future<List<Favorite>> futureFavorites;
 
   @override
@@ -91,7 +90,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
 
 class CustomBottomBigCard extends StatelessWidget {
   const CustomBottomBigCard({
-    super.key,
+    Key? key,
     required this.watchID,
     required this.screenWidth, //
     required this.imgUrl, //
@@ -123,89 +122,98 @@ class CustomBottomBigCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () =>
-          {Navigator.of(context).pushNamed(WatchScreen.id, arguments: watchID)},
+          Navigator.of(context).pushNamed(WatchScreen.id, arguments: watchID),
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 7),
         padding: const EdgeInsets.only(top: 10, bottom: 10),
         decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(
-              color: Colors.black26,
-              width: 1,
-            ),
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 2,
-                offset: Offset(3, 3), // Shadow position
-              ),
-            ],
-            borderRadius: const BorderRadius.all(Radius.circular(7))),
-        child: Row(children: [
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
-            child: Column(children: [
-              FutureBuilder<String>(
-                  future: imgUrl,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
-                    } else if (snapshot.hasData) {
-                      return Container(
-                        margin: const EdgeInsets.only(right: 0),
-                        alignment: Alignment.center, // This is needed
-                        child: Image.network(
-                          // Utilizzo di Image.network per caricare l'immagine da un URL
-                          snapshot.data!, // Utilizzo dell'URL dell'immagine
-                          fit: BoxFit.contain,
-                          width: screenWidth * 0.22,
-                        ),
-                      );
-                    } else if (snapshot.hasError) {
-                      return const Icon(Icons.error);
-                    } else {
-                      return const SizedBox();
-                    }
-                  }),
-              SizedBox(height: screenWidth * 0.07),
-              Container(
-                padding: const EdgeInsets.all(5),
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(3)),
-                    color: Colors.lightGreen),
-                child: Text('$incremento%'),
-              ),
-            ]),
+          color: Colors.white,
+          border: Border.all(
+            color: Colors.black26,
+            width: 1,
           ),
-          const SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                modelName,
-                style: TextStyle(
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 2,
+              offset: Offset(3, 3), // Shadow position
+            ),
+          ],
+          borderRadius: const BorderRadius.all(Radius.circular(7)),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+              child: Column(
+                children: [
+                  FutureBuilder<String>(
+                    future: imgUrl,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      } else if (snapshot.hasData) {
+                        return ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(7)),
+                  child: Image.network(
+                    snapshot.data!,
+                    width: screenWidth * 0.23,
+                    height: screenWidth * 0.23,
+                    fit: BoxFit.cover,
+                  ),
+                );
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        return const Text('Image not found');
+                      }
+                    },
+                  ),
+                  SizedBox(height: screenWidth * 0.05),
+                  Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(3)),
+                      color:
+                          (incremento > 0) ? Colors.lightGreen : Colors.red,
+                    ),
+                    child: Text('$incremento%'),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  brandName,
+                  style: TextStyle(
                     color: Colors.black38,
                     height: 1,
                     fontSize: screenWidth * 0.05,
-                    fontFamily: 'Bebas'),
-              ),
-              Text(
-                brandName,
-                style: TextStyle(
+                    fontFamily: 'Bebas',
+                  ),
+                ),
+                Text(
+                  modelName,
+                  style: TextStyle(
                     color: Colors.black87,
                     height: 1,
                     fontSize: screenWidth * 0.055,
-                    fontFamily: 'Bebas'),
-              ),
-              Text('Serial: $serialNumber'),
+                    fontFamily: 'Bebas',
+                  ),
+                ),
+                Text('Serial: $serialNumber'),
               SizedBox(height: screenWidth * 0.02),
               Text('Quote Possedute: $quotePossedute/$quoteTotali'),
-              Text('Controvalore: $controvalore €'),
-              Text('Valore di acquisto: $valoreDiAcquisto €'),
-              Text('Valore attuale: $valoreAttuale €'),
-            ],
-          )
-        ]),
+              Text('Controvalore: ' + formatAmountFromDouble(controvalore) + ' €'),
+              Text('Valore di acquisto: ' + formatAmountFromDouble(valoreDiAcquisto) + ' €'),
+              Text('Valore attuale: ' + formatAmountFromDouble(valoreAttuale) + ' €'),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

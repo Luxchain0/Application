@@ -22,14 +22,12 @@ class WatchScreen extends StatefulWidget {
 class _WatchScreenState extends State<WatchScreen> {
   late Future<Watch> futureWatchData;
   late Future<List<ShareOnSale>> futureSharesData;
-  late Future<bool> isFavourite;
 
   @override
   void initState() {
     super.initState();
     futureWatchData = getWatchByWatchId(widget.watchID);
     futureSharesData = getSharesOfTheWatchOnSell(widget.watchID);
-    isFavourite = getFavorite(1, widget.watchID);
   }
 
   @override
@@ -93,48 +91,8 @@ class _WatchScreenState extends State<WatchScreen> {
                                 ),
                               ],
                             ),
-                            IconButton(
-                                onPressed:  () async {
-                                  bool isFav = await isFavourite;
-                                  if (isFav) {
-                                    APIStatus removeStatus = await removeFromFavourite(1, widget.watchID);
-                                    if (removeStatus == APIStatus.success) {
-                                      setState(() {
-                                        isFavourite = Future.value(false);
-                                      });
-                                    }
-                                  } else {
-                                    APIStatus addStatus = await addToFavourite(1, widget.watchID);
-                                    if (addStatus == APIStatus.success) {
-                                      setState(() {
-                                        isFavourite = Future.value(true);
-                                      });
-                                    }
-                                  }
-                                },
-                                icon: FutureBuilder<bool>(
-                                  future: isFavourite,
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return const CircularProgressIndicator();
-                                    } else if (snapshot.hasData) {
-                                      bool isFav = snapshot.data!;
-                                      return Icon(
-                                        isFav
-                                            ? Icons.favorite_rounded
-                                            : Icons.favorite_border_outlined,
-                                        color: Colors.red,
-                                      );
-                                    } else if (snapshot.hasError) {
-                                      return const Icon(Icons.error);
-                                    } else {
-                                      return const SizedBox();
-                                    }
-                                  },
-                                )
-                              )
-                          ], 
+                            RefreshingButton(watchID: widget.watchID),
+                          ],
                         ),
                         Container(
                           margin: EdgeInsets.symmetric(vertical: heigh * 0.02),
@@ -179,9 +137,12 @@ class _WatchScreenState extends State<WatchScreen> {
                             "Materiale cassa: ${watch.modelType.casematerial}"),
                         Text(
                             "Materiale bracciale: ${watch.modelType.braceletmaterial}"),
-                        Text('Prezzo di listino: ${formatAmountFromDouble(watch.initialPrice)} €'),
-                        Text('Prezzo medio: ${formatAmountFromDouble(watch.actualPrice)} €'),
-                        Text('Prezzo di vendita proposto: ${formatAmountFromDouble(watch.actualPrice)} €'),
+                        Text(
+                            'Prezzo di listino: ${formatAmountFromDouble(watch.initialPrice)} €'),
+                        Text(
+                            'Prezzo medio: ${formatAmountFromDouble(watch.actualPrice)} €'),
+                        Text(
+                            'Prezzo di vendita proposto: ${formatAmountFromDouble(watch.actualPrice)} €'),
                         Text("Numero di quote: ${watch.numberOfShares}"),
                         Text("Condizione orlogio: ${watch.condition}"),
                         Row(
@@ -448,5 +409,65 @@ class CustomButton extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class RefreshingButton extends StatefulWidget {
+  final int watchID;
+  const RefreshingButton({required this.watchID, super.key});
+
+  @override
+  _RefreshingButtonState createState() => _RefreshingButtonState();
+}
+
+class _RefreshingButtonState extends State<RefreshingButton> {
+  late Future<bool> isFavourite;
+
+  @override
+  void initState() {
+    isFavourite = getFavorite(1, widget.watchID);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+        onPressed: () async {
+          bool isFav = await isFavourite;
+          if (isFav) {
+            APIStatus removeStatus =
+                await removeFromFavourite(1, widget.watchID);
+            if (removeStatus == APIStatus.success) {
+              setState(() {
+                isFavourite = Future.value(false);
+              });
+            }
+          } else {
+            APIStatus addStatus = await addToFavourite(1, widget.watchID);
+            if (addStatus == APIStatus.success) {
+              setState(() {
+                isFavourite = Future.value(true);
+              });
+            }
+          }
+        },
+        icon: FutureBuilder<bool>(
+          future: isFavourite,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            } else if (snapshot.hasData) {
+              bool isFav = snapshot.data!;
+              return Icon(
+                isFav ? Icons.favorite_rounded : Icons.favorite_border_outlined,
+                color: Colors.red,
+              );
+            } else if (snapshot.hasError) {
+              return const Icon(Icons.error);
+            } else {
+              return const SizedBox();
+            }
+          },
+        ));
   }
 }
