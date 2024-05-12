@@ -33,7 +33,7 @@ class _SellScreenState extends State<SellScreen> {
                 actions: [
                   TextButton(
                     onPressed: () {
-                      //Se va tutto bene si chiude il messaggio di avviso e si torna al waalet
+                      //Se va tutto bene si chiude il messaggio di avviso e si torna al wallet
                       //TODO: bisognerebbe tornare alla scheramta delle proprie schare in vendita
                       Navigator.pushNamed(context, FrameScreen.id);
                     },

@@ -20,7 +20,6 @@ class BuyInfo {
   });
 }
 
-
 class SellInfo {
   final int watchid;
   final String brandName;
@@ -47,7 +46,7 @@ class ModifySharesOnSale {
   final int watchid;
   final String brandName;
   final String modelName;
-  final double proposalPrice;
+  double proposalPrice;
   int onSaleAtPrice;
   final int sharesOwned;
   int sharesOnSale;
@@ -68,8 +67,10 @@ class ModifySharesOnSale {
     if (sharesOnSale < sharesOwned) {
       onSaleAtPrice++;
       sharesOnSale++;
+      return true;
     } else {
-      throw ArgumentError('Non puoi mettere in vendita più azioni di quante ne possiedi.');
+      throw ArgumentError(
+          'Non puoi mettere in vendita più azioni di quante ne possiedi.');
     }
   }
 
@@ -77,8 +78,18 @@ class ModifySharesOnSale {
     if (sharesOnSale > 0) {
       onSaleAtPrice--;
       sharesOnSale--;
+      return true;
     } else {
       throw ArgumentError('Non puoi mettere in vendita meno di 0 azioni.');
+    }
+  }
+
+  setProposalPrice(String controller) {
+    try {
+      double number = double.parse(controller);
+      proposalPrice = number;
+    } catch (e) {
+      print('Errore ' + e.toString());
     }
   }
 }

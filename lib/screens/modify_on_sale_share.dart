@@ -1,7 +1,9 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'dart:ui' as ui;
 import 'package:lux_chain/utilities/api_calls.dart';
+import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
@@ -19,45 +21,64 @@ class ModifyOnSaleShareScreen extends StatefulWidget {
 
 class _ModifyOnSaleShareScreenState extends State<ModifyOnSaleShareScreen> {
   late ModifySharesOnSale modifySharesOnSale;
+  final myController = TextEditingController();
+  late int onSaleAtPrice;
+
+  @override
+  void dispose() {
+    myController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
     super.initState();
     modifySharesOnSale = widget.modifySharesOnSale;
+    onSaleAtPrice = modifySharesOnSale.onSaleAtPrice;
   }
 
   Future<void> _saveChanges() async {
-    try {
-      await updateSharesOnSale(
+    // ignore: avoid_print
+    print("SAVING");
+    var result =
+        await updateSharesOnSale(
         modifySharesOnSale.watchid, // watchId
         1, // TODO: get this
         modifySharesOnSale.proposalPrice, // oldPrice
         modifySharesOnSale.proposalPrice, // newPrice
         modifySharesOnSale.onSaleAtPrice, // numberOfShares
       );
-
-      setState(() {});
-    } catch (e) {
-      if (mounted) {
-        showDialog(
+    if (APIStatus.success == result) {
+      showDialog(
           context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Errore'),
-              content: const Text(
-                  'Si è verificato un errore durante il salvataggio delle modifiche.'),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Chiudi'),
-                ),
-              ],
-            );
-          },
-        );
-      }
+          builder: (context) => AlertDialog(
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, FrameScreen.id);
+                    },
+                    child: const Text('Close'),
+                  ),
+                ],
+                contentPadding: const EdgeInsets.all(20.0),
+                content: Text('La modifica delle quote in vendita è andata a buon fine'),
+              ));
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Close'),
+                  ),
+                ],
+                title: const Text('Messaggio di info'),
+                contentPadding: const EdgeInsets.all(20.0),
+                content: Text('OOps. Qualcosa è andato storto'),
+              ));
     }
   }
 
@@ -78,13 +99,38 @@ class _ModifyOnSaleShareScreenState extends State<ModifyOnSaleShareScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              Text(
-                'Modifica',
-                style: TextStyle(
-                    color: Colors.black87,
-                    height: 1,
-                    fontSize: width * 0.1,
-                    fontFamily: 'Bebas'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Modifica',
+                    style: TextStyle(
+                        color: Colors.black87,
+                        height: 1,
+                        fontSize: width * 0.1,
+                        fontFamily: 'Bebas'),
+                  ),
+                  OutlinedButton(
+                    onPressed: () => {
+                      if (myController.text != '')
+                        {
+                          modifySharesOnSale
+                              .setProposalPrice(myController.text),
+                        },
+                        _saveChanges(),
+                    },
+                    style: ButtonStyle(
+                        backgroundColor:
+                            const MaterialStatePropertyAll(Colors.blueAccent),
+                        foregroundColor:
+                            MaterialStateProperty.all<Color>(Colors.white),
+                        minimumSize: MaterialStateProperty.all<ui.Size>(
+                            ui.Size(width * 0.25, width * 0.08))),
+                    child: const Text(
+                      'Salva',
+                    ),
+                  ),
+                ],
               ),
               Container(
                 margin: EdgeInsets.symmetric(vertical: heigh * 0.02),
@@ -158,13 +204,17 @@ class _ModifyOnSaleShareScreenState extends State<ModifyOnSaleShareScreen> {
                   ),
                   GestureDetector(
                     onTap: () => {
-                      (modifySharesOnSale.sharesOnSale > 0)
-                          ? () => {
-                              print('siamo più interni'),
-                              modifySharesOnSale.decreaseShareOnSale(),
-                              _saveChanges(),
+                      if (modifySharesOnSale.sharesOnSale > 0)
+                        {
+                          if (modifySharesOnSale.decreaseShareOnSale())
+                            {
+                              setState(() {
+                                onSaleAtPrice--;
+                              }),
                             }
-                          : null
+                        }
+                      else
+                        {null}
                     },
                     child: CircleAvatar(
                       radius: width * 0.04,
@@ -181,14 +231,18 @@ class _ModifyOnSaleShareScreenState extends State<ModifyOnSaleShareScreen> {
                   ),
                   GestureDetector(
                     onTap: () => {
-                      print('siamo nel +'),
-                      modifySharesOnSale.sharesOnSale <
-                              modifySharesOnSale.sharesOwned
-                          ? () {
-                              modifySharesOnSale.increaseShareOnSale();
-                              _saveChanges();
+                      if (modifySharesOnSale.sharesOnSale <
+                          modifySharesOnSale.sharesOwned)
+                        {
+                          if (modifySharesOnSale.increaseShareOnSale())
+                            {
+                              setState(() {
+                                onSaleAtPrice++;
+                              }),
                             }
-                          : null,
+                        }
+                      else
+                        {null}
                     },
                     child: CircleAvatar(
                       radius: width * 0.04,
@@ -198,50 +252,48 @@ class _ModifyOnSaleShareScreenState extends State<ModifyOnSaleShareScreen> {
                   ),
                 ],
               ),
+              SizedBox(
+                height: heigh * 0.02,
+              ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Prezzo di vendita: ' +
-                      formatAmountFromDouble(modifySharesOnSale.proposalPrice) +
-                      '€'),
-                  OutlinedButton(
-                    //TODO: migliorare look and feel
-                    //TODO: quando viene cliccato il tasto edit, dove si inserisce la cifra?¯
-                    onPressed: () => {},
-                    style: ButtonStyle(
-                        backgroundColor: const MaterialStatePropertyAll(
-                          Color.fromARGB(226, 102, 176, 255),
+                  Text('Prezzo di vendita:'),
+                  SizedBox(
+                    width: width * 0.02,
+                  ),
+                  Container(
+                    width: width * 0.3,
+                    child: TextField(
+                      controller: myController,
+                      decoration: InputDecoration(
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 1, horizontal: 15),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(226, 102, 176, 255)),
+                          borderRadius: BorderRadius.circular(5.5),
                         ),
-                        foregroundColor:
-                            MaterialStateProperty.all<Color>(Colors.white),
-                        minimumSize: MaterialStateProperty.all<Size>(
-                            Size(width * 0.25, width * 0.08))),
-                    child: const Text(
-                      'Edit',
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.white10,
+                          ),
+                        ),
+                        filled: true,
+                        fillColor: Color.fromARGB(31, 102, 176, 255),
+                        labelText: formatAmountFromDouble(
+                            modifySharesOnSale.proposalPrice),
+                        labelStyle: TextStyle(color: Colors.black),
+                      ),
                     ),
                   ),
+                  SizedBox(
+                    width: width * 0.02,
+                  ),
+                  Text('€'),
                 ],
               ),
               SizedBox(
-                height: heigh * 0.03,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  OutlinedButton(
-                    onPressed: () => {},
-                    style: ButtonStyle(
-                        backgroundColor:
-                            const MaterialStatePropertyAll(Colors.blueAccent),
-                        foregroundColor:
-                            MaterialStateProperty.all<Color>(Colors.white),
-                        minimumSize: MaterialStateProperty.all<Size>(
-                            Size(width * 0.25, width * 0.08))),
-                    child: const Text(
-                      'Salva',
-                    ),
-                  ),
-                ],
+                height: heigh * 0.02,
               ),
             ],
           ),
