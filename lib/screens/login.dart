@@ -8,7 +8,7 @@ import 'package:lux_chain/screens/signup_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_sign_in/google_sign_in.dart';
 
-const String apiURL = 'https://luxchain-flame.vercel.app/api';
+const String apiURL = 'https://luxchain-flame.vercel.app/api/auth';
 
 const List<String> scopes = <String>[
   'email',
@@ -157,7 +157,7 @@ class _LoginState extends State<Login> {
             };
 
             final response = await http.post(
-              Uri.parse('$apiURL/auth/login'),
+              Uri.parse('$apiURL/login'),
               headers: <String, String>{
                 'Content-Type': 'application/json; charset=UTF-8',
               },
@@ -247,7 +247,7 @@ class _LoginState extends State<Login> {
             () async {
               print('Google Login Pressed');
               try {
-                await _googleSignIn.disconnect();  // da togliere
+                //await _googleSignIn.disconnect();  // da togliere
                 var googleUser = await _googleSignIn.signIn();
                 if (googleUser == null) {
                   print('Google Login Failed');
@@ -256,9 +256,8 @@ class _LoginState extends State<Login> {
                   Map<String, String> headers = await googleUser.authHeaders;
 
                   final response = await http.get(
-                    Uri.parse('$apiURL/google/callback'),
-                    headers: headers
-                  );
+                      Uri.parse('$apiURL/google/callback'),
+                      headers: headers);
                   print(response.statusCode);
                   if (response.statusCode == 200) {
                     // salva user + token e cambia pagina
@@ -270,7 +269,6 @@ class _LoginState extends State<Login> {
                     throw Exception(
                         '[FLUTTER] Google Login http Error: ${response.statusCode}');
                   }
-                  
                 }
               } catch (e) {
                 throw Exception('[FLUTTER] Google Login Error: $e');
