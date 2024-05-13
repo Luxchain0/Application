@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:lux_chain/utilities/frame.dart';
@@ -245,19 +247,17 @@ class _LoginState extends State<Login> {
             () async {
               print('Google Login Pressed');
               try {
-                await _googleSignIn.disconnect();
+                await _googleSignIn.disconnect();  // da togliere
                 var googleUser = await _googleSignIn.signIn();
                 if (googleUser == null) {
                   print('Google Login Failed');
                 } else {
                   print(googleUser);
-                  /*
+                  Map<String, String> headers = await googleUser.authHeaders;
+
                   final response = await http.get(
                     Uri.parse('$apiURL/google/callback'),
-                    headers: <String, String>{
-                      'Content-Type': 'application/json; charset=UTF-8',
-                    },
-                    body: jsonEncode(googleUser),
+                    headers: headers
                   );
                   print(response.statusCode);
                   if (response.statusCode == 200) {
@@ -270,7 +270,7 @@ class _LoginState extends State<Login> {
                     throw Exception(
                         '[FLUTTER] Google Login http Error: ${response.statusCode}');
                   }
-                  */
+                  
                 }
               } catch (e) {
                 throw Exception('[FLUTTER] Google Login Error: $e');
