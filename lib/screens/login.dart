@@ -4,8 +4,20 @@ import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:lux_chain/screens/signup_screen.dart';
 import 'package:http/http.dart' as http;
+import 'package:google_sign_in/google_sign_in.dart';
 
 const String apiURL = 'https://luxchain-flame.vercel.app/api';
+
+const List<String> scopes = <String>[
+  'email',
+  'profile',
+];
+
+GoogleSignIn _googleSignIn = GoogleSignIn(
+  // Optional clientId
+  // clientId: 'your-client_id.apps.googleusercontent.com',
+  scopes: scopes,
+);
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -233,17 +245,32 @@ class _LoginState extends State<Login> {
             () async {
               print('Google Login Pressed');
               try {
-                final response = await http.get(
-                  Uri.parse('$apiURL/auth/login/google'),
-                );
-
-                print(response.statusCode);
-                if (response.statusCode == 200) {
-                  // salva user + token e cambia pagina
-                  print(jsonDecode(response.body));
+                await _googleSignIn.disconnect();
+                var googleUser = await _googleSignIn.signIn();
+                if (googleUser == null) {
+                  print('Google Login Failed');
                 } else {
-                  throw Exception(
-                      '[FLUTTER] Google Login http Error: ${response.statusCode}');
+                  print(googleUser);
+                  /*
+                  final response = await http.get(
+                    Uri.parse('$apiURL/google/callback'),
+                    headers: <String, String>{
+                      'Content-Type': 'application/json; charset=UTF-8',
+                    },
+                    body: jsonEncode(googleUser),
+                  );
+                  print(response.statusCode);
+                  if (response.statusCode == 200) {
+                    // salva user + token e cambia pagina
+                    print('user:');
+                    print(jsonDecode(response.body)['user']);
+                    print('token:');
+                    print(jsonDecode(response.body)['token']);
+                  } else {
+                    throw Exception(
+                        '[FLUTTER] Google Login http Error: ${response.statusCode}');
+                  }
+                  */
                 }
               } catch (e) {
                 throw Exception('[FLUTTER] Google Login Error: $e');
