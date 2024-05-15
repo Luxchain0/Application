@@ -6,13 +6,17 @@ import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:lux_chain/screens/signup_screen.dart';
 import 'package:http/http.dart' as http;
-import 'package:google_sign_in/google_sign_in.dart';
+//import 'package:google_sign_in/google_sign_in.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 const String apiURL = 'https://luxchain-flame.vercel.app/api/auth';
 
+// testuser@example.com
+// password123
+
+/*
 const List<String> scopes = <String>[
   'email',
-  'profile',
 ];
 
 GoogleSignIn _googleSignIn = GoogleSignIn(
@@ -20,6 +24,7 @@ GoogleSignIn _googleSignIn = GoogleSignIn(
   // clientId: 'your-client_id.apps.googleusercontent.com',
   scopes: scopes,
 );
+*/
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -246,13 +251,45 @@ class _LoginState extends State<Login> {
           _buildSocialBtn(
             () async {
               print('Google Login Pressed');
+              final Uri url = Uri.parse('$apiURL/login/google');
+              if (!await launchUrl(url)) {
+                throw Exception('Could not launch $url');
+              }
+
+              /*
               try {
-                //await _googleSignIn.disconnect();  // da togliere
+                //await _googleSignIn.disconnect();
+                await _googleSignIn.signIn().then((result) {
+                  print(result);
+                  result?.authentication.then((googleKey) {
+                    print(googleKey.accessToken);
+                    print(googleKey.idToken);
+                    print(_googleSignIn.currentUser?.displayName);
+                  }).catchError((err) {
+                    print('inner error');
+                  });
+                }).catchError((err) {
+                  print('error occured');
+                });
+
+                /*
                 var googleUser = await _googleSignIn.signIn();
                 if (googleUser == null) {
                   print('Google Login Failed');
                 } else {
                   print(googleUser);
+
+                final response = await http.post(
+                  Uri.parse('$apiURL/login/google'),
+                  headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                  },
+                  body: {'idtoken': id_token},
+                );
+
+                print(response.statusCode);
+
+                
                   Map<String, String> headers = await googleUser.authHeaders;
 
                   final response = await http.get(
@@ -269,10 +306,11 @@ class _LoginState extends State<Login> {
                     throw Exception(
                         '[FLUTTER] Google Login http Error: ${response.statusCode}');
                   }
-                }
+                  */
               } catch (e) {
                 throw Exception('[FLUTTER] Google Login Error: $e');
               }
+              */
             },
             const AssetImage(
               'assets/images/google.jpg',
