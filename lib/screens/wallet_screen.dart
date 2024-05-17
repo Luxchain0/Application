@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-//import 'package:lux_chain/screens/wallet_specs_screen.dart';
+import 'package:lux_chain/screens/login.dart';
 import 'package:lux_chain/screens/watch_screen.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/api_models.dart';
@@ -61,43 +61,53 @@ class _WalletScreenState extends State<WalletScreen> {
                           const Icon(Icons.visibility),
                         ],
                       ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(vertical: 3),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              formatAmountFromDouble(
-                                  walletData.inShares + walletData.liquidity),
-                              style: TextStyle(
-                                  color: Colors.black87,
-                                  height: 1,
-                                  fontSize: width * 0.1,
-                                  fontWeight: FontWeight.bold),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const Login(),
                             ),
-                            SizedBox(
-                              width: width * 0.01,
-                            ),
-                            Text(
-                              '€',
-                              style: TextStyle(
-                                fontSize: width * 0.06,
-                                height: 1,
+                          );
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(vertical: 3),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                formatAmountFromDouble(
+                                    walletData.inShares + walletData.liquidity),
+                                style: TextStyle(
+                                    color: Colors.black87,
+                                    height: 1,
+                                    fontSize: width * 0.1,
+                                    fontWeight: FontWeight.bold),
                               ),
-                            ),
-                            Expanded(
-                                child: SizedBox(
-                              width: width * 0.01,
-                            )),
-                            Container(
-                              padding: const EdgeInsets.all(5),
-                              decoration: const BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(3)),
-                                  color: Colors.lightGreen),
-                              child: Text('${walletData.rate}%'),
-                            ),
-                          ],
+                              SizedBox(
+                                width: width * 0.01,
+                              ),
+                              Text(
+                                '€',
+                                style: TextStyle(
+                                  fontSize: width * 0.06,
+                                  height: 1,
+                                ),
+                              ),
+                              Expanded(
+                                  child: SizedBox(
+                                width: width * 0.01,
+                              )),
+                              Container(
+                                padding: const EdgeInsets.all(5),
+                                decoration: const BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(3)),
+                                    color: Colors.lightGreen),
+                                child: Text('${walletData.rate}%'),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       Text(
@@ -158,8 +168,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                           return CustomBottomBigCard(
                                             watchID: watch.watchid,
                                             screenWidth: width,
-                                            imgUrl:
-                                                getDownloadURL(watch.imageuri),
+                                            imgUrl: getDownloadURL(watch.imageuri),
                                             reference:
                                                 watch.modeltype.reference,
                                             modelName:
@@ -324,15 +333,9 @@ class CustomBottomBigCard extends StatelessWidget {
                 Text('Reference: $reference'),
                 SizedBox(height: screenWidth * 0.02),
                 Text('Quote Possedute: $quotePossedute/$quoteTotali'),
-                Text('Controvalore: ' +
-                    formatAmountFromDouble(controvalore) +
-                    '€'),
-                Text('Prezzo di listino: ' +
-                    formatAmountFromDouble(initialPrice) +
-                    '€'),
-                Text('Valore attuale: ' +
-                    formatAmountFromDouble(valoreAttuale) +
-                    '€'),
+                Text('Controvalore: ${formatAmountFromDouble(controvalore)}€'),
+                Text('Prezzo di listino: ${formatAmountFromDouble(initialPrice)}€'),
+                Text('Valore attuale: ${formatAmountFromDouble(valoreAttuale)}€'),
               ],
             ),
           ],
