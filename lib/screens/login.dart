@@ -251,14 +251,18 @@ class _LoginState extends State<Login> {
           _buildSocialBtn(
             () async {
               print('Google Login Pressed');
+
+              // login via browser:
               final Uri url = Uri.parse('$apiURL/login/google');
               if (!await launchUrl(url)) {
                 throw Exception('Could not launch $url');
               }
 
-              /*
+              /* login via google_sign_in plugin
               try {
                 //await _googleSignIn.disconnect();
+                
+                // getting token try 1
                 await _googleSignIn.signIn().then((result) {
                   print(result);
                   result?.authentication.then((googleKey) {
@@ -272,29 +276,30 @@ class _LoginState extends State<Login> {
                   print('error occured');
                 });
 
-                /*
+                /* getting token try 2
                 var googleUser = await _googleSignIn.signIn();
                 if (googleUser == null) {
-                  print('Google Login Failed');
+                    throw Exception(
+                        '[FLUTTER] Google Login: User not retrieved from google api');
                 } else {
                   print(googleUser);
 
-                final response = await http.post(
-                  Uri.parse('$apiURL/login/google'),
-                  headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                  },
-                  body: {'idtoken': id_token},
-                );
+                  //api call try 1
+                  final response = await http.post(
+                    Uri.parse('$apiURL/login/google'),
+                    headers: {
+                      'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: {'idtoken': id_token},
+                  );
 
-                print(response.statusCode);
-
-                
+                  //api call try 2
                   Map<String, String> headers = await googleUser.authHeaders;
-
                   final response = await http.get(
                       Uri.parse('$apiURL/google/callback'),
                       headers: headers);
+
+
                   print(response.statusCode);
                   if (response.statusCode == 200) {
                     // salva user + token e cambia pagina
@@ -304,11 +309,11 @@ class _LoginState extends State<Login> {
                     print(jsonDecode(response.body)['token']);
                   } else {
                     throw Exception(
-                        '[FLUTTER] Google Login http Error: ${response.statusCode}');
+                        '[FLUTTER] Google Login api Error: ${response.statusCode}');
                   }
-                  */
+                } */
               } catch (e) {
-                throw Exception('[FLUTTER] Google Login Error: $e');
+                throw Exception('[FLUTTER] Google Login Plugin Error: $e');
               }
               */
             },
