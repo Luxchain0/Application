@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lux_chain/screens/login.dart';
+import 'package:lux_chain/screens/wallet_specs_screen.dart';
 import 'package:lux_chain/screens/watch_screen.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/api_models.dart';
@@ -66,7 +66,7 @@ class _WalletScreenState extends State<WalletScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const Login(),
+                              builder: (context) => const WalletSpecsScreen(),
                             ),
                           );
                         },
@@ -168,7 +168,8 @@ class _WalletScreenState extends State<WalletScreen> {
                                           return CustomBottomBigCard(
                                             watchID: watch.watchid,
                                             screenWidth: width,
-                                            imgUrl: getDownloadURL(watch.imageuri),
+                                            imgUrl:
+                                                getDownloadURL(watch.imageuri),
                                             reference:
                                                 watch.modeltype.reference,
                                             modelName:
@@ -280,14 +281,15 @@ class CustomBottomBigCard extends StatelessWidget {
                         return const CircularProgressIndicator();
                       } else if (snapshot.hasData) {
                         return ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(7)),
-                  child: Image.network(
-                    snapshot.data!,
-                    width: screenWidth * 0.3,
-                    height: screenWidth * 0.3,
-                    fit: BoxFit.cover,
-                  ),
-                );
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(7)),
+                          child: Image.network(
+                            snapshot.data!,
+                            width: screenWidth * 0.3,
+                            height: screenWidth * 0.3,
+                            fit: BoxFit.cover,
+                          ),
+                        );
                       } else if (snapshot.hasError) {
                         return Text('Error: ${snapshot.error}');
                       } else {
@@ -334,8 +336,10 @@ class CustomBottomBigCard extends StatelessWidget {
                 SizedBox(height: screenWidth * 0.02),
                 Text('Quote Possedute: $quotePossedute/$quoteTotali'),
                 Text('Controvalore: ${formatAmountFromDouble(controvalore)}€'),
-                Text('Prezzo di listino: ${formatAmountFromDouble(initialPrice)}€'),
-                Text('Valore attuale: ${formatAmountFromDouble(valoreAttuale)}€'),
+                Text(
+                    'Prezzo di listino: ${formatAmountFromDouble(initialPrice)}€'),
+                Text(
+                    'Valore attuale: ${formatAmountFromDouble(valoreAttuale)}€'),
               ],
             ),
           ],

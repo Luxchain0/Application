@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lux_chain/screens/buy_screen.dart';
+import 'package:lux_chain/screens/login.dart';
 import 'package:lux_chain/screens/market_screen.dart';
 import 'package:lux_chain/screens/modify_on_sale_share.dart';
 import 'package:lux_chain/screens/sell_screen.dart';
@@ -20,6 +21,8 @@ class RouteGenerator {
     switch (settings.name) {
       case HomeScreen.id:
         return MaterialPageRoute(builder: (_) => const HomeScreen());
+      case Login.id:
+        return MaterialPageRoute(builder: (_) => const Login());
       case SettingsScreen.id:
         return MaterialPageRoute(builder: (_) => const SettingsScreen());
       case WatchTinderScreen.id:
@@ -46,7 +49,9 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const FrameScreen());
       case ModifyOnSaleShareScreen.id:
         if (args is ModifySharesOnSale) {
-          return MaterialPageRoute(builder: (_) => ModifyOnSaleShareScreen(modifySharesOnSale: args));
+          return MaterialPageRoute(
+              builder: (_) =>
+                  ModifyOnSaleShareScreen(modifySharesOnSale: args));
         }
         break;
       case WatchScreen.id:

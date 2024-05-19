@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:lux_chain/firebase_options.dart';
-import 'package:lux_chain/utilities/frame.dart';
+import 'package:lux_chain/screens/login.dart';
 import 'package:lux_chain/utilities/route_generator.dart';
 import 'package:lux_chain/utilities/theme_data.dart';
 
@@ -21,10 +21,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: true,
-      initialRoute: FrameScreen.id,
+      initialRoute: Login.id,
       onGenerateRoute: RouteGenerator.generateRoute,
       theme: MyTheme.lightTheme,
-      home: const FrameScreen(),
+      home: const Login(),
     );
   }
 }

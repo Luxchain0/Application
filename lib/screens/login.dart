@@ -27,6 +27,7 @@ GoogleSignIn _googleSignIn = GoogleSignIn(
 */
 
 class Login extends StatefulWidget {
+  static const String id = 'Login';
   const Login({Key? key}) : super(key: key);
 
   @override
@@ -171,11 +172,13 @@ class _LoginState extends State<Login> {
 
             print(response.statusCode);
             if (response.statusCode == 200) {
-              // salva user + token e cambia pagina
+              // da salvare user + token
               print('user:');
               print(jsonDecode(response.body)['user']);
               print('token:');
               print(jsonDecode(response.body)['token']);
+
+              Navigator.pushReplacementNamed(context, FrameScreen.id);
             } else {
               throw Exception(
                   '[FLUTTER] Login http Error: $response.statusCode');
