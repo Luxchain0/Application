@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:lux_chain/utilities/frame.dart';
@@ -174,7 +172,6 @@ class _LoginState extends State<Login> {
                 body: jsonEncode(requestBody),
               );
 
-              print(response.statusCode);
               if (response.statusCode == 200) {
                 var decodedResponse = jsonDecode(response.body);
                 user = decodedResponse['user'];
@@ -186,6 +183,7 @@ class _LoginState extends State<Login> {
                 snackbar(context, 'Errore lato server, riprova tra poco');
               }
             } catch (e) {
+              snackbar(context, 'Errore di connessione');
               throw Exception('[FLUTTER] Login Error: $e');
             }
           } else {
