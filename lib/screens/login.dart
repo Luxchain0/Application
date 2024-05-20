@@ -108,6 +108,7 @@ class _LoginState extends State<Login> {
     );
   }
 
+/*
   Widget _buildForgotPasswordBtn() {
     return Container(
       alignment: Alignment.centerRight,
@@ -122,6 +123,7 @@ class _LoginState extends State<Login> {
       ),
     );
   }
+*/
 
   Widget _buildShowPasswordBox() {
     return SizedBox(
@@ -152,39 +154,42 @@ class _LoginState extends State<Login> {
 
   Widget _buildLoginBtn() {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 25.0),
+      padding: const EdgeInsets.symmetric(vertical: 15.0),
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () async {
-          try {
-            Map<String, String> requestBody = {
-              'email': emailController.text,
-              'password': passwordController.text,
-            };
+          if (emailController.text.isNotEmpty &&
+              passwordController.text.isNotEmpty) {
+            try {
+              Map<String, String> requestBody = {
+                'email': emailController.text,
+                'password': passwordController.text,
+              };
 
-            final response = await http.post(
-              Uri.parse('$apiURL/login'),
-              headers: <String, String>{
-                'Content-Type': 'application/json; charset=UTF-8',
-              },
-              body: jsonEncode(requestBody),
-            );
+              final response = await http.post(
+                Uri.parse('$apiURL/login'),
+                headers: <String, String>{
+                  'Content-Type': 'application/json; charset=UTF-8',
+                },
+                body: jsonEncode(requestBody),
+              );
 
-            print(response.statusCode);
-            if (response.statusCode == 200) {
-              // da salvare user + token
-              print('user:');
-              print(jsonDecode(response.body)['user']);
-              print('token:');
-              print(jsonDecode(response.body)['token']);
-
-              Navigator.pushReplacementNamed(context, FrameScreen.id);
-            } else {
-              throw Exception(
-                  '[FLUTTER] Login http Error: $response.statusCode');
+              print(response.statusCode);
+              if (response.statusCode == 200) {
+                var decodedResponse = jsonDecode(response.body);
+                user = decodedResponse['user'];
+                token = decodedResponse['token'];
+                Navigator.pushReplacementNamed(context, FrameScreen.id);
+              } else if (response.statusCode == 401) {
+                snackbar(context, 'Email o Password errate');
+              } else {
+                snackbar(context, 'Errore lato server, riprova tra poco');
+              }
+            } catch (e) {
+              throw Exception('[FLUTTER] Login Error: $e');
             }
-          } catch (e) {
-            throw Exception('[FLUTTER] Login Error: $e');
+          } else {
+            snackbar(context, 'Email o Password errate');
           }
         },
         style: ElevatedButton.styleFrom(
@@ -396,7 +401,7 @@ class _LoginState extends State<Login> {
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: const EdgeInsets.symmetric(
                   horizontal: 40.0,
-                  vertical: 120.0,
+                  vertical: 40.0,
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -414,7 +419,8 @@ class _LoginState extends State<Login> {
                     _buildPasswordTF(),
                     const SizedBox(height: 10.0),
                     _buildShowPasswordBox(),
-                    _buildForgotPasswordBtn(),
+                    const SizedBox(height: 10.0),
+                    //_buildForgotPasswordBtn(),
                     _buildLoginBtn(),
                     _buildSignInWithText(),
                     _buildSocialBtnRow(),
@@ -449,3 +455,16 @@ final kBoxDecorationStyle = BoxDecoration(
     ),
   ],
 );
+
+void snackbar(context, text) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(
+        text,
+        textAlign: TextAlign.center,
+      ),
+      backgroundColor: const Color.fromARGB(255, 49, 115, 168),
+      duration: const Duration(milliseconds: 10000),
+    ),
+  );
+}

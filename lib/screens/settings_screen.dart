@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lux_chain/screens/login.dart';
+import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -55,8 +57,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             CustomCard(
                 icon: Icons.notifications,
                 text: 'Notification',
-                onPressed: () => {
-                    }),
+                onPressed: () => {}),
             CustomCard(
                 icon: Icons.chat_bubble,
                 text: 'Assistance',
@@ -68,7 +69,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 icon: Icons.lightbulb, text: 'Hints', onPressed: () => {}),
             CustomCard(
                 icon: Icons.translate, text: 'Language', onPressed: () => {}),
-            CustomCard(icon: Icons.logout, text: 'Logout', onPressed: () => {}),
+            CustomCard(
+                icon: Icons.logout,
+                text: 'Logout',
+                onPressed: () => {_logout(context)}),
           ],
         ),
       ),
@@ -113,4 +117,10 @@ class CustomCard extends StatelessWidget {
           ],
         ));
   }
+}
+
+_logout(context) {
+  user = {};
+  token = '';
+  Navigator.pushReplacementNamed(context, Login.id);
 }

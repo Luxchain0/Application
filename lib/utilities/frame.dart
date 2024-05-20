@@ -9,6 +9,9 @@ import 'package:lux_chain/screens/settings_screen.dart';
 //import 'package:lux_chain/screens/bottom_bar/buy_screen.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 
+Map<String, dynamic> user = {};
+String token = '';
+
 class FrameScreen extends StatefulWidget {
   static const String id = 'FrameScreen';
   const FrameScreen({super.key});
