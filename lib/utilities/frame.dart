@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lux_chain/screens/dashboard_excel_screen.dart';
-import 'package:lux_chain/screens/dashboard_screen.dart';
-import 'package:lux_chain/screens/dashboard_single_screen.dart';
 import 'package:lux_chain/screens/history_screen.dart';
 //import 'package:lux_chain/screens/home_screen.dart';
 import 'package:lux_chain/screens/market_screen.dart';
@@ -31,7 +29,7 @@ class _FrameScreenState extends State<FrameScreen> {
     MySharesScreen(), //Le quote che hai in vendita //TODO
     HistoryScreen(), //Ultime quote che hai comprato o venduto
     FavouritesScreen(), //Preferiti
-    DashboardSingleScreen(),
+    DashboardExcelScreen(),
   ];
 
   @override

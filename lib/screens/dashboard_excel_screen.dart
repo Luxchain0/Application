@@ -30,7 +30,7 @@ class _DashboardExcelScreenState extends State<DashboardExcelScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Text(
-                '... più orologi',
+                'Aggiungi orologi',
                 style: TextStyle(
                     color: Colors.black87,
                     height: 1,
@@ -39,7 +39,7 @@ class _DashboardExcelScreenState extends State<DashboardExcelScreen> {
               ),
               Container(
                 margin: EdgeInsets.only(top: heigh * 0.015), // This is needed
-                child: Text('Per eseguire questa operazione correttamente l\'applicazione deve ricevere un foglio excel contenente dati in un formato ben preciso'),
+                child: Text('Per eseguire questa operazione correttamente l\'applicazione deve ricevere un foglio excel contenente dati in un formato ben preciso.'),
               ),
               SizedBox(height: heigh*0.035,),
               Text(
@@ -50,7 +50,7 @@ class _DashboardExcelScreenState extends State<DashboardExcelScreen> {
                     fontSize: width * 0.06,
                     fontFamily: 'Bebas'),
               ),
-              Text('Di seguito puoi scaricare il foglio excel già preparato.\nTi basterà solo inserire i dati:'),
+              Text('Di seguito trovi il modello excel nel quale inserire i vari orologi e relativi dati.'),
               SizedBox(height: heigh*0.01,),
               OutlinedButton(
                 onPressed: () => {},
