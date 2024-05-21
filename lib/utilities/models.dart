@@ -1,3 +1,5 @@
+import 'dart:math';
+
 class BuyInfo {
   final int watchid;
   final String brandName;
@@ -85,11 +87,14 @@ class ModifySharesOnSale {
   }
 
   setProposalPrice(String controller) {
-    try {
+    if (controller.contains(',')) {
+      var splitted = controller.split(',');
+      String corretto = (splitted[0] + '.' + splitted[1][0] + splitted[1][1]);
+      double number = double.parse(corretto);
+      proposalPrice = number;
+    } else {
       double number = double.parse(controller);
       proposalPrice = number;
-    } catch (e) {
-      print('Errore ' + e.toString());
     }
   }
 }

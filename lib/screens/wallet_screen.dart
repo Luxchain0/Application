@@ -31,6 +31,7 @@ class _WalletScreenState extends State<WalletScreen> {
     SizeConfig().init(context);
     double height = SizeConfig.screenH!;
     double width = SizeConfig.screenW!;
+    double contributiNetti = 715300.00;
 
     return Scaffold(
       body: SafeArea(
@@ -61,6 +62,7 @@ class _WalletScreenState extends State<WalletScreen> {
                           const Icon(Icons.visibility),
                         ],
                       ),
+                      SizedBox(height: height*0.01,),
                       GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -100,16 +102,21 @@ class _WalletScreenState extends State<WalletScreen> {
                               )),
                               Container(
                                 padding: const EdgeInsets.all(5),
-                                decoration: const BoxDecoration(
+                                decoration: BoxDecoration(
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(3)),
-                                    color: Colors.lightGreen),
+                                    color: walletData.rate > 0 ? Colors.lightGreen : Colors.red),
                                 child: Text('${walletData.rate}%'),
                               ),
                             ],
                           ),
                         ),
                       ),
+                      Text(
+                        'Contributi netti: ${formatAmountFromDouble(contributiNetti)} €',
+                        style: TextStyle(fontSize: width * 0.04),
+                      ),
+                      SizedBox(height: height * 0.01,),
                       Text(
                         'In collezioni: ${formatAmountFromDouble(walletData.inShares)} €',
                         style: TextStyle(fontSize: width * 0.04),
@@ -120,34 +127,6 @@ class _WalletScreenState extends State<WalletScreen> {
                       ),
                       SizedBox(
                         height: height * 0.04,
-                      ),
-                      Container(
-                        margin: EdgeInsets.symmetric(vertical: height * 0.02),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.archive,
-                              size: width * 0.08,
-                            ),
-                            Icon(
-                              Icons.timelapse,
-                              size: width * 0.08,
-                            ),
-                            Icon(
-                              Icons.store,
-                              size: width * 0.08,
-                            ),
-                            Icon(
-                              Icons.star,
-                              size: width * 0.08,
-                            ),
-                            Expanded(child: SizedBox(width: width * 0.08)),
-                            Icon(Icons.arrow_outward_rounded,
-                                size: width * 0.08),
-                            Icon(Icons.filter, size: width * 0.08),
-                            Icon(Icons.search, size: width * 0.08),
-                          ],
-                        ),
                       ),
                       Expanded(
                         child: SingleChildScrollView(

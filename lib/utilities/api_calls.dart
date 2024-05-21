@@ -13,13 +13,12 @@ Future<List<WalletWatch>> getUserWalletWatches(int userID) async {
     );
 
     if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);     
+      final List<dynamic> data = jsonDecode(response.body);
       return data.map((e) => WalletWatch.fromJson(e)).toList();
     } else {
       throw Exception('[FLUTTER] Failed to load user watches');
     }
   } catch (e) {
-    
     throw Exception('[FLUTTER] Error retrieving user watches: $e');
   }
 }
@@ -32,13 +31,12 @@ Future<Watch> getWatchByWatchId(int watchID) async {
     );
 
     if (response.statusCode == 200) {
-      final dynamic data = jsonDecode(response.body);     
+      final dynamic data = jsonDecode(response.body);
       return Watch.fromJson(data);
     } else {
       throw Exception('[FLUTTER] Failed to load watch\'s data');
     }
   } catch (e) {
-    
     throw Exception('[FLUTTER] Error retrieving watch\'s data: $e');
   }
 }
@@ -51,13 +49,12 @@ Future<List<WalletWatch>> getSharesByUser(int userID) async {
     );
 
     if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);     
+      final List<dynamic> data = jsonDecode(response.body);
       return data.map((e) => WalletWatch.fromJson(e)).toList();
     } else {
       throw Exception('[FLUTTER] Failed to load user shares');
     }
   } catch (e) {
-    
     throw Exception('[FLUTTER] Error retrieving user shares: $e');
   }
 }
@@ -70,13 +67,12 @@ Future<List<WalletWatch>> getSharesByWatch(int watchID) async {
     );
 
     if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);     
+      final List<dynamic> data = jsonDecode(response.body);
       return data.map((e) => WalletWatch.fromJson(e)).toList();
     } else {
       throw Exception('[FLUTTER] Failed to load watch\'s shares');
     }
   } catch (e) {
-    
     throw Exception('[FLUTTER] Error retrieving watche\'s shares: $e');
   }
 }
@@ -89,13 +85,12 @@ Future<List<WalletWatch>> getSharesOfUserOnSale(int userID) async {
     );
 
     if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);     
+      final List<dynamic> data = jsonDecode(response.body);
       return data.map((e) => WalletWatch.fromJson(e)).toList();
     } else {
       throw Exception('[FLUTTER] Failed to load user shares');
     }
   } catch (e) {
-    
     throw Exception('[FLUTTER] Error retrieving user shares: $e');
   }
 }
@@ -108,7 +103,7 @@ Future<List<ShareOnSale>> getSharesOfTheWatchOnSell(int watchID) async {
     );
 
     if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);     
+      final List<dynamic> data = jsonDecode(response.body);
       return data.map((e) => ShareOnSale.fromJson(e)).toList();
     } else {
       throw Exception('[FLUTTER] Failed to load shares');
@@ -126,18 +121,18 @@ Future<WalletData> getWalletData(int userID) async {
     );
 
     if (response.statusCode == 200) {
-      final dynamic data = jsonDecode(response.body);     
+      final dynamic data = jsonDecode(response.body);
       return WalletData.fromJson(data);
     } else {
       throw Exception('[FLUTTER] Failed to load wallet data');
     }
   } catch (e) {
-    
     throw Exception('[FLUTTER] Error retrieving wallet data: $e');
   }
 }
 
-Future<APIStatus> sellShares(int userID, int watchID, int numberOfShares, double priceOfOneShare) async {
+Future<APIStatus> sellShares(
+    int userID, int watchID, int numberOfShares, double priceOfOneShare) async {
   try {
     // Costruisci il corpo della richiesta come una mappa JSON
     Map<String, dynamic> requestBody = {
@@ -160,14 +155,16 @@ Future<APIStatus> sellShares(int userID, int watchID, int numberOfShares, double
       print("SUCCESS SELL");
       return APIStatus.success;
     } else {
-      throw Exception('[FLUTTER] Failed to sell $numberOfShares shares of watch $watchID');
+      throw Exception(
+          '[FLUTTER] Failed to sell $numberOfShares shares of watch $watchID');
     }
   } catch (e) {
     throw Exception('[FLUTTER] Error selling shares: $e');
   }
 }
 
-Future<APIStatus> buyShares(int userID, int watchID, int numberOfShares, double priceOfOneShare) async {
+Future<APIStatus> buyShares(
+    int userID, int watchID, int numberOfShares, double priceOfOneShare) async {
   try {
     Map<String, dynamic> requestBody = {
       'price': priceOfOneShare.toString(),
@@ -187,12 +184,12 @@ Future<APIStatus> buyShares(int userID, int watchID, int numberOfShares, double 
       print("SUCCESS BUY");
       return APIStatus.success;
     } else {
-      throw Exception('[FLUTTER] Failed to buy $numberOfShares shares of watch $watchID');
+      throw Exception(
+          '[FLUTTER] Failed to buy $numberOfShares shares of watch $watchID');
     }
   } catch (e) {
     throw Exception('[FLUTTER] Error buying shares: $e');
   }
-
 }
 
 Future<List<MarketPlaceWatch>> getMarketPlaceWatches() async {
@@ -209,7 +206,6 @@ Future<List<MarketPlaceWatch>> getMarketPlaceWatches() async {
       throw Exception('[FLUTTER] Failed to load market place watches');
     }
   } catch (e) {
-    
     throw Exception('[FLUTTER] Error retrieving market place watches: $e');
   }
 }
@@ -265,8 +261,8 @@ Future<List<Favorite>> getFavorites(int userID) async {
   }
 }
 
-Future<APIStatus> updateSharesOnSale(
-    int watchId, int userId, double oldPrice, double newPrice, int numberOfShares) async {
+Future<APIStatus> updateSharesOnSale(int watchId, int userId, double oldPrice,
+    double newPrice, int numberOfShares) async {
   try {
     Map<String, dynamic> requestBody = {
       'oldPrice': oldPrice.toString(),
@@ -285,10 +281,9 @@ Future<APIStatus> updateSharesOnSale(
     if (response.statusCode == 200) {
       return APIStatus.success;
     } else {
-      throw Exception('[FLUTTER] Failed to update shares on sale');
+      return APIStatus.error;
     }
   } catch (e) {
-
     throw Exception('[FLUTTER] Error updating shares on sale: $e');
   }
 }
@@ -310,10 +305,8 @@ Future<bool> getFavorite(int userID, int watchID) async {
   }
 }
 
-
 Future<APIStatus> addToFavourite(int userID, int watchID) async {
   try {
-
     final response = await http.post(
       Uri.parse('$apiURL/wallet/favorite/$userID/$watchID'),
     );
@@ -323,7 +316,8 @@ Future<APIStatus> addToFavourite(int userID, int watchID) async {
       print("SUCCESS ADDING WATCH TO FAVOURITE");
       return APIStatus.success;
     } else {
-      throw Exception('[FLUTTER] Failed to adding watch $watchID to favourites');
+      throw Exception(
+          '[FLUTTER] Failed to adding watch $watchID to favourites');
     }
   } catch (e) {
     throw Exception('[FLUTTER] Error adding to favourites');
@@ -332,7 +326,6 @@ Future<APIStatus> addToFavourite(int userID, int watchID) async {
 
 Future<APIStatus> removeFromFavourite(int userID, int watchID) async {
   try {
-
     final response = await http.delete(
       Uri.parse('$apiURL/wallet/favorite/$userID/$watchID'),
     );
@@ -342,7 +335,8 @@ Future<APIStatus> removeFromFavourite(int userID, int watchID) async {
       print("SUCCESS REMOVING WATCH FROM FAVOURITE");
       return APIStatus.success;
     } else {
-      throw Exception('[FLUTTER] Failed removing watch $watchID from favourites');
+      throw Exception(
+          '[FLUTTER] Failed removing watch $watchID from favourites');
     }
   } catch (e) {
     throw Exception('[FLUTTER] Error removing from favourites');

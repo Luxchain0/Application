@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:ui' as ui;
 import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/api_models.dart';
@@ -40,14 +41,13 @@ class _ModifyOnSaleShareScreenState extends State<ModifyOnSaleShareScreen> {
   Future<void> _saveChanges() async {
     // ignore: avoid_print
     print("SAVING");
-    var result =
-        await updateSharesOnSale(
-        modifySharesOnSale.watchid, // watchId
-        1, // TODO: get this
-        modifySharesOnSale.proposalPrice, // oldPrice
-        modifySharesOnSale.proposalPrice, // newPrice
-        modifySharesOnSale.onSaleAtPrice, // numberOfShares
-      );
+    var result = await updateSharesOnSale(
+      modifySharesOnSale.watchid, // watchId
+      1, // TODO: get this
+      modifySharesOnSale.proposalPrice, // oldPrice
+      modifySharesOnSale.proposalPrice, // newPrice
+      modifySharesOnSale.onSaleAtPrice, // numberOfShares
+    );
     if (APIStatus.success == result) {
       showDialog(
           context: context,
@@ -61,7 +61,8 @@ class _ModifyOnSaleShareScreenState extends State<ModifyOnSaleShareScreen> {
                   ),
                 ],
                 contentPadding: const EdgeInsets.all(20.0),
-                content: Text('La modifica delle quote in vendita è andata a buon fine'),
+                content: Text(
+                    'La modifica delle quote in vendita è andata a buon fine'),
               ));
     } else {
       showDialog(
@@ -117,7 +118,7 @@ class _ModifyOnSaleShareScreenState extends State<ModifyOnSaleShareScreen> {
                           modifySharesOnSale
                               .setProposalPrice(myController.text),
                         },
-                        _saveChanges(),
+                      _saveChanges(),
                     },
                     style: ButtonStyle(
                         backgroundColor:
@@ -265,6 +266,10 @@ class _ModifyOnSaleShareScreenState extends State<ModifyOnSaleShareScreen> {
                     width: width * 0.3,
                     child: TextField(
                       controller: myController,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                            RegExp(r'^\d+([.,]\d+)?')), //TODO
+                      ],
                       decoration: InputDecoration(
                         contentPadding:
                             EdgeInsets.symmetric(vertical: 1, horizontal: 15),

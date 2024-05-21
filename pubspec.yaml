@@ -24,6 +24,7 @@ dependencies:
   firebase_storage: ^11.7.4
   google_sign_in: ^6.2.1
   url_launcher: ^6.2.6
+  dotted_border: ^2.1.0
 
 dev_dependencies:
   flutter_test:

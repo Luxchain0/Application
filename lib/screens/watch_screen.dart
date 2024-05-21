@@ -13,6 +13,7 @@ import 'package:lux_chain/utilities/utils.dart';
 class WatchScreen extends StatefulWidget {
   static const String id = 'WatchScreen';
   final int watchID;
+
   const WatchScreen({required this.watchID, super.key});
 
   @override
@@ -22,6 +23,7 @@ class WatchScreen extends StatefulWidget {
 class _WatchScreenState extends State<WatchScreen> {
   late Future<Watch> futureWatchData;
   late Future<List<ShareOnSale>> futureSharesData;
+  late Future<WalletWatch> futureWalletWatchData;
 
   @override
   void initState() {
@@ -144,6 +146,8 @@ class _WatchScreenState extends State<WatchScreen> {
                         Text(
                             'Prezzo di vendita proposto: ${formatAmountFromDouble(watch.actualPrice)} €'),
                         Text("Numero di quote: ${watch.numberOfShares}"),
+                        Text(
+                            "Numero di quote possedute: X"),
                         Text("Condizione orlogio: ${watch.condition}"),
                         Row(
                           children: [

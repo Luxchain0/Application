@@ -67,20 +67,7 @@ class _MarketScreenState extends State<MarketScreen> {
                 alignLabelWithHint: true,
                 labelText: 'Insert the name of the watch'),
           ),
-          Container(
-            margin: EdgeInsets.symmetric(vertical: heigh * 0.02),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.favorite_border_outlined,
-                  size: width * 0.08,
-                ),
-                Expanded(child: SizedBox(width: width * 0.08)),
-                Icon(Icons.arrow_outward_rounded, size: width * 0.08),
-                Icon(Icons.filter, size: width * 0.08),
-              ],
-            ),
-          ),
+          SizedBox(height: heigh*0.02,),
           FutureBuilder<List<MarketPlaceWatch>>(
             future: futureMarketPlaceWatches,
             builder: (context, snapshot) {
