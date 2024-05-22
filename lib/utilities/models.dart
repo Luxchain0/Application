@@ -98,3 +98,11 @@ class ModifySharesOnSale {
     }
   }
 }
+
+class WatchScreenArguments {
+  final int watchID;
+  final int ownedShares;
+  final double rate;
+
+  WatchScreenArguments(this.watchID, this.ownedShares, this.rate);
+}

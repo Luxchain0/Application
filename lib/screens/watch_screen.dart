@@ -13,8 +13,14 @@ import 'package:lux_chain/utilities/utils.dart';
 class WatchScreen extends StatefulWidget {
   static const String id = 'WatchScreen';
   final int watchID;
+  final int ownedShares;
+  final double rate;
 
-  const WatchScreen({required this.watchID, super.key});
+  const WatchScreen(
+      {required this.watchID,
+      required this.ownedShares,
+      required this.rate,
+      super.key});
 
   @override
   State<WatchScreen> createState() => _WatchScreenState();
@@ -147,7 +153,7 @@ class _WatchScreenState extends State<WatchScreen> {
                             'Prezzo di vendita proposto: ${formatAmountFromDouble(watch.actualPrice)} €'),
                         Text("Numero di quote: ${watch.numberOfShares}"),
                         Text(
-                            "Numero di quote possedute: X"),
+                            "Numero di quote possedute: ${widget.ownedShares} "),
                         Text("Condizione orlogio: ${watch.condition}"),
                         Row(
                           children: [
@@ -159,7 +165,7 @@ class _WatchScreenState extends State<WatchScreen> {
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(3)),
                                   color: Colors.lightGreen),
-                              child: const Text('+ 2.3%'),
+                              child: Text("${widget.rate}%"),
                             ),
                           ],
                         ),
@@ -418,6 +424,7 @@ class CustomButton extends StatelessWidget {
 
 class RefreshingButton extends StatefulWidget {
   final int watchID;
+
   const RefreshingButton({required this.watchID, super.key});
 
   @override

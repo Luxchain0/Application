@@ -4,6 +4,7 @@ import 'package:lux_chain/screens/watch_screen.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/firestore.dart';
+import 'package:lux_chain/utilities/models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:lux_chain/utilities/utils.dart';
 
@@ -228,7 +229,7 @@ class CustomBottomBigCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () =>
-          Navigator.of(context).pushNamed(WatchScreen.id, arguments: watchID),
+          Navigator.of(context).pushNamed(WatchScreen.id, arguments: WatchScreenArguments(watchID, quotePossedute, increaseRate)),
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 7),
         padding: const EdgeInsets.only(top: 10, bottom: 10),
