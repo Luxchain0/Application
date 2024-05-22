@@ -1,6 +1,9 @@
+import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:lux_chain/utilities/size_config.dart';
+import 'package:path_provider/path_provider.dart';
 
 class DashboardExcelScreen extends StatefulWidget {
   static const String id = 'DashboardExcelScreen';
@@ -12,6 +15,24 @@ class DashboardExcelScreen extends StatefulWidget {
 }
 
 class _DashboardExcelScreenState extends State<DashboardExcelScreen> {
+  bool isFilePresente = true;
+
+  //questo è corretto e serve per trovare il path dei Documenti
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+    return directory.path;
+  }
+
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    return File('$path/Luxchain.xlsx');
+  }
+
+
+  Future<File> writeExcel(Excel excel) async {
+    final file = await _localFile;
+    return file.writeAsBytes(excel.encode()!);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +60,12 @@ class _DashboardExcelScreenState extends State<DashboardExcelScreen> {
               ),
               Container(
                 margin: EdgeInsets.only(top: heigh * 0.015), // This is needed
-                child: Text('Per eseguire questa operazione correttamente l\'applicazione deve ricevere un foglio excel contenente dati in un formato ben preciso.'),
+                child: Text(
+                    'Per eseguire questa operazione correttamente l\'applicazione deve ricevere un foglio excel contenente dati in un formato ben preciso.'),
               ),
-              SizedBox(height: heigh*0.035,),
+              SizedBox(
+                height: heigh * 0.035,
+              ),
               Text(
                 '1. Scarica il modello',
                 style: TextStyle(
@@ -50,13 +74,18 @@ class _DashboardExcelScreenState extends State<DashboardExcelScreen> {
                     fontSize: width * 0.06,
                     fontFamily: 'Bebas'),
               ),
-              Text('Di seguito trovi il modello excel nel quale inserire i vari orologi e relativi dati.'),
-              SizedBox(height: heigh*0.01,),
+              Text(
+                  'Di seguito trovi il modello excel nel quale inserire i vari orologi e relativi dati.'),
+              SizedBox(
+                height: heigh * 0.01,
+              ),
               OutlinedButton(
-                onPressed: () => {},
+                onPressed: () => {
+                  //TODO: bisonga implementare la funzione correttamente
+                },
                 style: ButtonStyle(
-                    backgroundColor:
-                        const MaterialStatePropertyAll(Color.fromARGB(255, 23, 77, 169)),
+                    backgroundColor: const MaterialStatePropertyAll(
+                        Color.fromARGB(255, 23, 77, 169)),
                     foregroundColor:
                         MaterialStateProperty.all<Color>(Colors.white),
                     minimumSize: MaterialStateProperty.all<Size>(
@@ -65,7 +94,9 @@ class _DashboardExcelScreenState extends State<DashboardExcelScreen> {
                   'Scarica foglio excel',
                 ),
               ),
-              SizedBox(height: heigh*0.035,),
+              SizedBox(
+                height: heigh * 0.035,
+              ),
               Text(
                 '2. Carica il file excel',
                 style: TextStyle(
@@ -74,10 +105,13 @@ class _DashboardExcelScreenState extends State<DashboardExcelScreen> {
                     fontSize: width * 0.06,
                     fontFamily: 'Bebas'),
               ),
-              Text('Una volta riempito il file scaricato con i dati corretti caricalo qua sotto:'),
-              SizedBox(height: heigh*0.03,),
+              Text(
+                  'Una volta riempito il file scaricato con i dati corretti caricalo qua sotto:'),
+              SizedBox(
+                height: heigh * 0.025,
+              ),
               Container(
-                margin: EdgeInsets.symmetric(horizontal: width*0.15),
+                margin: EdgeInsets.symmetric(horizontal: width * 0.15),
                 child: DottedBorder(
                   borderType: BorderType.RRect,
                   radius: Radius.circular(20),
@@ -85,39 +119,84 @@ class _DashboardExcelScreenState extends State<DashboardExcelScreen> {
                   color: Colors.grey,
                   strokeWidth: 2,
                   child: Card(
-                      color: Color.fromARGB(255, 203, 228, 253),
+                      color: isFilePresente
+                          ? Color.fromARGB(255, 135, 255, 143)
+                          : Color.fromARGB(255, 203, 228, 253),
                       shape: RoundedRectangleBorder(
-                         borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Container(
-                            margin: EdgeInsets.only(top: heigh*0.05, bottom: heigh*0.01),
-                            child: Icon(
-                              Icons.upload_file_outlined,
-                              size: heigh*0.08,
-                            )
-                          ),
-                          Container(
-                            margin: EdgeInsets.symmetric(horizontal: width*0.1, vertical: heigh*0.03),
-                            child: OutlinedButton(
-                              onPressed: () => {},
-                              style: ButtonStyle(
-                                  backgroundColor:
-                                      const MaterialStatePropertyAll(Color.fromARGB(255, 23, 77, 169)),
-                                  foregroundColor:
-                                      MaterialStateProperty.all<Color>(Colors.white),
-                                  minimumSize: MaterialStateProperty.all<Size>(
-                                      Size(width * 0.25, width * 0.08))),
-                              child: const Text(
-                                'Seleziona il file',
-                              ),
-                            ),
-                          ),
+                              margin: EdgeInsets.only(
+                                  top: heigh * 0.04, bottom: heigh * 0.01),
+                              child: Icon(
+                                isFilePresente
+                                    ? Icons.check_box_outlined
+                                    : Icons.upload_file_outlined,
+                                size: heigh * 0.08,
+                              )),
+                          isFilePresente
+                              ? Container(
+                                  margin: EdgeInsets.only(top: heigh * 0.03),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.file_copy),
+                                          SizedBox(width: width * 0.03),
+                                          Text('NomeFile.excel'),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: heigh * 0.015,
+                                      ),
+                                      IconButton(
+                                        onPressed: () => {
+                                          setState(() {
+                                            isFilePresente = false;
+                                          }),
+                                        },
+                                        icon: Icon(
+                                          Icons.delete_outline,
+                                          color: const Color.fromARGB(
+                                              255, 247, 63, 49),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : Container(
+                                  margin: EdgeInsets.symmetric(
+                                      horizontal: width * 0.1,
+                                      vertical: heigh * 0.03),
+                                  child: OutlinedButton(
+                                    onPressed: () => {
+                                      setState(() {
+                                        isFilePresente = true;
+                                      }),
+                                    },
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                            const MaterialStatePropertyAll(
+                                                Color.fromARGB(
+                                                    255, 23, 77, 169)),
+                                        foregroundColor:
+                                            MaterialStateProperty.all<Color>(
+                                                Colors.white),
+                                        minimumSize: MaterialStateProperty.all<
+                                                Size>(
+                                            Size(width * 0.25, width * 0.08))),
+                                    child: const Text(
+                                      'Seleziona il file',
+                                    ),
+                                  ),
+                                ),
                         ],
-                      )
-                  ),
+                      )),
                 ),
               ),
             ],
