@@ -119,8 +119,8 @@ class CustomCard extends StatelessWidget {
   }
 }
 
-_logout(context) {
-  user = {};
+_logout(context) async {
+  await user.clear();
   token = '';
   Navigator.pushReplacementNamed(context, Login.id);
 }

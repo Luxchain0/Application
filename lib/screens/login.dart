@@ -34,8 +34,10 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool _showPassword = false;
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController emailController =
+      TextEditingController(text: 'testuser@example.com');
+  final TextEditingController passwordController =
+      TextEditingController(text: 'password123');
 
   Widget _buildEmailTF() {
     return Column(
@@ -164,18 +166,23 @@ class _LoginState extends State<Login> {
                 'password': passwordController.text,
               };
 
-              final response = await http.post(
-                Uri.parse('$apiURL/login'),
-                headers: <String, String>{
-                  'Content-Type': 'application/json; charset=UTF-8',
-                },
-                body: jsonEncode(requestBody),
-              );
+              final response = await http
+                  .post(
+                    Uri.parse('$apiURL/login'),
+                    headers: <String, String>{
+                      'Content-Type': 'application/json; charset=UTF-8',
+                    },
+                    body: jsonEncode(requestBody),
+                  )
+                  .timeout(const Duration(seconds: 10));
 
               if (response.statusCode == 200) {
-                var decodedResponse = jsonDecode(response.body);
-                user = decodedResponse['user'];
-                token = decodedResponse['token'];
+                Map<String, dynamic> myMap = jsonDecode(response.body);
+                for (var v in myMap['user'].entries) {
+                  saveData(v.key, v.value);
+                }
+                token = myMap['token'];
+                saveData('token', token);
                 Navigator.pushReplacementNamed(context, FrameScreen.id);
               } else if (response.statusCode == 401) {
                 snackbar(context, 'Email o Password errate');
@@ -183,7 +190,7 @@ class _LoginState extends State<Login> {
                 snackbar(context, 'Errore lato server, riprova tra poco');
               }
             } catch (e) {
-              snackbar(context, 'Errore di connessione');
+              snackbar(context, 'Errore di connessione col server');
               throw Exception('[FLUTTER] Login Error: $e');
             }
           } else {

@@ -4,14 +4,16 @@ import 'package:lux_chain/screens/history_screen.dart';
 //import 'package:lux_chain/screens/home_screen.dart';
 import 'package:lux_chain/screens/market_screen.dart';
 import 'package:lux_chain/screens/my_shares_screen.dart';
+import 'package:lux_chain/screens/settings_screen.dart';
 import 'package:lux_chain/screens/wallet_screen.dart';
 import 'package:lux_chain/screens/favourites_screen.dart';
 //import 'package:lux_chain/screens/settings_screen.dart';
 //import 'package:lux_chain/screens/bottom_bar/buy_screen.dart';
 import 'package:lux_chain/utilities/size_config.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-Map<String, dynamic> user = {};
-String token = '';
+late final SharedPreferences user;
+String? token;
 
 class FrameScreen extends StatefulWidget {
   static const String id = 'FrameScreen';
@@ -24,9 +26,9 @@ class FrameScreen extends StatefulWidget {
 class _FrameScreenState extends State<FrameScreen> {
   int currentPageIndex = 0;
   List<Widget> pages = const [
-    WalletScreen(),
+    SettingsScreen(), //replace with WalletScreen()
     MarketScreen(),
-    MySharesScreen(), //Le quote che hai in vendita //TODO
+    MySharesScreen(), //Le quote che hai in vendita
     HistoryScreen(), //Ultime quote che hai comprato o venduto
     FavouritesScreen(), //Preferiti
     DashboardExcelScreen(),
@@ -84,4 +86,20 @@ appBar(width) {
           ),
         ],
       ));
+}
+
+// method for saving data to shared preferences
+void saveData(String key, dynamic value) async {
+  print('Saving $key: $value');
+  if (value is String) {
+    await user.setString(key, value);
+  } else if (value is int) {
+    await user.setInt(key, value);
+  } else if (value is double) {
+    await user.setDouble(key, value);
+  } else if (value is bool) {
+    await user.setBool(key, value);
+  } else if (value is List<String>) {
+    await user.setStringList(key, value);
+  }
 }
