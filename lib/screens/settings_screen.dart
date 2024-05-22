@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lux_chain/screens/login.dart';
+import 'package:lux_chain/screens/login_screen.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 
@@ -122,5 +122,5 @@ class CustomCard extends StatelessWidget {
 _logout(context) async {
   await user.clear();
   token = '';
-  Navigator.pushReplacementNamed(context, Login.id);
+  Navigator.pushReplacementNamed(context, LoginScreen.id);
 }

@@ -24,15 +24,15 @@ GoogleSignIn _googleSignIn = GoogleSignIn(
 );
 */
 
-class Login extends StatefulWidget {
-  static const String id = 'Login';
-  const Login({Key? key}) : super(key: key);
+class LoginScreen extends StatefulWidget {
+  static const String id = 'LoginScreen';
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<Login> createState() => _LoginState();
+  State<LoginScreen> createState() => _LoginState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginState extends State<LoginScreen> {
   bool _showPassword = false;
   final TextEditingController emailController =
       TextEditingController(text: 'testuser@example.com');

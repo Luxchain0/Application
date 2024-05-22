@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:lux_chain/firebase_options.dart';
-import 'package:lux_chain/screens/login.dart';
+import 'package:lux_chain/screens/login_screen.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/route_generator.dart';
 import 'package:lux_chain/utilities/theme_data.dart';
@@ -43,7 +43,7 @@ class _MyAppState extends State<MyApp> {
           builder: (buildContext, snapshot) {
             if (snapshot.hasData) {
               if (snapshot.data!) {
-                return const Login();
+                return const LoginScreen();
               }
               return const FrameScreen();
             } else {
