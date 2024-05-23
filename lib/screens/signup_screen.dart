@@ -456,13 +456,14 @@ class _SignUpState extends State<SignUpScreen> {
               print(myMap['error']);
               print(myMap['error']['meta']);
               print(myMap['error']['meta']['target']);
-              if (myMap['error']['meta']['target'] == "email") {
+              if (myMap['error']['meta']['target'].contains('email')) {
                 snackbar(context, 'utente già registrato, procedi al login');
                 Navigator.pop(context);
-              } else if (myMap['error']['meta']['target'] == "username") {
+              } else if (myMap['error']['meta']['target']
+                  .contains('username')) {
                 snackbar(
                     context, 'username già utilizzato da un altro account');
-              } else if (myMap['error']['meta']['target'] == "phonenr") {
+              } else if (myMap['error']['meta']['target'].contains('phonenr')) {
                 snackbar(context,
                     'numero di telefono già utilizzato da un altro account');
               }
