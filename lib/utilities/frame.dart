@@ -103,3 +103,16 @@ void saveData(String key, dynamic value) async {
     await user.setStringList(key, value);
   }
 }
+
+void snackbar(context, text) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(
+        text,
+        textAlign: TextAlign.center,
+      ),
+      backgroundColor: const Color.fromARGB(255, 49, 115, 168),
+      duration: const Duration(milliseconds: 10000),
+    ),
+  );
+}

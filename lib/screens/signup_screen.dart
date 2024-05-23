@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:http/http.dart' as http;
@@ -18,6 +20,11 @@ class _SignUpState extends State<SignUpScreen> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController firstnameController = TextEditingController();
   final TextEditingController lastnameController = TextEditingController();
+  final TextEditingController birthdateController = TextEditingController();
+  final TextEditingController birthcountryController = TextEditingController();
+  final TextEditingController nationalityController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
+  final TextEditingController phonenrController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -70,7 +77,6 @@ class _SignUpState extends State<SignUpScreen> {
           height: 60.0,
           child: TextField(
             controller: firstnameController,
-            keyboardType: TextInputType.emailAddress,
             style: const TextStyle(
               color: Colors.white,
             ),
@@ -105,7 +111,6 @@ class _SignUpState extends State<SignUpScreen> {
           height: 60.0,
           child: TextField(
             controller: lastnameController,
-            keyboardType: TextInputType.emailAddress,
             style: const TextStyle(
               color: Colors.white,
             ),
@@ -117,6 +122,183 @@ class _SignUpState extends State<SignUpScreen> {
                 color: Colors.white,
               ),
               hintText: 'Enter your Last Name',
+              hintStyle: kHintTextStyle,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBirthDateTF() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        const Text(
+          'Birth Date',
+          style: kLabelStyle,
+        ),
+        const SizedBox(height: 10.0),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: kBoxDecorationStyle,
+          height: 60.0,
+          child: TextField(
+            controller: birthdateController,
+            readOnly: true,
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(
+                Icons.account_box,
+                color: Colors.white,
+              ),
+              hintText: 'Enter your Birth Date',
+              hintStyle: kHintTextStyle,
+            ),
+            onTap: () => datePicker(context),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBirthCountryTF() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        const Text(
+          'Birth Country',
+          style: kLabelStyle,
+        ),
+        const SizedBox(height: 10.0),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: kBoxDecorationStyle,
+          height: 60.0,
+          child: TextField(
+            controller: birthcountryController,
+            readOnly: true,
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(
+                Icons.email,
+                color: Colors.white,
+              ),
+              hintText: 'Enter your Birth Country',
+              hintStyle: kHintTextStyle,
+            ),
+            onTap: () => birthCountryPicker(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNationalityTF() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        const Text(
+          'Nationality',
+          style: kLabelStyle,
+        ),
+        const SizedBox(height: 10.0),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: kBoxDecorationStyle,
+          height: 60.0,
+          child: TextField(
+            controller: nationalityController,
+            readOnly: true,
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(
+                Icons.email,
+                color: Colors.white,
+              ),
+              hintText: 'Enter your Nationality',
+              hintStyle: kHintTextStyle,
+            ),
+            onTap: () => nationalityPicker(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAddressTF() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        const Text(
+          'Address',
+          style: kLabelStyle,
+        ),
+        const SizedBox(height: 10.0),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: kBoxDecorationStyle,
+          height: 60.0,
+          child: TextField(
+            controller: addressController,
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(
+                Icons.account_box,
+                color: Colors.white,
+              ),
+              hintText: 'Enter your Address',
+              hintStyle: kHintTextStyle,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPhonenrTF() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        const Text(
+          'Phone Number',
+          style: kLabelStyle,
+        ),
+        const SizedBox(height: 10.0),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: kBoxDecorationStyle,
+          height: 60.0,
+          child: TextField(
+            controller: phonenrController,
+            keyboardType: TextInputType.phone,
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(
+                Icons.email,
+                color: Colors.white,
+              ),
+              hintText: 'Enter your Phone Number',
               hintStyle: kHintTextStyle,
             ),
           ),
@@ -233,14 +415,11 @@ class _SignUpState extends State<SignUpScreen> {
               'username': usernameController.text,
               'firstname': firstnameController.text,
               'lastname': lastnameController.text,
-              //
-              "birthdate": "1990-05-20",
-              "birthcountry": "Italia",
-              "nationality": "Italiana",
-              "address": "Via Roma 123",
-              "phonenr": "+39123456789",
-              "govid": "ABC123XYZ",
-              //
+              "birthdate": birthdateController.text,
+              "birthcountry": birthcountryController.text,
+              "nationality": nationalityController.text,
+              "address": addressController.text,
+              "phonenr": phonenrController.text,
               'email': emailController.text,
               'password': passwordController.text,
             };
@@ -254,13 +433,20 @@ class _SignUpState extends State<SignUpScreen> {
             );
 
             if (response.statusCode == 200) {
-              // salva user + token e cambia pagina
-              print('Response: ${jsonDecode(response.body)['token']}');
+              Map<String, dynamic> myMap = jsonDecode(response.body);
+              for (var v in myMap['user'].entries) {
+                saveData(v.key, v.value);
+              }
+              token = myMap['token'];
+              saveData('token', token);
+              Navigator.pushReplacementNamed(context, FrameScreen.id);
+            } else if (response.statusCode == 401) {
+              snackbar(context, 'Email o Password errate');
             } else {
-              throw Exception(
-                  '[FLUTTER] SignUpScreen http Error: ${response.statusCode}');
+              snackbar(context, 'Errore lato server, riprova tra poco');
             }
           } catch (e) {
+            snackbar(context, 'Errore di connessione col server');
             throw Exception('[FLUTTER] SignUpScreen Error: $e');
           }
         },
@@ -280,11 +466,80 @@ class _SignUpState extends State<SignUpScreen> {
     );
   }
 
-  @override
-  void dispose() {
-    // Clean up the controller when the widget is disposed.
-    emailController.dispose();
-    super.dispose();
+  datePicker(context) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      lastDate: DateTime.now(),
+      firstDate: DateTime(2015),
+      initialDate: DateTime.now(),
+    );
+    if (pickedDate == null) return;
+    birthdateController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
+  }
+
+  birthCountryPicker() {
+    showCountryPicker(
+      context: context,
+      onSelect: (Country country) {
+        setState(() {
+          birthcountryController.text = country.displayNameNoCountryCode;
+          nationalityController.text = country.displayNameNoCountryCode;
+          phonenrController.text = '+${country.phoneCode}';
+        });
+      },
+      countryListTheme: CountryListThemeData(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(40.0),
+          topRight: Radius.circular(40.0),
+        ),
+        inputDecoration: InputDecoration(
+          labelText: 'Search',
+          hintText: 'Start typing to search',
+          prefixIcon: const Icon(Icons.search),
+          border: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: const Color(0xFF8C98A8).withOpacity(0.2),
+            ),
+          ),
+        ),
+        searchTextStyle: const TextStyle(
+          color: Colors.black,
+          fontSize: 18,
+        ),
+      ),
+    );
+  }
+
+  nationalityPicker() {
+    showCountryPicker(
+      context: context,
+      onSelect: (Country country) {
+        setState(() {
+          nationalityController.text = country.displayNameNoCountryCode;
+          phonenrController.text = '+${country.phoneCode}';
+        });
+      },
+      countryListTheme: CountryListThemeData(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(40.0),
+          topRight: Radius.circular(40.0),
+        ),
+        inputDecoration: InputDecoration(
+          labelText: 'Search',
+          hintText: 'Start typing to search',
+          prefixIcon: const Icon(Icons.search),
+          border: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: const Color(0xFF8C98A8).withOpacity(0.2),
+            ),
+          ),
+        ),
+        searchTextStyle: const TextStyle(
+          color: Colors.black,
+          fontSize: 18,
+        ),
+      ),
+    );
   }
 
   @override
@@ -311,7 +566,7 @@ class _SignUpState extends State<SignUpScreen> {
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: const EdgeInsets.symmetric(
                   horizontal: 40.0,
-                  vertical: 60.0,
+                  vertical: 40.0,
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -330,9 +585,21 @@ class _SignUpState extends State<SignUpScreen> {
                     const SizedBox(height: 15.0),
                     _buildLastnameTF(),
                     const SizedBox(height: 15.0),
+                    _buildBirthDateTF(),
+                    const SizedBox(height: 15.0),
+                    _buildBirthCountryTF(),
+                    const SizedBox(height: 15.0),
+                    _buildNationalityTF(),
+                    const SizedBox(height: 15.0),
+                    _buildAddressTF(),
+                    const SizedBox(height: 15.0),
+                    _buildPhonenrTF(),
+                    const SizedBox(height: 15.0),
                     _buildEmailTF(),
                     const SizedBox(height: 15.0),
                     _buildPasswordTF(),
+                    const SizedBox(height: 10.0),
+                    _buildShowPasswordBox(),
                     const SizedBox(height: 15.0),
                     _buildSignUpBtn(),
                   ],
