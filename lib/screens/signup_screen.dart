@@ -412,6 +412,17 @@ class _SignUpState extends State<SignUpScreen> {
         onPressed: () async {
           try {
             Map<String, String> requestBody = {
+              'username': 'matteooo',
+              'firstname': 'Matteo',
+              'lastname': 'Artuso',
+              "birthdate": '1999-01-04',
+              "birthcountry": 'italy',
+              "nationality": 'italy',
+              "address": 'via ferrari 1',
+              "phonenr": '+393662167868',
+              'email': 'matteo@artuso.it',
+              'password': 'password',
+              /*
               'username': usernameController.text,
               'firstname': firstnameController.text,
               'lastname': lastnameController.text,
@@ -422,6 +433,7 @@ class _SignUpState extends State<SignUpScreen> {
               "phonenr": phonenrController.text,
               'email': emailController.text,
               'password': passwordController.text,
+              */
             };
 
             final response = await http.post(
@@ -432,16 +444,19 @@ class _SignUpState extends State<SignUpScreen> {
               body: jsonEncode(requestBody),
             );
 
+            Map<String, dynamic> myMap = jsonDecode(response.body);
             if (response.statusCode == 200) {
-              Map<String, dynamic> myMap = jsonDecode(response.body);
               for (var v in myMap['user'].entries) {
                 saveData(v.key, v.value);
               }
               token = myMap['token'];
               saveData('token', token);
               Navigator.pushReplacementNamed(context, FrameScreen.id);
-            } else if (response.statusCode == 401) {
-              snackbar(context, 'Email o Password errate');
+            } else if (response.statusCode == 409) {
+              print(myMap['error']);
+              print(myMap['error']['meta']);
+              print(myMap['error']['meta']['target']);
+              snackbar(context, 'valore duplicato nel database');
             } else {
               snackbar(context, 'Errore lato server, riprova tra poco');
             }
