@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:lux_chain/screens/login_screen.dart';
-import 'package:lux_chain/screens/personal_data_screen.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/size_config.dart';
+import 'package:lux_chain/screens/settings_screen.dart';
 
-class SettingsScreen extends StatefulWidget {
-  static const String id = 'SettingsScreen';
-  const SettingsScreen({super.key});
+class PersonalDataScreen extends StatefulWidget {
+  static const String id = 'PersonalDataScreen';
+  const PersonalDataScreen({super.key});
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  State<PersonalDataScreen> createState() => _PersonalDataScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _PersonalDataScreenState extends State<PersonalDataScreen> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -54,16 +53,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ],
             ),
             CustomCard(
-                icon: Icons.person,
-                text: 'Personal data',
-                onPressed: () => {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const PersonalDataScreen(),
-                        ),
-                      )
-                    }),
+                icon: Icons.person, text: 'Personal data', onPressed: () => {}),
             CustomCard(
                 icon: Icons.notifications,
                 text: 'Notification',
@@ -79,10 +69,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 icon: Icons.lightbulb, text: 'Hints', onPressed: () => {}),
             CustomCard(
                 icon: Icons.translate, text: 'Language', onPressed: () => {}),
-            CustomCard(
-                icon: Icons.logout,
-                text: 'Logout',
-                onPressed: () => {_logout(context)}),
           ],
         ),
       ),
@@ -127,10 +113,4 @@ class CustomCard extends StatelessWidget {
           ],
         ));
   }
-}
-
-_logout(context) async {
-  await user.clear();
-  token = '';
-  Navigator.pushReplacementNamed(context, LoginScreen.id);
 }
