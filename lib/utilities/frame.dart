@@ -26,12 +26,12 @@ class FrameScreen extends StatefulWidget {
 class _FrameScreenState extends State<FrameScreen> {
   int currentPageIndex = 0;
   List<Widget> pages = const [
-    SettingsScreen(), //replace with WalletScreen()
+    WalletScreen(),
     MarketScreen(),
     MySharesScreen(), //Le quote che hai in vendita
     HistoryScreen(), //Ultime quote che hai comprato o venduto
     FavouritesScreen(), //Preferiti
-    DashboardExcelScreen(),
+    DashboardExcelScreen(), //replace with SettingsScreen()
   ];
 
   @override
