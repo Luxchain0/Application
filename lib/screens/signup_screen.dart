@@ -456,7 +456,16 @@ class _SignUpState extends State<SignUpScreen> {
               print(myMap['error']);
               print(myMap['error']['meta']);
               print(myMap['error']['meta']['target']);
-              snackbar(context, 'valore duplicato nel database');
+              if (myMap['error']['meta']['target'] == "email") {
+                snackbar(context, 'utente già registrato, procedi al login');
+                Navigator.pop(context);
+              } else if (myMap['error']['meta']['target'] == "username") {
+                snackbar(
+                    context, 'username già utilizzato da un altro account');
+              } else if (myMap['error']['meta']['target'] == "phonenr") {
+                snackbar(context,
+                    'numero di telefono già utilizzato da un altro account');
+              }
             } else {
               snackbar(context, 'Errore lato server, riprova tra poco');
             }
