@@ -57,12 +57,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 icon: Icons.person,
                 text: 'Personal data',
                 onPressed: () => {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const PersonalDataScreen(),
-                        ),
-                      )
+                      Navigator.of(context).pushNamed(PersonalDataScreen.id),
                     }),
             CustomCard(
                 icon: Icons.notifications,

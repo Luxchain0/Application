@@ -20,6 +20,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: appBar(width),
       body: Padding(
         padding: EdgeInsets.symmetric(
             horizontal: width * 0.1, vertical: heigh * 0.02),
