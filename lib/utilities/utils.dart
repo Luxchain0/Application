@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 String formatAmountFromInt(int number) {
   String stringNumber = number.toString();
   String numberCorrect = "";
@@ -13,9 +15,11 @@ String formatAmountFromInt(int number) {
     numberCorrect =
         "${stringNumber.substring(0, 3)} ${stringNumber.substring(3, 6)}";
   } else if (stringNumber.length == 7) {
-    numberCorrect = "${stringNumber[0]} ${stringNumber.substring(1, 4)} ${stringNumber.substring(4, 7)}";
+    numberCorrect =
+        "${stringNumber[0]} ${stringNumber.substring(1, 4)} ${stringNumber.substring(4, 7)}";
   } else if (stringNumber.length == 8) {
-    numberCorrect = "${stringNumber.substring(0, 2)} ${stringNumber.substring(2, 5)} ${stringNumber.substring(5, 8)}";
+    numberCorrect =
+        "${stringNumber.substring(0, 2)} ${stringNumber.substring(2, 5)} ${stringNumber.substring(5, 8)}";
   }
   return "$numberCorrect,00";
 }
@@ -36,9 +40,11 @@ String formatAmountFromDouble(double number) {
   } else if (stringX.length == 6) {
     numberCorrect = "${stringX.substring(0, 3)} ${stringX.substring(3, 6)}";
   } else if (stringX.length == 7) {
-    numberCorrect = "${stringX[0]} ${stringX.substring(1, 4)} ${stringX.substring(4, 7)}";
+    numberCorrect =
+        "${stringX[0]} ${stringX.substring(1, 4)} ${stringX.substring(4, 7)}";
   } else if (stringX.length == 8) {
-    numberCorrect = "${stringX.substring(0, 2)} ${stringX.substring(2, 5)} ${stringX.substring(5, 8)}";
+    numberCorrect =
+        "${stringX.substring(0, 2)} ${stringX.substring(2, 5)} ${stringX.substring(5, 8)}";
   } else {
     numberCorrect = stringX;
   }
@@ -61,4 +67,10 @@ double customDoubleParser(num value) {
   } else {
     throw ArgumentError('Il valore fornito non è né un int né un double.');
   }
+}
+
+Future<SharedPreferences> getUserData() async {
+  SharedPreferences user = await SharedPreferences.getInstance();
+
+  return user;
 }

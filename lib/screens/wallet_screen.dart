@@ -7,6 +7,7 @@ import 'package:lux_chain/utilities/firestore.dart';
 import 'package:lux_chain/utilities/models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:lux_chain/utilities/utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class WalletScreen extends StatefulWidget {
   static const String id = 'WalletScreen';
@@ -23,8 +24,26 @@ class _WalletScreenState extends State<WalletScreen> {
   @override
   void initState() {
     super.initState();
-    futureWatches = getUserWalletWatches(1);
-    futureWalletData = getWalletData(1);
+    futureWatches = Future.value([]);
+    futureWalletData = Future.value(const WalletData(
+        inShares: 0,
+        liquidity: 0,
+        rate: 0)); // Initialize with empty WalletData
+    _initializeData();
+  }
+
+  void _initializeData() async {
+    Future<SharedPreferences> userFuture = getUserData();
+    SharedPreferences user = await userFuture;
+
+    // Assume that you have a specific key in SharedPreferences
+    int userId =
+        user.getInt('accountid') ?? 0;
+
+    setState(() {
+      futureWatches = getUserWalletWatches(userId);
+      futureWalletData = getWalletData(userId);
+    });
   }
 
   @override
@@ -63,7 +82,9 @@ class _WalletScreenState extends State<WalletScreen> {
                           const Icon(Icons.visibility),
                         ],
                       ),
-                      SizedBox(height: height*0.01,),
+                      SizedBox(
+                        height: height * 0.01,
+                      ),
                       GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -106,7 +127,9 @@ class _WalletScreenState extends State<WalletScreen> {
                                 decoration: BoxDecoration(
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(3)),
-                                    color: walletData.rate > 0 ? Colors.lightGreen : Colors.red),
+                                    color: walletData.rate > 0
+                                        ? Colors.lightGreen
+                                        : Colors.red),
                                 child: Text('${walletData.rate}%'),
                               ),
                             ],
@@ -117,7 +140,9 @@ class _WalletScreenState extends State<WalletScreen> {
                         'Contributi netti: ${formatAmountFromDouble(contributiNetti)} €',
                         style: TextStyle(fontSize: width * 0.04),
                       ),
-                      SizedBox(height: height * 0.01,),
+                      SizedBox(
+                        height: height * 0.01,
+                      ),
                       Text(
                         'In collezioni: ${formatAmountFromDouble(walletData.inShares)} €',
                         style: TextStyle(fontSize: width * 0.04),
@@ -228,8 +253,9 @@ class CustomBottomBigCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () =>
-          Navigator.of(context).pushNamed(WatchScreen.id, arguments: WatchScreenArguments(watchID, quotePossedute, increaseRate)),
+      onTap: () => Navigator.of(context).pushNamed(WatchScreen.id,
+          arguments:
+              WatchScreenArguments(watchID, quotePossedute, increaseRate)),
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 7),
         padding: const EdgeInsets.only(top: 10, bottom: 10),

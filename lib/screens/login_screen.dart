@@ -9,9 +9,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 const String apiURL = 'https://luxchain-flame.vercel.app/api/auth';
 
-// testuser@example.com
-// password123
-
 /*
 const List<String> scopes = <String>[
   'email',
@@ -35,9 +32,9 @@ class LoginScreen extends StatefulWidget {
 class _LoginState extends State<LoginScreen> {
   bool _showPassword = false;
   final TextEditingController emailController =
-      TextEditingController(text: 'testuser@example.com');
+      TextEditingController(text: 'email@gmail.com');
   final TextEditingController passwordController =
-      TextEditingController(text: 'password123');
+      TextEditingController(text: 'password');
 
   Widget _buildEmailTF() {
     return Column(

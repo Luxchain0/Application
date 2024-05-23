@@ -412,7 +412,7 @@ class _SignUpState extends State<SignUpScreen> {
         onPressed: () async {
           try {
             Map<String, String> requestBody = {
-              'username': 'matteooo',
+              /* 'username': 'matteooo',
               'firstname': 'Matteo',
               'lastname': 'Artuso',
               "birthdate": '1999-01-04',
@@ -421,8 +421,7 @@ class _SignUpState extends State<SignUpScreen> {
               "address": 'via ferrari 1',
               "phonenr": '+393662167868',
               'email': 'matteo@artuso.it',
-              'password': 'password',
-              /*
+              'password': 'password', */
               'username': usernameController.text,
               'firstname': firstnameController.text,
               'lastname': lastnameController.text,
@@ -433,7 +432,7 @@ class _SignUpState extends State<SignUpScreen> {
               "phonenr": phonenrController.text,
               'email': emailController.text,
               'password': passwordController.text,
-              */
+             
             };
 
             final response = await http.post(
