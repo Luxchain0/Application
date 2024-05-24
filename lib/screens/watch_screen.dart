@@ -9,18 +9,13 @@ import 'package:lux_chain/utilities/models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class WatchScreen extends StatefulWidget {
   static const String id = 'WatchScreen';
   final int watchID;
-  final int ownedShares;
-  final double rate;
 
-  const WatchScreen(
-      {required this.watchID,
-      required this.ownedShares,
-      required this.rate,
-      super.key});
+  const WatchScreen({required this.watchID, super.key});
 
   @override
   State<WatchScreen> createState() => _WatchScreenState();
@@ -152,8 +147,7 @@ class _WatchScreenState extends State<WatchScreen> {
                         Text(
                             'Prezzo di vendita proposto: ${formatAmountFromDouble(watch.actualPrice)} €'),
                         Text("Numero di quote: ${watch.numberOfShares}"),
-                        Text(
-                            "Numero di quote possedute: ${widget.ownedShares} "),
+                        const Text("Numero di quote possedute: - "),
                         Text("Condizione orlogio: ${watch.condition}"),
                         Row(
                           children: [
@@ -165,7 +159,7 @@ class _WatchScreenState extends State<WatchScreen> {
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(3)),
                                   color: Colors.lightGreen),
-                              child: Text("${widget.rate}%"),
+                              child: const Text("0%"),
                             ),
                           ],
                         ),
@@ -432,29 +426,46 @@ class RefreshingButton extends StatefulWidget {
 }
 
 class _RefreshingButtonState extends State<RefreshingButton> {
-  late Future<bool> isFavourite;
+  late Future<bool> isFavourite = Future.value(false);
 
   @override
   void initState() {
-    isFavourite = getFavorite(1, widget.watchID);
     super.initState();
+    _initializeData();
+  }
+
+  void _initializeData() async {
+    Future<SharedPreferences> userFuture = getUserData();
+    SharedPreferences user = await userFuture;
+
+    // Assume that you have a specific key in SharedPreferences
+    int userId = user.getInt('accountid') ?? 0;
+
+    setState(() {
+      isFavourite = getFavorite(userId, widget.watchID);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
         onPressed: () async {
+          Future<SharedPreferences> userFuture = getUserData();
+          SharedPreferences user = await userFuture;
+
+          // Assume that you have a specific key in SharedPreferences
+          int userId = user.getInt('accountid') ?? 0;
           bool isFav = await isFavourite;
           if (isFav) {
             APIStatus removeStatus =
-                await removeFromFavourite(1, widget.watchID);
+                await removeFromFavourite(userId, widget.watchID);
             if (removeStatus == APIStatus.success) {
               setState(() {
                 isFavourite = Future.value(false);
               });
             }
           } else {
-            APIStatus addStatus = await addToFavourite(1, widget.watchID);
+            APIStatus addStatus = await addToFavourite(userId, widget.watchID);
             if (addStatus == APIStatus.success) {
               setState(() {
                 isFavourite = Future.value(true);

@@ -4,6 +4,8 @@ import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:lux_chain/utilities/frame.dart';
+import 'package:lux_chain/utilities/utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SellScreen extends StatefulWidget {
   static const String id = 'SellScreen';
@@ -24,8 +26,10 @@ class _SellScreenState extends State<SellScreen> {
 
   handleSell() async {
     print("SELLING");
-    var result =
-        await sellShares(1, sellInfo.watchid, _shareSelected, _priceOfOneShare);
+    Future<SharedPreferences> userFuture = getUserData();
+    SharedPreferences user = await userFuture;
+    int userId = user.getInt('accountid') ?? 0;
+    var result = await sellShares(userId, sellInfo.watchid, _shareSelected, _priceOfOneShare);
     if (result == APIStatus.success) {
       showDialog(
           context: context,

@@ -58,12 +58,10 @@ class RouteGenerator {
         }
         break;
       case WatchScreen.id:
-        if (args is WatchScreenArguments) {
+        if (args is int) {
           return MaterialPageRoute(
               builder: (_) => WatchScreen(
-                  watchID: args.watchID,
-                  ownedShares: args.ownedShares,
-                  rate: args.rate));
+                  watchID: args));
         }
         break;
       default:

@@ -7,6 +7,7 @@ import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/firestore.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:lux_chain/utilities/utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HistoryScreen extends StatefulWidget {
   static const String id = 'HistoryScreen';
@@ -22,7 +23,19 @@ class _MySharesScreenState extends State<HistoryScreen> {
   @override
   void initState() {
     super.initState();
-    futureTradeHistory = getTradeHistory(1);
+    _initializeData();
+  }
+
+  void _initializeData() async {
+    Future<SharedPreferences> userFuture = getUserData();
+    SharedPreferences user = await userFuture;
+
+    // Assume that you have a specific key in SharedPreferences
+    int userId = user.getInt('accountid') ?? 0;
+    
+    setState(() {
+      futureTradeHistory = getTradeHistory(userId);
+    });
   }
 
   @override

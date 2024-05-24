@@ -5,6 +5,7 @@ import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/firestore.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:lux_chain/utilities/utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FavouritesScreen extends StatefulWidget {
   static const String id = 'FavouritesScreen';
@@ -20,7 +21,19 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
   @override
   void initState() {
     super.initState();
-    futureFavorites = getFavorites(2);
+    _initializeData(); 
+  }
+
+  void _initializeData() async {
+    Future<SharedPreferences> userFuture = getUserData();
+    SharedPreferences user = await userFuture;
+
+    // Assume that you have a specific key in SharedPreferences
+    int userId = user.getInt('accountid') ?? 0;
+
+    setState(() {
+      futureFavorites = getFavorites(userId);
+    });
   }
 
   @override
@@ -57,12 +70,17 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                                   return CustomBottomBigCard(
                                     watchID: favorite.watch.watchId,
                                     screenWidth: width,
-                                    imgUrl: getDownloadURL(favorite.watch.imageuri),
-                                    modelName: favorite.watch.watchId.toString(),
-                                    brandName: favorite.watch.modelType.model.modelname,
-                                    serialNumber: favorite.watch.watchId.toString(),
+                                    imgUrl:
+                                        getDownloadURL(favorite.watch.imageuri),
+                                    modelName:
+                                        favorite.watch.watchId.toString(),
+                                    brandName: favorite
+                                        .watch.modelType.model.modelname,
+                                    serialNumber:
+                                        favorite.watch.watchId.toString(),
                                     valoreAttuale: 0,
-                                    valoreDiAcquisto: favorite.watch.initialPrice,
+                                    valoreDiAcquisto:
+                                        favorite.watch.initialPrice,
                                     quotePossedute: 0,
                                     quoteTotali: favorite.watch.numberOfShares,
                                     controvalore: 0,
@@ -154,14 +172,15 @@ class CustomBottomBigCard extends StatelessWidget {
                         return const CircularProgressIndicator();
                       } else if (snapshot.hasData) {
                         return ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(7)),
-                  child: Image.network(
-                    snapshot.data!,
-                    width: screenWidth * 0.23,
-                    height: screenWidth * 0.23,
-                    fit: BoxFit.cover,
-                  ),
-                );
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(7)),
+                          child: Image.network(
+                            snapshot.data!,
+                            width: screenWidth * 0.23,
+                            height: screenWidth * 0.23,
+                            fit: BoxFit.cover,
+                          ),
+                        );
                       } else if (snapshot.hasError) {
                         return Text('Error: ${snapshot.error}');
                       } else {
@@ -174,8 +193,7 @@ class CustomBottomBigCard extends StatelessWidget {
                     padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(3)),
-                      color:
-                          (incremento > 0) ? Colors.lightGreen : Colors.red,
+                      color: (incremento > 0) ? Colors.lightGreen : Colors.red,
                     ),
                     child: Text('$incremento%'),
                   ),
@@ -205,11 +223,17 @@ class CustomBottomBigCard extends StatelessWidget {
                   ),
                 ),
                 Text('Serial: $serialNumber'),
-              SizedBox(height: screenWidth * 0.02),
-              Text('Quote Possedute: $quotePossedute/$quoteTotali'),
-              Text('Controvalore: ' + formatAmountFromDouble(controvalore) + ' €'),
-              Text('Valore di acquisto: ' + formatAmountFromDouble(valoreDiAcquisto) + ' €'),
-              Text('Valore attuale: ' + formatAmountFromDouble(valoreAttuale) + ' €'),
+                SizedBox(height: screenWidth * 0.02),
+                Text('Quote Possedute: $quotePossedute/$quoteTotali'),
+                Text('Controvalore: ' +
+                    formatAmountFromDouble(controvalore) +
+                    ' €'),
+                Text('Valore di acquisto: ' +
+                    formatAmountFromDouble(valoreDiAcquisto) +
+                    ' €'),
+                Text('Valore attuale: ' +
+                    formatAmountFromDouble(valoreAttuale) +
+                    ' €'),
               ],
             ),
           ],

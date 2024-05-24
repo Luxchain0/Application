@@ -5,6 +5,7 @@ import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:lux_chain/utilities/utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BuyScreen extends StatefulWidget {
   static const String id = 'BuyScreen';
@@ -26,7 +27,16 @@ class _BuyScreenState extends State<BuyScreen> {
   @override
   void initState() {
     super.initState();
-    getWalletData(2).then((walletData) {
+    _initializeData();
+  }
+
+  void _initializeData() async {
+    Future<SharedPreferences> userFuture = getUserData();
+    SharedPreferences user = await userFuture;
+
+    int userId = user.getInt('accountid') ?? 0;
+
+    getWalletData(userId).then((walletData) {
       setState(() {
         _moneyInTheWallet = walletData.liquidity;
       });
@@ -43,8 +53,10 @@ class _BuyScreenState extends State<BuyScreen> {
   handleBuy() async {
     // ignore: avoid_print
     print("BUYING");
-    var result =
-        await buyShares(2, buyInfo.watchid, _shareSelected, buyInfo.proposalPrice);
+    Future<SharedPreferences> userFuture = getUserData();
+    SharedPreferences user = await userFuture;
+    int userId = user.getInt('accountid') ?? 0;
+    var result = await buyShares(userId, buyInfo.watchid, _shareSelected, buyInfo.proposalPrice);
     if (APIStatus.success == result) {
       showDialog(
           context: context,
@@ -59,7 +71,7 @@ class _BuyScreenState extends State<BuyScreen> {
                 ],
                 title: const Text('Messaggio di info'),
                 contentPadding: const EdgeInsets.all(20.0),
-                content: Text('tutto bene'),
+                content: const Text('tutto bene'),
               ));
     } else {
       showDialog(
