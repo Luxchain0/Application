@@ -56,7 +56,8 @@ class _BuyScreenState extends State<BuyScreen> {
     Future<SharedPreferences> userFuture = getUserData();
     SharedPreferences user = await userFuture;
     int userId = user.getInt('accountid') ?? 0;
-    var result = await buyShares(userId, buyInfo.watchid, _shareSelected, buyInfo.proposalPrice);
+    var result = await buyShares(
+        userId, buyInfo.watchid, _shareSelected, buyInfo.proposalPrice);
     if (APIStatus.success == result) {
       showDialog(
           context: context,
@@ -64,7 +65,7 @@ class _BuyScreenState extends State<BuyScreen> {
                 actions: [
                   TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, FrameScreen.id);
+                      Navigator.pushReplacementNamed(context, FrameScreen.id);
                     },
                     child: const Text('Close'),
                   ),

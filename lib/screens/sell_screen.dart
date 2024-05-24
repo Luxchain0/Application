@@ -29,7 +29,8 @@ class _SellScreenState extends State<SellScreen> {
     Future<SharedPreferences> userFuture = getUserData();
     SharedPreferences user = await userFuture;
     int userId = user.getInt('accountid') ?? 0;
-    var result = await sellShares(userId, sellInfo.watchid, _shareSelected, _priceOfOneShare);
+    var result = await sellShares(
+        userId, sellInfo.watchid, _shareSelected, _priceOfOneShare);
     if (result == APIStatus.success) {
       showDialog(
           context: context,
@@ -39,7 +40,7 @@ class _SellScreenState extends State<SellScreen> {
                     onPressed: () {
                       //Se va tutto bene si chiude il messaggio di avviso e si torna al wallet
                       //TODO: bisognerebbe tornare alla scheramta delle proprie schare in vendita
-                      Navigator.pushNamed(context, FrameScreen.id);
+                      Navigator.pushReplacementNamed(context, FrameScreen.id);
                     },
                     child: const Text('Close'),
                   ),
