@@ -23,8 +23,8 @@ class WatchScreen extends StatefulWidget {
 
 class _WatchScreenState extends State<WatchScreen> {
   late Future<List<ShareOnSale>> futureSharesData = Future.value([]);
-  late Future<int> sharesOwned = Future.value(0);
-  late Future<double> increaseRate = Future.value(0);
+  late int sharesOwned = 0;
+  late double increaseRate = 0;
 
   @override
   void initState() {
@@ -40,8 +40,10 @@ class _WatchScreenState extends State<WatchScreen> {
 
     futureSharesData = getSharesOfTheWatchOnSell(widget.watch.watchId);
     getWatchAdditionalData(userId, widget.watch.watchId).then((value) {
-      sharesOwned = Future.value(value.sharesOwned);
-      increaseRate = Future.value(value.increaseRate);
+      setState(() {
+        sharesOwned = value.sharesOwned;
+        increaseRate = value.increaseRate;
+      });
     });
   }
 
@@ -146,51 +148,17 @@ class _WatchScreenState extends State<WatchScreen> {
                 Text(
                     'Actual Price: ${formatAmountFromDouble(widget.watch.actualPrice)} €'),
                 Text("Shares: ${widget.watch.numberOfShares}"),
-                FutureBuilder<int>(
-                  future: sharesOwned,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Text("Shares owned: -");
-                    } else if (snapshot.hasData) {
-                      int sharesOwned = snapshot.data!;
-                      return Text("Shares owned: $sharesOwned");
-                    } else if (snapshot.hasError) {
-                      return const Text('Error');
-                    } else {
-                      return const SizedBox();
-                    }
-                  },
-                ),
+                Text("Shares owned: $sharesOwned"),
                 Text("Conditions: ${widget.watch.condition}"),
                 Row(
                   children: [
-                    FutureBuilder<double>(
-                      future: increaseRate,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        } else if (snapshot.hasData) {
-                          double increaseRate = snapshot.data!;
-                          return Row(
-                            children: [
-                              const Text('Rate: '),
-                              Container(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 3),
-                                decoration: const BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(3)),
-                                    color: Colors.lightGreen),
-                                child: Text("$increaseRate%"),
-                              ),
-                            ],
-                          );
-                        } else if (snapshot.hasError) {
-                          return const Text('Error');
-                        } else {
-                          return const SizedBox();
-                        }
-                      },
+                    const Text('Rate: '),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 3),
+                      decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(3)),
+                          color: Colors.lightGreen),
+                      child: Text("$increaseRate%"),
                     ),
                   ],
                 ),
@@ -232,11 +200,10 @@ class _WatchScreenState extends State<WatchScreen> {
                               brandName: widget.watch.modelType.model.brandname,
                               modelName: widget.watch.modelType.model.modelname,
                               actualPrice: widget.watch.actualPrice,
-                              totalNumberOfShares: widget.watch.numberOfShares,
+                              sharesOwned: sharesOwned,
                               image: getDownloadURL(widget.watch.imageuri),
                               proposalPrice: widget.watch.actualPrice,
-                              numberOfShares: widget
-                                  .watch.numberOfShares, // TODO: Change this
+                              numberOfShares: widget.watch.numberOfShares,
                             ))
                       },
                       style: ButtonStyle(
@@ -301,15 +268,11 @@ class _WatchScreenState extends State<WatchScreen> {
                                         quotePrice: share.price,
                                         buyInfo: BuyInfo(
                                           watchid: widget.watch.watchId,
-                                          brandName: widget
-                                              .watch.modelType.model.brandname,
-                                          modelName: widget
-                                              .watch.modelType.model.modelname,
+                                          brandName: widget.watch.modelType.model.brandname,
+                                          modelName: widget.watch.modelType.model.modelname,
                                           actualPrice: widget.watch.actualPrice,
-                                          totalNumberOfShares:
-                                              widget.watch.numberOfShares,
-                                          image: getDownloadURL(
-                                              widget.watch.imageuri),
+                                          sharesOnSale: widget.watch.numberOfShares,
+                                          image: getDownloadURL(widget.watch.imageuri),
                                           proposalPrice: share.price,
                                           numberOfShares: share.shareCount,
                                         ));

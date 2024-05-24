@@ -6,7 +6,7 @@ class BuyInfo {
   final String modelName;
   final double actualPrice;
   final double proposalPrice;
-  final int totalNumberOfShares;
+  final int sharesOnSale;
   final int numberOfShares;
   final Future<String> image;
 
@@ -16,7 +16,7 @@ class BuyInfo {
     required this.modelName,
     required this.actualPrice,
     required this.proposalPrice,
-    required this.totalNumberOfShares,
+    required this.sharesOnSale,
     required this.numberOfShares,
     required this.image,
   });
@@ -28,7 +28,7 @@ class SellInfo {
   final String modelName;
   final double actualPrice;
   final double proposalPrice;
-  final int totalNumberOfShares;
+  final int sharesOwned;
   final int numberOfShares;
   final Future<String> image;
 
@@ -38,7 +38,7 @@ class SellInfo {
     required this.modelName,
     required this.actualPrice,
     required this.proposalPrice,
-    required this.totalNumberOfShares,
+    required this.sharesOwned,
     required this.numberOfShares,
     required this.image,
   });
