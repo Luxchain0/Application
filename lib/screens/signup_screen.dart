@@ -442,21 +442,21 @@ class _SignUpState extends State<SignUpScreen> {
               Navigator.pushReplacementNamed(context, FrameScreen.id);
             } else if (response.statusCode == 409) {
               if (myMap['error']['meta']['target'].contains('email')) {
-                snackbar(context, 'utente già registrato, procedi al login');
+                snackbar(context,
+                    'User already registered, please proceed to login');
                 Navigator.pop(context);
               } else if (myMap['error']['meta']['target']
                   .contains('username')) {
-                snackbar(
-                    context, 'username già utilizzato da un altro account');
+                snackbar(context, 'Username already used by another account');
               } else if (myMap['error']['meta']['target'].contains('phonenr')) {
                 snackbar(context,
-                    'numero di telefono già utilizzato, hai già creato un account?');
+                    'Phone number already used, have you already created an account?');
               }
             } else {
-              snackbar(context, 'Errore lato server, riprova tra poco');
+              snackbar(context, 'Server error, please try again later');
             }
           } catch (e) {
-            snackbar(context, 'Errore di connessione col server');
+            snackbar(context, 'Connection error with the server');
             throw Exception('[FLUTTER] SignUpScreen Error: $e');
           }
         },

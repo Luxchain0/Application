@@ -181,16 +181,16 @@ class _LoginState extends State<LoginScreen> {
                 saveData('token', token);
                 Navigator.pushReplacementNamed(context, FrameScreen.id);
               } else if (response.statusCode == 401) {
-                snackbar(context, 'Email o Password errate');
+                snackbar(context, 'Incorrect email or password');
               } else {
-                snackbar(context, 'Errore lato server, riprova tra poco');
+                snackbar(context, 'Server error, please try again later');
               }
             } catch (e) {
-              snackbar(context, 'Errore di connessione col server');
+              snackbar(context, 'Connection error with the server');
               throw Exception('[FLUTTER] Login Error: $e');
             }
           } else {
-            snackbar(context, 'Email o Password errate');
+            snackbar(context, 'Incorrect email or password');
           }
         },
         style: ElevatedButton.styleFrom(
