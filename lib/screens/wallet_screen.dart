@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class WalletScreen extends StatefulWidget {
   static const String id = 'WalletScreen';
+
   const WalletScreen({super.key});
 
   @override
@@ -37,8 +38,7 @@ class _WalletScreenState extends State<WalletScreen> {
     SharedPreferences user = await userFuture;
 
     // Assume that you have a specific key in SharedPreferences
-    int userId =
-        user.getInt('accountid') ?? 0;
+    int userId = user.getInt('accountid') ?? 0;
 
     setState(() {
       futureWatches = getUserWalletWatches(userId);
@@ -144,11 +144,11 @@ class _WalletScreenState extends State<WalletScreen> {
                         height: height * 0.01,
                       ),
                       Text(
-                        'In collezioni: ${formatAmountFromDouble(walletData.inShares)} €',
+                        'In shares: ${formatAmountFromDouble(walletData.inShares)} €',
                         style: TextStyle(fontSize: width * 0.04),
                       ),
                       Text(
-                        'Liquidi: ${formatAmountFromDouble(walletData.liquidity)} €',
+                        'Liquidity: ${formatAmountFromDouble(walletData.liquidity)} €',
                         style: TextStyle(fontSize: width * 0.04),
                       ),
                       SizedBox(
@@ -173,22 +173,9 @@ class _WalletScreenState extends State<WalletScreen> {
                                           return CustomBottomBigCard(
                                             watchID: watch.watchId,
                                             screenWidth: width,
+                                            walletWatch: watch,
                                             imgUrl:
                                                 getDownloadURL(watch.imageuri),
-                                            reference:
-                                                watch.modelType.reference,
-                                            modelName:
-                                                watch.modelType.model.modelname,
-                                            brandName:
-                                                watch.modelType.model.brandname,
-                                            serialNumber:
-                                                watch.watchId.toString(),
-                                            valoreAttuale: watch.actualPrice,
-                                            initialPrice: watch.initialPrice,
-                                            quotePossedute: watch.owned,
-                                            quoteTotali: watch.numberOfShares,
-                                            controvalore: 0.0,
-                                            increaseRate: watch.increaseRate,
                                           );
                                         },
                                       ).toList(),
@@ -223,38 +210,31 @@ class CustomBottomBigCard extends StatelessWidget {
     Key? key,
     required this.watchID,
     required this.screenWidth,
+    required this.walletWatch,
     required this.imgUrl,
-    required this.reference,
-    required this.modelName,
-    required this.brandName,
-    required this.serialNumber,
-    required this.valoreAttuale,
-    required this.initialPrice,
-    required this.quotePossedute,
-    required this.quoteTotali,
-    required this.controvalore,
-    required this.increaseRate,
   }) : super(key: key);
 
   final int watchID;
   final double screenWidth;
+  final WalletWatch walletWatch;
   final Future<String> imgUrl;
-  final String reference;
-  final String modelName;
-  final String brandName;
-  final String serialNumber;
-  final int quotePossedute;
-  final int quoteTotali;
-  final double controvalore;
-  final double initialPrice;
-  final double valoreAttuale;
-  final double increaseRate;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => Navigator.of(context).pushNamed(WatchScreen.id,
-          arguments: watchID),
+          arguments: Watch(
+              watchId: walletWatch.watchId,
+              condition: walletWatch.condition,
+              numberOfShares: walletWatch.numberOfShares,
+              initialPrice: walletWatch.initialPrice,
+              actualPrice: walletWatch.actualPrice,
+              dialcolor: walletWatch.dialcolor,
+              year: walletWatch.year,
+              imageuri: walletWatch.imageuri,
+              description: walletWatch.description,
+              modelTypeId: walletWatch.modelTypeId,
+              modelType: walletWatch.modelType)),
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 7),
         padding: const EdgeInsets.only(top: 10, bottom: 10),
@@ -307,10 +287,11 @@ class CustomBottomBigCard extends StatelessWidget {
                     padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(3)),
-                      color:
-                          (increaseRate > 0) ? Colors.lightGreen : Colors.red,
+                      color: (walletWatch.increaseRate > 0)
+                          ? Colors.lightGreen
+                          : Colors.red,
                     ),
-                    child: Text('$increaseRate%'),
+                    child: Text('${walletWatch.increaseRate}%'),
                   ),
                 ],
               ),
@@ -320,7 +301,7 @@ class CustomBottomBigCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  brandName,
+                  walletWatch.modelType.model.brandname,
                   style: TextStyle(
                     color: Colors.black38,
                     height: 1,
@@ -329,7 +310,7 @@ class CustomBottomBigCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  modelName,
+                  walletWatch.modelType.model.modelname,
                   style: TextStyle(
                     color: Colors.black87,
                     height: 1,
@@ -337,14 +318,14 @@ class CustomBottomBigCard extends StatelessWidget {
                     fontFamily: 'Bebas',
                   ),
                 ),
-                Text('Reference: $reference'),
+                Text('Reference: ${walletWatch.modelType.reference}'),
                 SizedBox(height: screenWidth * 0.02),
-                Text('Quote Possedute: $quotePossedute/$quoteTotali'),
-                Text('Controvalore: ${formatAmountFromDouble(controvalore)}€'),
                 Text(
-                    'Prezzo di listino: ${formatAmountFromDouble(initialPrice)}€'),
+                    'Owned Shares: ${walletWatch.owned}/${walletWatch.numberOfShares}'),
                 Text(
-                    'Valore attuale: ${formatAmountFromDouble(valoreAttuale)}€'),
+                    'Initial Price: ${formatAmountFromDouble(walletWatch.initialPrice)}€'),
+                Text(
+                    'Actual Price: ${formatAmountFromDouble(walletWatch.actualPrice)}€'),
               ],
             ),
           ],

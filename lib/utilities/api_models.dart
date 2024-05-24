@@ -325,52 +325,60 @@ class Trade extends Watch {
   }
 }
 
-class MySharesOnSale {
-  final int watchId;
-  final String condition;
-  final int numberOfShares;
-  final double initialPrice;
-  final double actualPrice;
-  final String dialColor;
-  final int year;
-  final String imageuri;
-  final String description;
-  final int modelTypeId;
-  final String reference;
-  final String braceletMaterial;
-  final String caseMaterial;
-  final String diameter;
-  final int modelId;
-  final String modelName;
-  final String brandName;
+class MySharesOnSale extends Watch {
   final double price;
   final int onSaleAtPrice;
   final int sharesOwned;
   final int sharesOnSale;
 
   MySharesOnSale({
-    required this.watchId,
-    required this.condition,
-    required this.numberOfShares,
-    required this.initialPrice,
-    required this.actualPrice,
-    required this.dialColor,
-    required this.year,
-    required this.imageuri,
-    required this.description,
-    required this.modelTypeId,
-    required this.reference,
-    required this.braceletMaterial,
-    required this.caseMaterial,
-    required this.diameter,
-    required this.modelId,
-    required this.modelName,
-    required this.brandName,
+    required watchId,
+    required condition,
+    required numberOfShares,
+    required initialPrice,
+    required actualPrice,
+    required dialColor,
+    required year,
+    required imageuri,
+    required description,
+    required modelTypeId,
+    required reference,
+    required braceletMaterial,
+    required caseMaterial,
+    required diameter,
+    required modelId,
+    required modelName,
+    required brandName,
     required this.price,
     required this.onSaleAtPrice,
     required this.sharesOwned,
     required this.sharesOnSale,
-  });
+  }) : super (
+    watchId: watchId,
+    condition: condition,
+    numberOfShares: numberOfShares,
+    initialPrice: initialPrice,
+    actualPrice: actualPrice,
+    dialcolor: dialColor,
+    year: year,
+    imageuri: imageuri,
+    description: description,
+    modelTypeId: modelTypeId,
+    modelType: ModelType(
+      modeltypeid: modelTypeId,
+      reference: reference,
+      braceletmaterial: braceletMaterial,
+      casematerial: caseMaterial,
+      diameter: diameter,
+      modelid: modelId,
+      model: Model(
+        modelid: modelId,
+        modelname: modelName,
+        brandname: brandName,
+      ),
+    ),
+
+  );
 
   factory MySharesOnSale.fromJson(Map<String, dynamic> json) {
     return MySharesOnSale(

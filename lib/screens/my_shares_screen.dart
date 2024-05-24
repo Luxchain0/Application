@@ -55,7 +55,7 @@ class _MySharesScreenState extends State<MySharesScreen> {
                 Container(
                   margin: EdgeInsets.symmetric(vertical: heigh * 0.02),
                   child: Text(
-                    'Le mie quote in vendita',
+                    'My Shares on Sale',
                     style: TextStyle(
                         color: Colors.black87,
                         height: 1,
@@ -74,14 +74,8 @@ class _MySharesScreenState extends State<MySharesScreen> {
                             .map((myShare) => CustomCard(
                                   watchID: myShare.watchId,
                                   screenWidth: width,
+                                  myShare: myShare,
                                   imgUrl: getDownloadURL(myShare.imageuri),
-                                  modelName: myShare.modelName,
-                                  brandName: myShare.brandName,
-                                  reference: myShare.reference,
-                                  onSaleAtPrice: myShare.onSaleAtPrice,
-                                  sharesOwned: myShare.sharesOwned,
-                                  sharesOnSale: myShare.sharesOnSale,
-                                  price: myShare.price,
                                 ))
                             .toList(),
                       );
@@ -106,26 +100,14 @@ class CustomCard extends StatelessWidget {
     super.key,
     required this.watchID,
     required this.screenWidth,
+    required this.myShare,
     required this.imgUrl,
-    required this.modelName,
-    required this.brandName,
-    required this.reference,
-    required this.onSaleAtPrice,
-    required this.sharesOwned,
-    required this.sharesOnSale,
-    required this.price,
   });
 
   final int watchID;
   final double screenWidth;
-  final String modelName;
-  final String brandName;
+  final MySharesOnSale myShare;
   final Future<String> imgUrl;
-  final String reference;
-  final int onSaleAtPrice; // Shares on sale at this price
-  final int sharesOwned; // Shares owned by the user
-  final int sharesOnSale; // Shares on sale owned by the user
-  final double price;
 
   @override
   Widget build(BuildContext context) {
@@ -180,17 +162,17 @@ class CustomCard extends StatelessWidget {
                     screenWidth: screenWidth,
                     backgorundColor: const Color.fromARGB(255, 17, 45, 68),
                     textColor: Colors.white,
-                    text: 'Modifica',
+                    text: 'Edit',
                     onPressed: () => {
                       Navigator.of(context).pushNamed(ModifyOnSaleShareScreen.id,
             arguments: ModifySharesOnSale(
               watchid: watchID,
-              brandName: brandName,
-              modelName: modelName,
-              proposalPrice: price,
-              onSaleAtPrice: onSaleAtPrice,
-              sharesOwned: sharesOwned,
-              sharesOnSale: sharesOnSale,
+              brandName: myShare.modelType.model.brandname,
+              modelName: myShare.modelType.model.modelname,
+              proposalPrice: myShare.price,
+              onSaleAtPrice: myShare.onSaleAtPrice,
+              sharesOwned: myShare.sharesOwned,
+              sharesOnSale: myShare.sharesOnSale,
               image: imgUrl,
             ))
                     },
@@ -203,7 +185,7 @@ class CustomCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                modelName,
+                myShare.modelType.model.brandname,
                 style: TextStyle(
                   color: Colors.black38,
                   height: 1,
@@ -212,7 +194,7 @@ class CustomCard extends StatelessWidget {
                 ),
               ),
               Text(
-                brandName,
+                myShare.modelType.model.modelname,
                 style: TextStyle(
                   color: Colors.black87,
                   height: 1,
@@ -220,11 +202,11 @@ class CustomCard extends StatelessWidget {
                   fontFamily: 'Bebas',
                 ),
               ),
-              Text('Reference: $reference'),
+              Text('Reference: ${myShare.modelType.reference}'),
                   Text('Serial: $watchID'),
                   SizedBox(height: screenWidth * 0.02),
-                  Text('Quote in vendita: $onSaleAtPrice'),
-                  Text('Prezzo quota: ' + formatAmountFromDouble(price) + '€'),
+                  Text('Shares on Sale: ${myShare.sharesOnSale}'),
+                  Text('Share price: ${formatAmountFromDouble(myShare.price)}€'),
             ],
           ),
           ],
