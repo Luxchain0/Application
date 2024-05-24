@@ -31,10 +31,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginState extends State<LoginScreen> {
   bool _showPassword = false;
-  final TextEditingController emailController =
-      TextEditingController(text: 'email@gmail.com');
-  final TextEditingController passwordController =
-      TextEditingController(text: 'password');
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   Widget _buildEmailTF() {
     return Column(
@@ -51,6 +49,7 @@ class _LoginState extends State<LoginScreen> {
           height: 60.0,
           child: TextField(
             controller: emailController,
+            keyboardType: TextInputType.emailAddress,
             style: const TextStyle(
               color: Colors.white,
             ),

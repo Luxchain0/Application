@@ -412,16 +412,6 @@ class _SignUpState extends State<SignUpScreen> {
         onPressed: () async {
           try {
             Map<String, String> requestBody = {
-              /* 'username': 'matteooo',
-              'firstname': 'Matteo',
-              'lastname': 'Artuso',
-              "birthdate": '1999-01-04',
-              "birthcountry": 'italy',
-              "nationality": 'italy',
-              "address": 'via ferrari 1',
-              "phonenr": '+393662167868',
-              'email': 'matteo@artuso.it',
-              'password': 'password', */
               'username': usernameController.text,
               'firstname': firstnameController.text,
               'lastname': lastnameController.text,
@@ -432,7 +422,6 @@ class _SignUpState extends State<SignUpScreen> {
               "phonenr": phonenrController.text,
               'email': emailController.text,
               'password': passwordController.text,
-             
             };
 
             final response = await http.post(
@@ -448,13 +437,10 @@ class _SignUpState extends State<SignUpScreen> {
               for (var v in myMap['user'].entries) {
                 saveData(v.key, v.value);
               }
-              token = myMap['token'];
+              token = myMap['jwt_token'];
               saveData('token', token);
               Navigator.pushReplacementNamed(context, FrameScreen.id);
             } else if (response.statusCode == 409) {
-              print(myMap['error']);
-              print(myMap['error']['meta']);
-              print(myMap['error']['meta']['target']);
               if (myMap['error']['meta']['target'].contains('email')) {
                 snackbar(context, 'utente già registrato, procedi al login');
                 Navigator.pop(context);
@@ -464,7 +450,7 @@ class _SignUpState extends State<SignUpScreen> {
                     context, 'username già utilizzato da un altro account');
               } else if (myMap['error']['meta']['target'].contains('phonenr')) {
                 snackbar(context,
-                    'numero di telefono già utilizzato da un altro account');
+                    'numero di telefono già utilizzato, hai già creato un account?');
               }
             } else {
               snackbar(context, 'Errore lato server, riprova tra poco');
