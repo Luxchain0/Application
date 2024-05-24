@@ -16,7 +16,7 @@ class FavouritesScreen extends StatefulWidget {
 }
 
 class _FavouritesScreenState extends State<FavouritesScreen> {
-  late Future<List<Favorite>> futureFavorites;
+  late Future<List<Favorite>> futureFavorites = Future.value([]);
 
   @override
   void initState() {

@@ -58,29 +58,6 @@ class ModelType {
   }
 }
 
-class OnSale {
-  final int onsaleid;
-  final int price;
-  final int shareid;
-  final int userid;
-
-  const OnSale({
-    required this.onsaleid,
-    required this.price,
-    required this.shareid,
-    required this.userid,
-  });
-
-  factory OnSale.fromJson(Map<String, dynamic> json) {
-    return OnSale(
-      onsaleid: json['onsaleid'] as int,
-      price: json['price'] as int,
-      shareid: json['shareid'] as int,
-      userid: json['userid'] as int,
-    );
-  }
-}
-
 class ShareOnSale {
   final double price;
   final int shareCount;
@@ -98,51 +75,51 @@ class ShareOnSale {
   }
 }
 
-
-class WalletWatch {
-  final int watchid;
-  final String condition;
-  final int numberofshares;
-  final double initialprice;
-  final double actualprice;
-  final String dialcolor;
-  final int year;
-  final String imageuri;
-  final String description;
-  final int modeltypeid;
-  final ModelType modeltype;
+class WalletWatch extends Watch {
   final int owned;
   final double increaseRate;
 
   const WalletWatch({
-    required this.watchid,
-    required this.condition,
-    required this.numberofshares,
-    required this.initialprice,
-    required this.actualprice,
-    required this.dialcolor,
-    required this.year,
-    required this.imageuri,
-    required this.description,
-    required this.modeltypeid,
-    required this.modeltype,
+    required watchId,
+    required condition,
+    required numberOfShares,
+    required initialPrice,
+    required actualPrice,
+    required dialcolor,
+    required year,
+    required imageuri,
+    required description,
+    required modelTypeId,
+    required modelType,
     required this.owned,
     required this.increaseRate,
-  });
+  }) : super(
+          watchId: watchId,
+          condition: condition,
+          numberOfShares: numberOfShares,
+          initialPrice: initialPrice,
+          actualPrice: actualPrice,
+          dialcolor: dialcolor,
+          year: year,
+          imageuri: imageuri,
+          description: description,
+          modelTypeId: modelTypeId,
+          modelType: modelType,
+        );
 
   factory WalletWatch.fromJson(Map<String, dynamic> json) {
     return WalletWatch(
-      watchid: json['watchid'] as int,
+      watchId: json['watchid'] as int,
       condition: json['condition'] as String,
-      numberofshares: json['numberofshares'] as int,
-      initialprice: double.parse(json['initialprice'] as String),
-      actualprice: double.parse(json['actualprice'] as String),
+      numberOfShares: json['numberofshares'] as int,
+      initialPrice: double.parse(json['initialprice'] as String),
+      actualPrice: double.parse(json['actualprice'] as String),
       dialcolor: json['dialcolor'] as String,
       year: json['year'] as int,
       imageuri: json['imageuri'] as String,
       description: json['description'] as String,
-      modeltypeid: json['modeltypeid'] as int,
-      modeltype: ModelType.fromJson(json['modeltype'] as Map<String, dynamic>),
+      modelTypeId: json['modeltypeid'] as int,
+      modelType: ModelType.fromJson(json['modeltype'] as Map<String, dynamic>),
       owned: json['owned'] as int,
       increaseRate: json['increaseRate'] as double,
     );
@@ -215,6 +192,7 @@ class WalletData {
 
 class MarketPlaceWatch extends Watch {
   final int sharesOnSale;
+  final double rateOnPlatform;
 
   const MarketPlaceWatch({
     required int watchId,
@@ -229,6 +207,7 @@ class MarketPlaceWatch extends Watch {
     required int modelTypeId,
     required ModelType modelType,
     required this.sharesOnSale,
+    required this.rateOnPlatform,
   }) : super(
           watchId: watchId,
           condition: condition,
@@ -257,28 +236,12 @@ class MarketPlaceWatch extends Watch {
       modelTypeId: json['modeltypeid'] as int,
       modelType: ModelType.fromJson(json['modeltype'] as Map<String, dynamic>),
       sharesOnSale: json['sharesOnSale'] as int,
+      rateOnPlatform: customDoubleParser(json['increaseRate'] as num),
     );
   }
 }
 
-class Trade {
-  final int watchId;
-  final String condition;
-  final int numberOfShares;
-  final double initialPrice;
-  final double actualPrice;
-  final String dialColor;
-  final int year;
-  final String imageuri;
-  final String description;
-  final int modelTypeId;
-  final String reference;
-  final String braceletMaterial;
-  final String caseMaterial;
-  final String diameter;
-  final int modelId;
-  final String modelName;
-  final String brandName;
+class Trade extends Watch {
   final double price;
   final int sharesTraded;
   final int yearOfTrade;
@@ -286,29 +249,53 @@ class Trade {
   final String type;
 
   Trade({
-    required this.watchId,
-    required this.condition,
-    required this.numberOfShares,
-    required this.initialPrice,
-    required this.actualPrice,
-    required this.dialColor,
-    required this.year,
-    required this.imageuri,
-    required this.description,
-    required this.modelTypeId,
-    required this.reference,
-    required this.braceletMaterial,
-    required this.caseMaterial,
-    required this.diameter,
-    required this.modelId,
-    required this.modelName,
-    required this.brandName,
+    required watchId,
+    required condition,
+    required numberOfShares,
+    required initialPrice,
+    required actualPrice,
+    required dialColor,
+    required year,
+    required imageuri,
+    required description,
+    required modelTypeId,
+    required reference,
+    required braceletMaterial,
+    required caseMaterial,
+    required diameter,
+    required modelId,
+    required modelName,
+    required brandName,
     required this.price,
     required this.sharesTraded,
     required this.yearOfTrade,
     required this.dayOfTrade,
     required this.type,
-  });
+  }) : super(
+          watchId: watchId,
+          condition: condition,
+          numberOfShares: numberOfShares,
+          initialPrice: initialPrice,
+          actualPrice: actualPrice,
+          dialcolor: dialColor,
+          year: year,
+          imageuri: imageuri,
+          description: description,
+          modelTypeId: modelTypeId,
+          modelType: ModelType(
+            modeltypeid: modelTypeId,
+            reference: reference,
+            braceletmaterial: braceletMaterial,
+            casematerial: caseMaterial,
+            diameter: diameter,
+            modelid: modelId,
+            model: Model(
+              modelid: modelId,
+              modelname: modelName,
+              brandname: brandName,
+            ),
+          ),
+        );
 
   factory Trade.fromJson(Map<String, dynamic> json) {
     return Trade(

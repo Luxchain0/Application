@@ -171,22 +171,22 @@ class _WalletScreenState extends State<WalletScreen> {
                                       children: walletWatches.map(
                                         (watch) {
                                           return CustomBottomBigCard(
-                                            watchID: watch.watchid,
+                                            watchID: watch.watchId,
                                             screenWidth: width,
                                             imgUrl:
                                                 getDownloadURL(watch.imageuri),
                                             reference:
-                                                watch.modeltype.reference,
+                                                watch.modelType.reference,
                                             modelName:
-                                                watch.modeltype.model.modelname,
+                                                watch.modelType.model.modelname,
                                             brandName:
-                                                watch.modeltype.model.brandname,
+                                                watch.modelType.model.brandname,
                                             serialNumber:
-                                                watch.watchid.toString(),
-                                            valoreAttuale: watch.actualprice,
-                                            initialPrice: watch.initialprice,
+                                                watch.watchId.toString(),
+                                            valoreAttuale: watch.actualPrice,
+                                            initialPrice: watch.initialPrice,
                                             quotePossedute: watch.owned,
-                                            quoteTotali: watch.numberofshares,
+                                            quoteTotali: watch.numberOfShares,
                                             controvalore: 0.0,
                                             increaseRate: watch.increaseRate,
                                           );

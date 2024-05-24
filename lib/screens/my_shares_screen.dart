@@ -17,7 +17,7 @@ class MySharesScreen extends StatefulWidget {
 }
 
 class _MySharesScreenState extends State<MySharesScreen> {
-  late Future<List<MySharesOnSale>> futureMySharesOnSale;
+  late Future<List<MySharesOnSale>> futureMySharesOnSale = Future.value([]);
   @override
   void initState() {
     super.initState();

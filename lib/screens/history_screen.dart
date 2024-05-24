@@ -18,7 +18,7 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _MySharesScreenState extends State<HistoryScreen> {
-  late Future<List<Trade>> futureTradeHistory;
+  late Future<List<Trade>> futureTradeHistory = Future.value([]);
 
   @override
   void initState() {
@@ -78,9 +78,9 @@ class _MySharesScreenState extends State<HistoryScreen> {
                                   watchID: trade.watchId,
                                   screenWidth: width,
                                   imgUrl: getDownloadURL(trade.imageuri),
-                                  modelName: trade.modelName,
-                                  brandName: trade.brandName,
-                                  reference: trade.reference,
+                                  modelName: trade.modelType.model.modelname,
+                                  brandName: trade.modelType.model.brandname,
+                                  reference: trade.modelType.reference,
                                   shareTraded: trade.sharesTraded,
                                   buySell: trade.type,
                                   price: trade.price,
@@ -199,9 +199,7 @@ class CustomCard extends StatelessWidget {
                 SizedBox(height: screenWidth * 0.02),
                 Text('Quote scambiate: $shareTraded'),
                 Text('Tipologia: $buySell'),
-                Text('Totale: ' +
-                    formatAmountFromDouble(price * shareTraded) +
-                    '€'),
+                Text('Totale: ${formatAmountFromDouble(price * shareTraded)}€'),
               ],
             )
           ]),
