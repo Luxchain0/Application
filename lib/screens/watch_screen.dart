@@ -22,13 +22,27 @@ class WatchScreen extends StatefulWidget {
 }
 
 class _WatchScreenState extends State<WatchScreen> {
-  late Future<List<ShareOnSale>> futureSharesData;
-  late Future<WalletWatch> futureWalletWatchData;
+  late Future<List<ShareOnSale>> futureSharesData = Future.value([]);
+  late Future<int> sharesOwned = Future.value(0);
+  late Future<double> increaseRate = Future.value(0);
 
   @override
   void initState() {
     super.initState();
+    _initializeData();
+  }
+
+  void _initializeData() async {
+    Future<SharedPreferences> userFuture = getUserData();
+    SharedPreferences user = await userFuture;
+
+    int userId = user.getInt('accountid') ?? 0;
+
     futureSharesData = getSharesOfTheWatchOnSell(widget.watch.watchId);
+    getWatchAdditionalData(userId, widget.watch.watchId).then((value) {
+      sharesOwned = Future.value(value.sharesOwned);
+      increaseRate = Future.value(value.increaseRate);
+    });
   }
 
   @override
@@ -110,8 +124,7 @@ class _WatchScreenState extends State<WatchScreen> {
                               const BorderRadius.all(Radius.circular(7)),
                           child: Image.network(
                             snapshot.data!,
-                            fit: BoxFit
-                                .cover, // L'immagine si espanderà per riempire il contenitore
+                            fit: BoxFit.cover,
                           ),
                         );
                       } else if (snapshot.hasError) {
@@ -122,36 +135,68 @@ class _WatchScreenState extends State<WatchScreen> {
                     },
                   ),
                 ),
-                Text("Referenza: ${widget.watch.modelType.reference}"),
+                Text("Reference: ${widget.watch.modelType.reference}"),
                 Text("Seriale: ${widget.watch.watchId}"),
-                Text("Anno: ${widget.watch.year}"),
-                Text("Materiale cassa: ${widget.watch.modelType.casematerial}"),
+                Text("Year: ${widget.watch.year}"),
+                Text("Case material: ${widget.watch.modelType.casematerial}"),
                 Text(
-                    "Materiale bracciale: ${widget.watch.modelType.braceletmaterial}"),
+                    "Bracelet material: ${widget.watch.modelType.braceletmaterial}"),
                 Text(
-                    'Prezzo di listino: ${formatAmountFromDouble(widget.watch.initialPrice)} €'),
+                    'Initial Price: ${formatAmountFromDouble(widget.watch.initialPrice)} €'),
                 Text(
-                    'Prezzo medio: ${formatAmountFromDouble(widget.watch.actualPrice)} €'),
-                Text(
-                    'Prezzo di vendita proposto: ${formatAmountFromDouble(widget.watch.actualPrice)} €'),
-                Text("Numero di quote: ${widget.watch.numberOfShares}"),
-                const Text("Numero di quote possedute: - "),
-                Text("Condizione orlogio: ${widget.watch.condition}"),
+                    'Actual Price: ${formatAmountFromDouble(widget.watch.actualPrice)} €'),
+                Text("Shares: ${widget.watch.numberOfShares}"),
+                FutureBuilder<int>(
+                  future: sharesOwned,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Text("Shares owned: -");
+                    } else if (snapshot.hasData) {
+                      int sharesOwned = snapshot.data!;
+                      return Text("Shares owned: $sharesOwned");
+                    } else if (snapshot.hasError) {
+                      return const Text('Error');
+                    } else {
+                      return const SizedBox();
+                    }
+                  },
+                ),
+                Text("Conditions: ${widget.watch.condition}"),
                 Row(
                   children: [
-                    const Text('Variazione percentuale: '),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 3),
-                      decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(3)),
-                          color: Colors.lightGreen),
-                      child: const Text("0%"),
+                    FutureBuilder<double>(
+                      future: increaseRate,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasData) {
+                          double increaseRate = snapshot.data!;
+                          return Row(
+                            children: [
+                              const Text('Rate: '),
+                              Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 3),
+                                decoration: const BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(3)),
+                                    color: Colors.lightGreen),
+                                child: Text("$increaseRate%"),
+                              ),
+                            ],
+                          );
+                        } else if (snapshot.hasError) {
+                          return const Text('Error');
+                        } else {
+                          return const SizedBox();
+                        }
+                      },
                     ),
                   ],
                 ),
                 SizedBox(height: width * 0.05),
                 const Text(
-                  'Descrizione: ',
+                  'Description: ',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Text(
@@ -190,7 +235,8 @@ class _WatchScreenState extends State<WatchScreen> {
                               totalNumberOfShares: widget.watch.numberOfShares,
                               image: getDownloadURL(widget.watch.imageuri),
                               proposalPrice: widget.watch.actualPrice,
-                              numberOfShares: widget.watch.numberOfShares, // TODO: Change this
+                              numberOfShares: widget
+                                  .watch.numberOfShares, // TODO: Change this
                             ))
                       },
                       style: ButtonStyle(
@@ -210,7 +256,7 @@ class _WatchScreenState extends State<WatchScreen> {
                   height: heigh * 0.02,
                 ),
                 Text(
-                  'Le migliori quote in vendita: ',
+                  'Best shares for sale: ',
                   style: TextStyle(
                       fontWeight: FontWeight.bold, fontSize: heigh * 0.02),
                 ),
@@ -220,7 +266,7 @@ class _WatchScreenState extends State<WatchScreen> {
                     Expanded(
                       flex: 2,
                       child: Text(
-                        'Prezzo quota',
+                        'Price share',
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -230,7 +276,7 @@ class _WatchScreenState extends State<WatchScreen> {
                         padding:
                             EdgeInsets.symmetric(horizontal: 1, vertical: 20),
                         child: Text(
-                          'n° quote',
+                          'n° shares',
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -270,14 +316,11 @@ class _WatchScreenState extends State<WatchScreen> {
                                   },
                                 ).toList(),
                               )
-                            : const Text(
-                                'Ooops, there aren\'t any quote on sell');
+                            : const SizedBox();
                       } else if (snapshot.hasError) {
-                        // Gestisci il caso in cui si verifica un errore
                         return Text('Error: ${snapshot.error}');
                       } else {
-                        // Gestisci il caso in cui non ci sono dati disponibili
-                        return const SizedBox(); // Placeholder widget when no data is available
+                        return const SizedBox();
                       }
                     })
               ]),

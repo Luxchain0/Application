@@ -23,7 +23,7 @@ Future<List<WalletWatch>> getUserWalletWatches(int userID) async {
   }
 }
 
-Future<Watch> getWatchByWatchId(int watchID) async {
+/*Future<Watch> getWatchByWatchId(int watchID) async {
   try {
     // Retrieving all the information about the watch
     final response = await http.get(
@@ -38,6 +38,24 @@ Future<Watch> getWatchByWatchId(int watchID) async {
     }
   } catch (e) {
     throw Exception('[FLUTTER] Error retrieving watch\'s data: $e');
+  }
+}*/
+
+Future<WatchAdditionalData> getWatchAdditionalData(int userID, int watchID) async {
+  try {
+    // Retrieving all the additional information about the watch
+    final response = await http.get(
+      Uri.parse('$apiURL/wallet/watch/$userID/$watchID'),
+    );
+
+    if (response.statusCode == 200) {
+      final dynamic data = jsonDecode(response.body);
+      return WatchAdditionalData.fromJson(data);
+    } else {
+      throw Exception('[FLUTTER] Failed to load watch\'s additional data');
+    }
+  } catch (e) {
+    throw Exception('[FLUTTER] Error retrieving watch\'s additional data: $e');
   }
 }
 

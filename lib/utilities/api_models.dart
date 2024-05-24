@@ -170,6 +170,23 @@ class Watch {
   }
 }
 
+class WatchAdditionalData {
+  final int sharesOwned;
+  final double increaseRate;
+
+  const WatchAdditionalData({
+    required this.sharesOwned,
+    required this.increaseRate,
+  });
+
+  factory WatchAdditionalData.fromJson(Map<String, dynamic> json) {
+    return WatchAdditionalData(
+      sharesOwned: json['owned'] as int,
+      increaseRate: customDoubleParser(json['increaseRate'] as num),
+    );
+  }
+}
+
 class WalletData {
   final double liquidity;
   final double inShares;
