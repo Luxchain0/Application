@@ -54,44 +54,65 @@ class _BuyScreenState extends State<BuyScreen> {
   handleBuy() async {
     // ignore: avoid_print
     print("BUYING");
-    Future<SharedPreferences> userFuture = getUserData();
-    SharedPreferences user = await userFuture;
-    int userId = user.getInt('accountid') ?? 0;
-    var result = await buyShares(
-        userId, buyInfo.watchid, _shareSelected, buyInfo.proposalPrice);
-    if (APIStatus.success == result) {
-      showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, FrameScreen.id);
-                    },
-                    child: const Text('Close'),
-                  ),
-                ],
-                title: const Text('Messaggio di info'),
-                contentPadding: const EdgeInsets.all(20.0),
-                content: const Text('tutto bene'),
-              ));
-    } else {
-      showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text('Close'),
-                  ),
-                ],
-                title: const Text('Messaggio di info'),
-                contentPadding: const EdgeInsets.all(20.0),
-                content: Text('tutto male'),
-              ));
-    }
+
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: new Text('Are you sure?'),
+        content: Text('This action will irreversibly buy the selected shares.'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Nope'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Future<SharedPreferences> userFuture = getUserData();
+              SharedPreferences user = await userFuture;
+              int userId = user.getInt('accountid') ?? 0;
+              var result = await buyShares(userId, buyInfo.watchid,
+                  _shareSelected, buyInfo.proposalPrice);
+              if (APIStatus.success == result) {
+                showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pushReplacementNamed(
+                                    context, FrameScreen.id);
+                              },
+                              child: const Text('Close'),
+                            ),
+                          ],
+                          title: const Text('Successful payment'),
+                          contentPadding: const EdgeInsets.all(20.0),
+                          content: const Text(
+                              'The shares have been correctly added to your wallet'),
+                        ));
+              } else {
+                showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pushNamed(context, FrameScreen.id);
+                              },
+                              child: const Text('Close'),
+                            ),
+                          ],
+                          title: const Text('Warning'),
+                          contentPadding: const EdgeInsets.all(20.0),
+                          content: Text('Something went wrong'),
+                        ));
+              }
+            },
+            child: Text('Yep'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override

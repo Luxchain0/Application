@@ -77,7 +77,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
             CustomCard(
                 icon: Icons.logout,
                 text: 'Logout',
-                onPressed: () => {_logout(context)}),
+                onPressed: () => {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: new Text('Are you sure?'),
+                      content: Text('This action will bring you to the LoginIn page.'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text('Nope'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            _logout(context);
+                          },
+                          child: Text('Yep'),
+                        ),
+                      ],
+                    ),
+                  ),
+                }),
           ],
         ),
       ),

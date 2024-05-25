@@ -33,18 +33,7 @@ class _WatchScreenState extends State<WatchScreen> {
   }
 
   void _initializeData() async {
-    Future<SharedPreferences> userFuture = getUserData();
-    SharedPreferences user = await userFuture;
-
-    int userId = user.getInt('accountid') ?? 0;
-
     futureSharesData = getSharesOfTheWatchOnSell(widget.watch.watchId);
-    getWatchAdditionalData(userId, widget.watch.watchId).then((value) {
-      setState(() {
-        sharesOwned = value.sharesOwned;
-        increaseRate = value.increaseRate;
-      });
-    });
   }
 
   @override
@@ -147,21 +136,9 @@ class _WatchScreenState extends State<WatchScreen> {
                     'Initial Price: ${formatAmountFromDouble(widget.watch.initialPrice)} €'),
                 Text(
                     'Actual Price: ${formatAmountFromDouble(widget.watch.actualPrice)} €'),
-                Text("Shares: ${widget.watch.numberOfShares}"),
-                Text("Shares owned: $sharesOwned"),
                 Text("Conditions: ${widget.watch.condition}"),
-                Row(
-                  children: [
-                    const Text('Rate: '),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 3),
-                      decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(3)),
-                          color: Colors.lightGreen),
-                      child: Text("$increaseRate%"),
-                    ),
-                  ],
-                ),
+                Text("Shares: ${widget.watch.numberOfShares}"),
+                RefreshingAdditionalData(watchID: widget.watch.watchId),
                 SizedBox(height: width * 0.05),
                 const Text(
                   'Description: ',
@@ -268,11 +245,15 @@ class _WatchScreenState extends State<WatchScreen> {
                                         quotePrice: share.price,
                                         buyInfo: BuyInfo(
                                           watchid: widget.watch.watchId,
-                                          brandName: widget.watch.modelType.model.brandname,
-                                          modelName: widget.watch.modelType.model.modelname,
+                                          brandName: widget
+                                              .watch.modelType.model.brandname,
+                                          modelName: widget
+                                              .watch.modelType.model.modelname,
                                           actualPrice: widget.watch.actualPrice,
-                                          sharesOnSale: widget.watch.numberOfShares,
-                                          image: getDownloadURL(widget.watch.imageuri),
+                                          sharesOnSale:
+                                              widget.watch.numberOfShares,
+                                          image: getDownloadURL(
+                                              widget.watch.imageuri),
                                           proposalPrice: share.price,
                                           numberOfShares: share.shareCount,
                                         ));
@@ -462,5 +443,63 @@ class _RefreshingButtonState extends State<RefreshingButton> {
             }
           },
         ));
+  }
+}
+
+class RefreshingAdditionalData extends StatefulWidget {
+  final int watchID;
+
+  const RefreshingAdditionalData({required this.watchID, super.key});
+
+  @override
+  _RefreshingAdditionalDataState createState() =>
+      _RefreshingAdditionalDataState();
+}
+
+class _RefreshingAdditionalDataState extends State<RefreshingAdditionalData> {
+  late Future<bool> isFavourite = Future.value(false);
+  late int sharesOwned = 0;
+  late double increaseRate = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeData();
+  }
+
+  void _initializeData() async {
+    Future<SharedPreferences> userFuture = getUserData();
+    SharedPreferences user = await userFuture;
+
+    int userId = user.getInt('accountid') ?? 0;
+
+    getWatchAdditionalData(userId, widget.watchID).then((value) {
+      setState(() {
+        sharesOwned = value.sharesOwned;
+        increaseRate = value.increaseRate;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Shares owned: $sharesOwned"),
+        Row(
+          children: [
+            const Text('Rate: '),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 3),
+              decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(3)),
+                  color: Colors.lightGreen),
+              child: Text("$increaseRate%"),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 }

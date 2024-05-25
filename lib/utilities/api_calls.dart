@@ -41,7 +41,8 @@ Future<List<WalletWatch>> getUserWalletWatches(int userID) async {
   }
 }*/
 
-Future<WatchAdditionalData> getWatchAdditionalData(int userID, int watchID) async {
+Future<WatchAdditionalData> getWatchAdditionalData(
+    int userID, int watchID) async {
   try {
     // Retrieving all the additional information about the watch
     final response = await http.get(
@@ -177,7 +178,7 @@ Future<APIStatus> sellShares(
           '[FLUTTER] Failed to sell $numberOfShares shares of watch $watchID');
     }
   } catch (e) {
-    throw Exception('[FLUTTER] Error selling shares: $e');
+    return APIStatus.error;
   }
 }
 
@@ -206,7 +207,7 @@ Future<APIStatus> buyShares(
           '[FLUTTER] Failed to buy $numberOfShares shares of watch $watchID');
     }
   } catch (e) {
-    throw Exception('[FLUTTER] Error buying shares: $e');
+    return APIStatus.error;
   }
 }
 
