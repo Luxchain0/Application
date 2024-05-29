@@ -267,6 +267,26 @@ class _LoginState extends State<LoginScreen> {
                 throw Exception('Could not launch $url');
               }
 
+              try {
+                final Uri callbackUrl = Uri.parse('$apiURL/'); // modificare con nuova chiamata
+                final response = await http.get(callbackUrl).timeout(const Duration(seconds: 10));
+                if (response.statusCode == 200) {
+                  Map<String, dynamic> myMap = jsonDecode(response.body);
+                  for (var v in myMap['user'].entries) {
+                    saveData(v.key, v.value);
+                  }
+                  token = myMap['token'];
+                  saveData('token', token);
+                  Navigator.pushReplacementNamed(context, FrameScreen.id);
+                } else {
+                  snackbar(context, 'Server error, please try again later');
+                }
+              } catch (e) {
+                snackbar(context, 'Connection error with the server');
+                throw Exception('[FLUTTER] Login Error: $e');
+              }
+
+
               /* login via google_sign_in plugin
               try {
                 //await _googleSignIn.disconnect();
