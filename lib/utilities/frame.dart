@@ -8,8 +8,6 @@ import 'package:lux_chain/screens/settings_screen.dart';
 import 'package:lux_chain/screens/wallet_screen.dart';
 import 'package:lux_chain/screens/favourites_screen.dart';
 import 'package:lux_chain/screens/watch_screen.dart';
-//import 'package:lux_chain/screens/settings_screen.dart';
-//import 'package:lux_chain/screens/bottom_bar/buy_screen.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -32,7 +30,7 @@ class _FrameScreenState extends State<FrameScreen> {
     MySharesScreen(), //Le quote che hai in vendita
     HistoryScreen(), //Ultime quote che hai comprato o venduto
     FavouritesScreen(), //Preferiti
-    DashboardExcelScreen(), //replace with SettingsScreen()
+    SettingsScreen(),
   ];
 
   @override

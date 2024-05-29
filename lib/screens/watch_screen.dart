@@ -13,24 +13,27 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class WatchScreen extends StatefulWidget {
   static const String id = 'WatchScreen';
-  final int watchID;
+  final Watch watch;
 
-  const WatchScreen({required this.watchID, super.key});
+  const WatchScreen({required this.watch, super.key});
 
   @override
   State<WatchScreen> createState() => _WatchScreenState();
 }
 
 class _WatchScreenState extends State<WatchScreen> {
-  late Future<Watch> futureWatchData;
-  late Future<List<ShareOnSale>> futureSharesData;
-  late Future<WalletWatch> futureWalletWatchData;
+  late Future<List<ShareOnSale>> futureSharesData = Future.value([]);
+  late int sharesOwned = 0;
+  late double increaseRate = 0;
 
   @override
   void initState() {
     super.initState();
-    futureWatchData = getWatchByWatchId(widget.watchID);
-    futureSharesData = getSharesOfTheWatchOnSell(widget.watchID);
+    _initializeData();
+  }
+
+  void _initializeData() async {
+    futureSharesData = getSharesOfTheWatchOnSell(widget.watch.watchId);
   }
 
   @override
@@ -56,267 +59,216 @@ class _WatchScreenState extends State<WatchScreen> {
       body: SafeArea(
         bottom: false,
         child: SingleChildScrollView(
-          child: FutureBuilder<Watch>(
-            future: futureWatchData,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasData) {
-                Watch watch = snapshot.data!;
-                return Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: width * 0.05, vertical: heigh * 0.02),
-                  child: Column(
+            child: Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal: width * 0.05, vertical: heigh * 0.02),
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  watch.modelType.model.brandname,
-                                  style: TextStyle(
-                                      color: Colors.black38,
-                                      height: 1,
-                                      fontSize: width * 0.07,
-                                      fontFamily: 'Bebas'),
-                                ),
-                                Text(
-                                  watch.modelType.model.modelname,
-                                  style: TextStyle(
-                                      color: Colors.black87,
-                                      height: 1,
-                                      fontSize: width * 0.08,
-                                      fontFamily: 'Bebas'),
-                                ),
-                              ],
-                            ),
-                            RefreshingButton(watchID: widget.watchID),
-                          ],
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(vertical: heigh * 0.02),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                              color: Colors.black26,
-                              width: 1,
-                            ),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(7)),
-                          ),
-                          alignment: Alignment.center,
-                          child: FutureBuilder<String>(
-                            future: getDownloadURL(watch.imageuri),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const CircularProgressIndicator();
-                              } else if (snapshot.hasData) {
-                                return ClipRRect(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(7)),
-                                  child: Image.network(
-                                    snapshot.data!,
-                                    fit: BoxFit
-                                        .cover, // L'immagine si espanderà per riempire il contenitore
-                                  ),
-                                );
-                              } else if (snapshot.hasError) {
-                                return const Icon(Icons.error);
-                              } else {
-                                return const SizedBox();
-                              }
-                            },
-                          ),
-                        ),
-                        Text("Referenza: ${watch.modelType.reference}"),
-                        Text("Seriale: ${watch.watchId}"),
-                        Text("Anno: ${watch.year}"),
+                      children: [
                         Text(
-                            "Materiale cassa: ${watch.modelType.casematerial}"),
-                        Text(
-                            "Materiale bracciale: ${watch.modelType.braceletmaterial}"),
-                        Text(
-                            'Prezzo di listino: ${formatAmountFromDouble(watch.initialPrice)} €'),
-                        Text(
-                            'Prezzo medio: ${formatAmountFromDouble(watch.actualPrice)} €'),
-                        Text(
-                            'Prezzo di vendita proposto: ${formatAmountFromDouble(watch.actualPrice)} €'),
-                        Text("Numero di quote: ${watch.numberOfShares}"),
-                        const Text("Numero di quote possedute: - "),
-                        Text("Condizione orlogio: ${watch.condition}"),
-                        Row(
-                          children: [
-                            const Text('Variazione percentuale: '),
-                            Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 3),
-                              decoration: const BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(3)),
-                                  color: Colors.lightGreen),
-                              child: const Text("0%"),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: width * 0.05),
-                        const Text(
-                          'Descrizione: ',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          watch.description,
-                          textAlign: TextAlign.justify,
-                        ),
-                        SizedBox(
-                          height: heigh * 0.03,
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          width: double.infinity,
-                          height: 300,
-                          child: LineChart(
-                            LineChartData(
-                                borderData: FlBorderData(show: false),
-                                lineBarsData: [
-                                  LineChartBarData(spots: chartData),
-                                ]),
-                          ),
-                        ),
-                        SizedBox(
-                          height: heigh * 0.01,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            OutlinedButton(
-                              onPressed: () => {
-                                Navigator.pushNamed(context, SellScreen.id,
-                                    arguments: SellInfo(
-                                      watchid: widget.watchID,
-                                      brandName:
-                                          watch.modelType.model.brandname,
-                                      modelName:
-                                          watch.modelType.model.modelname,
-                                      actualPrice: watch.actualPrice,
-                                      totalNumberOfShares: watch.numberOfShares,
-                                      image: getDownloadURL(watch.imageuri),
-                                      proposalPrice: watch.actualPrice,
-                                      numberOfShares: watch
-                                          .numberOfShares, // TODO: Change this
-                                    ))
-                              },
-                              style: ButtonStyle(
-                                  backgroundColor:
-                                      const MaterialStatePropertyAll(
-                                          Colors.blueAccent),
-                                  foregroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                          Colors.white),
-                                  minimumSize: MaterialStateProperty.all<Size>(
-                                      Size(width * 0.25, width * 0.08))),
-                              child: const Text(
-                                'Sell',
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: heigh * 0.02,
-                        ),
-                        Text(
-                          'Le migliori quote in vendita: ',
+                          widget.watch.modelType.model.brandname,
                           style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: heigh * 0.02),
+                              color: Colors.black38,
+                              height: 1,
+                              fontSize: width * 0.07,
+                              fontFamily: 'Bebas'),
                         ),
-                        const Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              flex: 2,
-                              child: Text(
-                                'Prezzo quota',
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 1, vertical: 20),
-                                child: Text(
-                                  'n° quote',
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ),
-                            Expanded(flex: 2, child: SizedBox())
-                          ],
+                        Text(
+                          widget.watch.modelType.model.modelname,
+                          style: TextStyle(
+                              color: Colors.black87,
+                              height: 1,
+                              fontSize: width * 0.08,
+                              fontFamily: 'Bebas'),
                         ),
-                        FutureBuilder<List<ShareOnSale>>(
-                            future: futureSharesData,
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const Center(
-                                    child: CircularProgressIndicator());
-                              } else if (snapshot.hasData) {
-                                List<ShareOnSale> sharesOnSale = snapshot.data!;
-                                return sharesOnSale.isNotEmpty
-                                    ? Column(
-                                        children: sharesOnSale.map(
-                                          (share) {
-                                            return CustomRowForQuote(
-                                                width: width,
-                                                numberOfQuotes:
-                                                    share.shareCount,
-                                                quotePrice: share.price,
-                                                buyInfo: BuyInfo(
-                                                  watchid: widget.watchID,
-                                                  brandName: watch.modelType
-                                                      .model.brandname,
-                                                  modelName: watch.modelType
-                                                      .model.modelname,
-                                                  actualPrice:
-                                                      watch.actualPrice,
-                                                  totalNumberOfShares:
-                                                      watch.numberOfShares,
-                                                  image: getDownloadURL(
-                                                      watch.imageuri),
-                                                  proposalPrice: share.price,
-                                                  numberOfShares:
-                                                      share.shareCount,
-                                                ));
-                                          },
-                                        ).toList(),
-                                      )
-                                    : const Text(
-                                        'Ooops, there aren\'t any quote on sell');
-                              } else if (snapshot.hasError) {
-                                // Gestisci il caso in cui si verifica un errore
-                                return Text('Error: ${snapshot.error}');
-                              } else {
-                                // Gestisci il caso in cui non ci sono dati disponibili
-                                return const SizedBox(); // Placeholder widget when no data is available
-                              }
-                            })
-                      ]),
-                );
-              } else if (snapshot.hasError) {
-                // Gestisci il caso in cui si verifica un errore
-                return Text('Error: ${snapshot.error}');
-              } else {
-                // Gestisci il caso in cui non ci sono dati disponibili
-                return const SizedBox(); // Placeholder widget when no data is available
-              }
-            },
-          ),
-        ),
+                      ],
+                    ),
+                    RefreshingButton(watchID: widget.watch.watchId),
+                  ],
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: heigh * 0.02),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                      color: Colors.black26,
+                      width: 1,
+                    ),
+                    borderRadius: const BorderRadius.all(Radius.circular(7)),
+                  ),
+                  alignment: Alignment.center,
+                  child: FutureBuilder<String>(
+                    future: getDownloadURL(widget.watch.imageuri),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      } else if (snapshot.hasData) {
+                        return ClipRRect(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(7)),
+                          child: Image.network(
+                            snapshot.data!,
+                            fit: BoxFit.cover,
+                          ),
+                        );
+                      } else if (snapshot.hasError) {
+                        return const Icon(Icons.error);
+                      } else {
+                        return const SizedBox();
+                      }
+                    },
+                  ),
+                ),
+                Text("Reference: ${widget.watch.modelType.reference}"),
+                Text("Seriale: ${widget.watch.watchId}"),
+                Text("Year: ${widget.watch.year}"),
+                Text("Case material: ${widget.watch.modelType.casematerial}"),
+                Text(
+                    "Bracelet material: ${widget.watch.modelType.braceletmaterial}"),
+                Text(
+                    'Initial Price: ${formatAmountFromDouble(widget.watch.initialPrice)} €'),
+                Text(
+                    'Actual Price: ${formatAmountFromDouble(widget.watch.actualPrice)} €'),
+                Text("Conditions: ${widget.watch.condition}"),
+                Text("Shares: ${widget.watch.numberOfShares}"),
+                RefreshingAdditionalData(watchID: widget.watch.watchId),
+                SizedBox(height: width * 0.05),
+                const Text(
+                  'Description: ',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  widget.watch.description,
+                  textAlign: TextAlign.justify,
+                ),
+                SizedBox(
+                  height: heigh * 0.03,
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  width: double.infinity,
+                  height: 300,
+                  child: LineChart(
+                    LineChartData(
+                        borderData: FlBorderData(show: false),
+                        lineBarsData: [
+                          LineChartBarData(spots: chartData),
+                        ]),
+                  ),
+                ),
+                SizedBox(
+                  height: heigh * 0.01,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    OutlinedButton(
+                      onPressed: () => {
+                        Navigator.pushNamed(context, SellScreen.id,
+                            arguments: SellInfo(
+                              watchid: widget.watch.watchId,
+                              brandName: widget.watch.modelType.model.brandname,
+                              modelName: widget.watch.modelType.model.modelname,
+                              actualPrice: widget.watch.actualPrice,
+                              sharesOwned: sharesOwned,
+                              image: getDownloadURL(widget.watch.imageuri),
+                              proposalPrice: widget.watch.actualPrice,
+                              numberOfShares: widget.watch.numberOfShares,
+                            ))
+                      },
+                      style: ButtonStyle(
+                          backgroundColor:
+                              const MaterialStatePropertyAll(Colors.blueAccent),
+                          foregroundColor:
+                              MaterialStateProperty.all<Color>(Colors.white),
+                          minimumSize: MaterialStateProperty.all<Size>(
+                              Size(width * 0.25, width * 0.08))),
+                      child: const Text(
+                        'Sell',
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: heigh * 0.02,
+                ),
+                Text(
+                  'Best shares for sale: ',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: heigh * 0.02),
+                ),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        'Price share',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 1, vertical: 20),
+                        child: Text(
+                          'n° shares',
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    Expanded(flex: 2, child: SizedBox())
+                  ],
+                ),
+                FutureBuilder<List<ShareOnSale>>(
+                    future: futureSharesData,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasData) {
+                        List<ShareOnSale> sharesOnSale = snapshot.data!;
+                        return sharesOnSale.isNotEmpty
+                            ? Column(
+                                children: sharesOnSale.map(
+                                  (share) {
+                                    return CustomRowForQuote(
+                                        width: width,
+                                        numberOfQuotes: share.shareCount,
+                                        quotePrice: share.price,
+                                        buyInfo: BuyInfo(
+                                          watchid: widget.watch.watchId,
+                                          brandName: widget
+                                              .watch.modelType.model.brandname,
+                                          modelName: widget
+                                              .watch.modelType.model.modelname,
+                                          actualPrice: widget.watch.actualPrice,
+                                          sharesOnSale:
+                                              widget.watch.numberOfShares,
+                                          image: getDownloadURL(
+                                              widget.watch.imageuri),
+                                          proposalPrice: share.price,
+                                          numberOfShares: share.shareCount,
+                                        ));
+                                  },
+                                ).toList(),
+                              )
+                            : const SizedBox();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        return const SizedBox();
+                      }
+                    })
+              ]),
+        )),
       ),
     );
   }
@@ -491,5 +443,63 @@ class _RefreshingButtonState extends State<RefreshingButton> {
             }
           },
         ));
+  }
+}
+
+class RefreshingAdditionalData extends StatefulWidget {
+  final int watchID;
+
+  const RefreshingAdditionalData({required this.watchID, super.key});
+
+  @override
+  _RefreshingAdditionalDataState createState() =>
+      _RefreshingAdditionalDataState();
+}
+
+class _RefreshingAdditionalDataState extends State<RefreshingAdditionalData> {
+  late Future<bool> isFavourite = Future.value(false);
+  late int sharesOwned = 0;
+  late double increaseRate = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeData();
+  }
+
+  void _initializeData() async {
+    Future<SharedPreferences> userFuture = getUserData();
+    SharedPreferences user = await userFuture;
+
+    int userId = user.getInt('accountid') ?? 0;
+
+    getWatchAdditionalData(userId, widget.watchID).then((value) {
+      setState(() {
+        sharesOwned = value.sharesOwned;
+        increaseRate = value.increaseRate;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Shares owned: $sharesOwned"),
+        Row(
+          children: [
+            const Text('Rate: '),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 3),
+              decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(3)),
+                  color: Colors.lightGreen),
+              child: Text("$increaseRate%"),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 }

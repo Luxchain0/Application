@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class BuyScreen extends StatefulWidget {
   static const String id = 'BuyScreen';
   final BuyInfo buyInfo;
+
   const BuyScreen({required this.buyInfo, super.key});
 
   @override
@@ -53,43 +54,65 @@ class _BuyScreenState extends State<BuyScreen> {
   handleBuy() async {
     // ignore: avoid_print
     print("BUYING");
-    Future<SharedPreferences> userFuture = getUserData();
-    SharedPreferences user = await userFuture;
-    int userId = user.getInt('accountid') ?? 0;
-    var result = await buyShares(userId, buyInfo.watchid, _shareSelected, buyInfo.proposalPrice);
-    if (APIStatus.success == result) {
-      showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, FrameScreen.id);
-                    },
-                    child: const Text('Close'),
-                  ),
-                ],
-                title: const Text('Messaggio di info'),
-                contentPadding: const EdgeInsets.all(20.0),
-                content: const Text('tutto bene'),
-              ));
-    } else {
-      showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text('Close'),
-                  ),
-                ],
-                title: const Text('Messaggio di info'),
-                contentPadding: const EdgeInsets.all(20.0),
-                content: Text('tutto male'),
-              ));
-    }
+
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: new Text('Are you sure?'),
+        content: Text('This action will irreversibly buy the selected shares.'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Nope'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Future<SharedPreferences> userFuture = getUserData();
+              SharedPreferences user = await userFuture;
+              int userId = user.getInt('accountid') ?? 0;
+              var result = await buyShares(userId, buyInfo.watchid,
+                  _shareSelected, buyInfo.proposalPrice);
+              if (APIStatus.success == result) {
+                showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pushReplacementNamed(
+                                    context, FrameScreen.id);
+                              },
+                              child: const Text('Close'),
+                            ),
+                          ],
+                          title: const Text('Successful payment'),
+                          contentPadding: const EdgeInsets.all(20.0),
+                          content: const Text(
+                              'The shares have been correctly added to your wallet'),
+                        ));
+              } else {
+                showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pushNamed(context, FrameScreen.id);
+                              },
+                              child: const Text('Close'),
+                            ),
+                          ],
+                          title: const Text('Warning'),
+                          contentPadding: const EdgeInsets.all(20.0),
+                          content: Text('Something went wrong'),
+                        ));
+              }
+            },
+            child: Text('Yep'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -165,23 +188,14 @@ class _BuyScreenState extends State<BuyScreen> {
                       fontSize: width * 0.08,
                       fontFamily: 'Bebas'),
                 ),
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(3)),
-                      color: Colors.lightGreen),
-                  child: const Text('+ 2.3%'),
-                ),
                 SizedBox(
                   height: heigh * 0.02,
                 ),
-                const Text('Prezzo di listino: -€'),
-                Text('Numero di quote: ${buyInfo.totalNumberOfShares}'),
-                const Text('Prezzo medio: -€'),
-                Text('Prezzo di vendita: ' +
-                    formatAmountFromDouble(buyInfo.proposalPrice) +
-                    ' €'),
-                Text('Numero di quote in vendita: ${buyInfo.numberOfShares}'),
+                Text('Actual Price: ${buyInfo.actualPrice}€'),
+                Text('Total shares: ${buyInfo.numberOfShares}'),
+                Text('Share on sale: ${buyInfo.sharesOnSale}'),
+                Text(
+                    'Proposal price: ${formatAmountFromDouble(buyInfo.proposalPrice)} €'),
                 SizedBox(
                   height: heigh * 0.03,
                 ),
@@ -198,7 +212,7 @@ class _BuyScreenState extends State<BuyScreen> {
                               fontWeight: FontWeight.normal,
                               color: Colors.black87),
                           decoration: InputDecoration(
-                            hintText: 'N° di quote',
+                            hintText: 'N° of shares',
                             contentPadding: const EdgeInsets.fromLTRB(
                                 20.0, 10.0, 20.0, 10.0),
                             border: OutlineInputBorder(
@@ -215,10 +229,7 @@ class _BuyScreenState extends State<BuyScreen> {
                               }),
                     ),
                     Text(
-                      'Totale: ' +
-                          formatAmountFromDouble(
-                              _shareSelected * buyInfo.proposalPrice) +
-                          " €",
+                      'Total: ${formatAmountFromDouble(_shareSelected * buyInfo.proposalPrice)} €',
                       style: TextStyle(
                           fontSize: heigh * 0.023, fontWeight: FontWeight.bold),
                     ),

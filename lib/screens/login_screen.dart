@@ -31,10 +31,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginState extends State<LoginScreen> {
   bool _showPassword = false;
-  final TextEditingController emailController =
-      TextEditingController(text: 'email@gmail.com');
-  final TextEditingController passwordController =
-      TextEditingController(text: 'password');
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   Widget _buildEmailTF() {
     return Column(
@@ -51,6 +49,7 @@ class _LoginState extends State<LoginScreen> {
           height: 60.0,
           child: TextField(
             controller: emailController,
+            keyboardType: TextInputType.emailAddress,
             style: const TextStyle(
               color: Colors.white,
             ),
@@ -182,16 +181,16 @@ class _LoginState extends State<LoginScreen> {
                 saveData('token', token);
                 Navigator.pushReplacementNamed(context, FrameScreen.id);
               } else if (response.statusCode == 401) {
-                snackbar(context, 'Email o Password errate');
+                snackbar(context, 'Incorrect email or password');
               } else {
-                snackbar(context, 'Errore lato server, riprova tra poco');
+                snackbar(context, 'Server error, please try again later');
               }
             } catch (e) {
-              snackbar(context, 'Errore di connessione col server');
+              snackbar(context, 'Connection error with the server');
               throw Exception('[FLUTTER] Login Error: $e');
             }
           } else {
-            snackbar(context, 'Email o Password errate');
+            snackbar(context, 'Incorrect email or password');
           }
         },
         style: ElevatedButton.styleFrom(

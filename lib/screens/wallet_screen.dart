@@ -1,16 +1,18 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:lux_chain/screens/wallet_specs_screen.dart';
 import 'package:lux_chain/screens/watch_screen.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/firestore.dart';
-import 'package:lux_chain/utilities/models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:lux_chain/utilities/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class WalletScreen extends StatefulWidget {
   static const String id = 'WalletScreen';
+
   const WalletScreen({super.key});
 
   @override
@@ -20,6 +22,7 @@ class WalletScreen extends StatefulWidget {
 class _WalletScreenState extends State<WalletScreen> {
   late Future<List<WalletWatch>> futureWatches;
   late Future<WalletData> futureWalletData;
+  bool isBlurred = true;
 
   @override
   void initState() {
@@ -37,8 +40,7 @@ class _WalletScreenState extends State<WalletScreen> {
     SharedPreferences user = await userFuture;
 
     // Assume that you have a specific key in SharedPreferences
-    int userId =
-        user.getInt('accountid') ?? 0;
+    int userId = user.getInt('accountid') ?? 0;
 
     setState(() {
       futureWatches = getUserWalletWatches(userId);
@@ -70,90 +72,7 @@ class _WalletScreenState extends State<WalletScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      Row(
-                        children: [
-                          Text(
-                            'Wallet value',
-                            style: TextStyle(fontSize: width * 0.05),
-                          ),
-                          SizedBox(
-                            width: width * 0.02,
-                          ),
-                          const Icon(Icons.visibility),
-                        ],
-                      ),
-                      SizedBox(
-                        height: height * 0.01,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const WalletSpecsScreen(),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(vertical: 3),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                formatAmountFromDouble(
-                                    walletData.inShares + walletData.liquidity),
-                                style: TextStyle(
-                                    color: Colors.black87,
-                                    height: 1,
-                                    fontSize: width * 0.1,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(
-                                width: width * 0.01,
-                              ),
-                              Text(
-                                '€',
-                                style: TextStyle(
-                                  fontSize: width * 0.06,
-                                  height: 1,
-                                ),
-                              ),
-                              Expanded(
-                                  child: SizedBox(
-                                width: width * 0.01,
-                              )),
-                              Container(
-                                padding: const EdgeInsets.all(5),
-                                decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(3)),
-                                    color: walletData.rate > 0
-                                        ? Colors.lightGreen
-                                        : Colors.red),
-                                child: Text('${walletData.rate}%'),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Text(
-                        'Contributi netti: ${formatAmountFromDouble(contributiNetti)} €',
-                        style: TextStyle(fontSize: width * 0.04),
-                      ),
-                      SizedBox(
-                        height: height * 0.01,
-                      ),
-                      Text(
-                        'In collezioni: ${formatAmountFromDouble(walletData.inShares)} €',
-                        style: TextStyle(fontSize: width * 0.04),
-                      ),
-                      Text(
-                        'Liquidi: ${formatAmountFromDouble(walletData.liquidity)} €',
-                        style: TextStyle(fontSize: width * 0.04),
-                      ),
-                      SizedBox(
-                        height: height * 0.04,
-                      ),
+                      RefreshingWalletData(walletData: walletData, width: width, height: height, contributiNetti: contributiNetti),
                       Expanded(
                         child: SingleChildScrollView(
                             scrollDirection: Axis.vertical,
@@ -171,24 +90,11 @@ class _WalletScreenState extends State<WalletScreen> {
                                       children: walletWatches.map(
                                         (watch) {
                                           return CustomBottomBigCard(
-                                            watchID: watch.watchid,
+                                            watchID: watch.watchId,
                                             screenWidth: width,
+                                            walletWatch: watch,
                                             imgUrl:
                                                 getDownloadURL(watch.imageuri),
-                                            reference:
-                                                watch.modeltype.reference,
-                                            modelName:
-                                                watch.modeltype.model.modelname,
-                                            brandName:
-                                                watch.modeltype.model.brandname,
-                                            serialNumber:
-                                                watch.watchid.toString(),
-                                            valoreAttuale: watch.actualprice,
-                                            initialPrice: watch.initialprice,
-                                            quotePossedute: watch.owned,
-                                            quoteTotali: watch.numberofshares,
-                                            controvalore: 0.0,
-                                            increaseRate: watch.increaseRate,
                                           );
                                         },
                                       ).toList(),
@@ -218,43 +124,120 @@ class _WalletScreenState extends State<WalletScreen> {
   }
 }
 
+class WalletInfo extends StatelessWidget {
+  const WalletInfo({
+    super.key,
+    required this.walletData,
+    required this.width,
+    required this.contributiNetti,
+    required this.height,
+  });
+
+  final WalletData walletData;
+  final double width;
+  final double contributiNetti;
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 3),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  formatAmountFromDouble(
+                      walletData.inShares + walletData.liquidity),
+                  style: TextStyle(
+                      color: Colors.black87,
+                      height: 1,
+                      fontSize: width * 0.1,
+                      fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  width: width * 0.01,
+                ),
+                Text(
+                  '€',
+                  style: TextStyle(
+                    fontSize: width * 0.06,
+                    height: 1,
+                  ),
+                ),
+                Expanded(
+                    child: SizedBox(
+                  width: width * 0.01,
+                )),
+                Container(
+                  padding: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(3)),
+                      color:
+                          walletData.rate > 0 ? Colors.lightGreen : Colors.red),
+                  child: Text('${walletData.rate}%'),
+                ),
+              ],
+            ),
+          ),
+          Text(
+            'Contributi netti: ${formatAmountFromDouble(contributiNetti)} €',
+            style: TextStyle(fontSize: width * 0.04),
+          ),
+          SizedBox(
+            height: height * 0.01,
+          ),
+          Text(
+            'In shares: ${formatAmountFromDouble(walletData.inShares)} €',
+            style: TextStyle(fontSize: width * 0.04),
+          ),
+          Text(
+            'Liquidity: ${formatAmountFromDouble(walletData.liquidity)} €',
+            style: TextStyle(fontSize: width * 0.04),
+          ),
+          SizedBox(
+            height: height * 0.04,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class CustomBottomBigCard extends StatelessWidget {
   const CustomBottomBigCard({
     Key? key,
     required this.watchID,
     required this.screenWidth,
+    required this.walletWatch,
     required this.imgUrl,
-    required this.reference,
-    required this.modelName,
-    required this.brandName,
-    required this.serialNumber,
-    required this.valoreAttuale,
-    required this.initialPrice,
-    required this.quotePossedute,
-    required this.quoteTotali,
-    required this.controvalore,
-    required this.increaseRate,
   }) : super(key: key);
 
   final int watchID;
   final double screenWidth;
+  final WalletWatch walletWatch;
   final Future<String> imgUrl;
-  final String reference;
-  final String modelName;
-  final String brandName;
-  final String serialNumber;
-  final int quotePossedute;
-  final int quoteTotali;
-  final double controvalore;
-  final double initialPrice;
-  final double valoreAttuale;
-  final double increaseRate;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => Navigator.of(context).pushNamed(WatchScreen.id,
-          arguments: watchID),
+          arguments: Watch(
+              watchId: walletWatch.watchId,
+              condition: walletWatch.condition,
+              numberOfShares: walletWatch.numberOfShares,
+              initialPrice: walletWatch.initialPrice,
+              actualPrice: walletWatch.actualPrice,
+              dialcolor: walletWatch.dialcolor,
+              year: walletWatch.year,
+              imageuri: walletWatch.imageuri,
+              description: walletWatch.description,
+              modelTypeId: walletWatch.modelTypeId,
+              modelType: walletWatch.modelType)),
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 7),
         padding: const EdgeInsets.only(top: 10, bottom: 10),
@@ -307,10 +290,11 @@ class CustomBottomBigCard extends StatelessWidget {
                     padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(3)),
-                      color:
-                          (increaseRate > 0) ? Colors.lightGreen : Colors.red,
+                      color: (walletWatch.increaseRate > 0)
+                          ? Colors.lightGreen
+                          : Colors.red,
                     ),
-                    child: Text('$increaseRate%'),
+                    child: Text('${walletWatch.increaseRate}%'),
                   ),
                 ],
               ),
@@ -320,7 +304,7 @@ class CustomBottomBigCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  brandName,
+                  walletWatch.modelType.model.brandname,
                   style: TextStyle(
                     color: Colors.black38,
                     height: 1,
@@ -329,7 +313,7 @@ class CustomBottomBigCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  modelName,
+                  walletWatch.modelType.model.modelname,
                   style: TextStyle(
                     color: Colors.black87,
                     height: 1,
@@ -337,19 +321,125 @@ class CustomBottomBigCard extends StatelessWidget {
                     fontFamily: 'Bebas',
                   ),
                 ),
-                Text('Reference: $reference'),
+                Text('Reference: ${walletWatch.modelType.reference}'),
                 SizedBox(height: screenWidth * 0.02),
-                Text('Quote Possedute: $quotePossedute/$quoteTotali'),
-                Text('Controvalore: ${formatAmountFromDouble(controvalore)}€'),
                 Text(
-                    'Prezzo di listino: ${formatAmountFromDouble(initialPrice)}€'),
+                    'Owned Shares: ${walletWatch.owned}/${walletWatch.numberOfShares}'),
                 Text(
-                    'Valore attuale: ${formatAmountFromDouble(valoreAttuale)}€'),
+                    'Initial Price: ${formatAmountFromDouble(walletWatch.initialPrice)}€'),
+                Text(
+                    'Actual Price: ${formatAmountFromDouble(walletWatch.actualPrice)}€'),
               ],
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class BlurFilter extends StatelessWidget {
+  final Widget child;
+  final double sigmaX;
+  final double sigmaY;
+
+  BlurFilter({required this.child, this.sigmaX = 10.0, this.sigmaY = 10.0});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        child,
+        ClipRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(
+              sigmaX: sigmaX,
+              sigmaY: sigmaY,
+            ),
+            child: Opacity(
+              opacity: 0.01,
+              child: child,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class RefreshingWalletData extends StatefulWidget {
+  final WalletData walletData;
+  final double width;
+  final double height;
+  final double contributiNetti;
+
+  const RefreshingWalletData(
+      {
+      required this.walletData,
+      required this.width,
+      required this.height,
+      required this.contributiNetti,
+      super.key});
+
+  @override
+  _RefreshingWalletDataState createState() => _RefreshingWalletDataState();
+}
+
+class _RefreshingWalletDataState extends State<RefreshingWalletData> {
+  bool isBlur = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: Row(
+                          children: [
+                            Text(
+                              'Wallet value',
+                              style: TextStyle(fontSize: widget.width * 0.05),
+                            ),
+                            SizedBox(
+                              width: widget.width * 0.02,
+                            ),
+                            IconButton(
+                                onPressed: () => { 
+                                  setState(() {
+                                    isBlur = !isBlur;
+                                  }),
+                                  },
+                                icon: Icon(Icons.visibility)),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: widget.height * 0.01,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const WalletSpecsScreen(),
+                            ),
+                          );
+                        },
+                        child: isBlur
+        ? BlurFilter(
+            child: WalletInfo(
+                walletData: widget.walletData,
+                width: widget.width,
+                contributiNetti: widget.contributiNetti,
+                height: widget.height),
+          )
+        : WalletInfo(
+            walletData: widget.walletData,
+            width: widget.width,
+            contributiNetti: widget.contributiNetti,
+            height: widget.height),
+                      ),
+      ],
     );
   }
 }

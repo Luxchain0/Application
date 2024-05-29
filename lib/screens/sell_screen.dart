@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SellScreen extends StatefulWidget {
   static const String id = 'SellScreen';
   final SellInfo sellInfo;
+
   const SellScreen({required this.sellInfo, super.key});
 
   @override
@@ -26,45 +27,67 @@ class _SellScreenState extends State<SellScreen> {
 
   handleSell() async {
     print("SELLING");
-    Future<SharedPreferences> userFuture = getUserData();
-    SharedPreferences user = await userFuture;
-    int userId = user.getInt('accountid') ?? 0;
-    var result = await sellShares(userId, sellInfo.watchid, _shareSelected, _priceOfOneShare);
-    if (result == APIStatus.success) {
-      showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      //Se va tutto bene si chiude il messaggio di avviso e si torna al wallet
-                      //TODO: bisognerebbe tornare alla scheramta delle proprie schare in vendita
-                      Navigator.pushNamed(context, FrameScreen.id);
-                    },
-                    child: const Text('Close'),
-                  ),
-                ],
-                title: const Text('Messaggio di info'),
-                contentPadding: const EdgeInsets.all(20.0),
-                content: Text('tutto bene'),
-              ));
-    } else {
-      showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text('Close'),
-                  ),
-                ],
-                title: const Text('Messaggio di info'),
-                contentPadding: const EdgeInsets.all(20.0),
-                content: Text('tutto male'),
-              ));
-    }
+
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: new Text('Are you sure?'),
+        content: Text(
+            'This action will put on the market the shares and other users will able to buy them.'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Nope'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Future<SharedPreferences> userFuture = getUserData();
+              SharedPreferences user = await userFuture;
+              int userId = user.getInt('accountid') ?? 0;
+              var result = await sellShares(
+                  userId, sellInfo.watchid, _shareSelected, _priceOfOneShare);
+              if (result == APIStatus.success) {
+                showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pushReplacementNamed(
+                                    context, FrameScreen.id);
+                              },
+                              child: const Text('Close'),
+                            ),
+                          ],
+                          title: const Text('The action ended up successfully'),
+                          contentPadding: const EdgeInsets.all(20.0),
+                          content: Text(
+                              'Your shares have been put on the market at the chosen price'),
+                        ));
+              } else {
+                showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pushNamed(context, FrameScreen.id);
+                              },
+                              child: const Text('Close'),
+                            ),
+                          ],
+                          title: const Text('Something went wrong'),
+                          contentPadding: const EdgeInsets.all(20.0),
+                          content: Text(
+                              'Try to redo the wanted operation. If the problem persists contact us'),
+                        ));
+              }
+            },
+            child: Text('Yep'),
+          ),
+        ],
+      ),
+    );
   }
 
   final SellInfo sellInfo;
@@ -72,6 +95,7 @@ class _SellScreenState extends State<SellScreen> {
   double _priceOfOneShare = 0;
 
   _SellScreenState({required this.sellInfo});
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -145,20 +169,12 @@ class _SellScreenState extends State<SellScreen> {
                       fontSize: width * 0.08,
                       fontFamily: 'Bebas'),
                 ),
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(3)),
-                      color: Colors.lightGreen),
-                  child: const Text('+ 2.3%'),
-                ),
                 SizedBox(
                   height: heigh * 0.02,
                 ),
-                const Text('Prezzo di listino: - €'),
-                Text('Numero di quote: ${sellInfo.totalNumberOfShares}'),
-                const Text('Prezzo medio: -€'),
-                const Text('Numero di quote possedute: ?'),
+                Text('Actual Price: ${sellInfo.actualPrice} €'),
+                Text('Shares: ${sellInfo.numberOfShares}'),
+                Text('Owned shares: ${sellInfo.sharesOwned}'),
                 SizedBox(
                   height: heigh * 0.06,
                 ),
@@ -175,7 +191,7 @@ class _SellScreenState extends State<SellScreen> {
                             fontWeight: FontWeight.normal,
                             color: Colors.black87),
                         decoration: InputDecoration(
-                          hintText: 'N° di quote',
+                          hintText: 'N° shares',
                           contentPadding:
                               const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                           border: OutlineInputBorder(
@@ -202,7 +218,7 @@ class _SellScreenState extends State<SellScreen> {
                             fontWeight: FontWeight.normal,
                             color: Colors.black87),
                         decoration: InputDecoration(
-                          hintText: 'Prezzo',
+                          hintText: 'Price',
                           contentPadding:
                               const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                           border: OutlineInputBorder(
@@ -225,7 +241,28 @@ class _SellScreenState extends State<SellScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     OutlinedButton(
-                      onPressed: canSell() ? () => handleSell() : null,
+                      onPressed: canSell()
+                          ? () => handleSell()
+                          : () => {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.pushReplacementNamed(
+                                                    context, FrameScreen.id);
+                                              },
+                                              child: const Text('Close'),
+                                            ),
+                                          ],
+                                          title: const Text('Info message'),
+                                          contentPadding:
+                                              const EdgeInsets.all(20.0),
+                                          content:
+                                              Text('Insufficient shares owned'),
+                                        ))
+                              },
                       style: ButtonStyle(
                           backgroundColor:
                               const MaterialStatePropertyAll(Colors.blueAccent),

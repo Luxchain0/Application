@@ -16,21 +16,19 @@ class FavouritesScreen extends StatefulWidget {
 }
 
 class _FavouritesScreenState extends State<FavouritesScreen> {
-  late Future<List<Favorite>> futureFavorites;
+  Future<List<Favorite>> futureFavorites = Future.value([]);
 
   @override
   void initState() {
+    _initializeData();
     super.initState();
-    _initializeData(); 
   }
 
   void _initializeData() async {
     Future<SharedPreferences> userFuture = getUserData();
     SharedPreferences user = await userFuture;
 
-    // Assume that you have a specific key in SharedPreferences
     int userId = user.getInt('accountid') ?? 0;
-
     setState(() {
       futureFavorites = getFavorites(userId);
     });
@@ -64,37 +62,50 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                                 child: CircularProgressIndicator());
                           } else if (snapshot.hasData) {
                             List<Favorite> favorites = snapshot.data!;
-                            return Column(
-                              children: favorites.map(
-                                (favorite) {
-                                  return CustomBottomBigCard(
-                                    watchID: favorite.watch.watchId,
-                                    screenWidth: width,
-                                    imgUrl:
-                                        getDownloadURL(favorite.watch.imageuri),
-                                    modelName:
-                                        favorite.watch.watchId.toString(),
-                                    brandName: favorite
-                                        .watch.modelType.model.modelname,
-                                    serialNumber:
-                                        favorite.watch.watchId.toString(),
-                                    valoreAttuale: 0,
-                                    valoreDiAcquisto:
-                                        favorite.watch.initialPrice,
-                                    quotePossedute: 0,
-                                    quoteTotali: favorite.watch.numberOfShares,
-                                    controvalore: 0,
-                                    incremento: 0,
+                            return favorites.isNotEmpty
+                                ? Column(
+                                    children: favorites.map(
+                                      (favorite) {
+                                        return CustomBottomBigCard(
+                                          watchID: favorite.watch.watchId,
+                                          screenWidth: width,
+                                          imgUrl: getDownloadURL(
+                                              favorite.watch.imageuri),
+                                          modelName:
+                                              favorite.watch.watchId.toString(),
+                                          brandName: favorite
+                                              .watch.modelType.model.modelname,
+                                          serialNumber:
+                                              favorite.watch.watchId.toString(),
+                                          valoreAttuale: 0,
+                                          valoreDiAcquisto:
+                                              favorite.watch.initialPrice,
+                                          quotePossedute: 0,
+                                          quoteTotali:
+                                              favorite.watch.numberOfShares,
+                                          controvalore: 0,
+                                          incremento: 0,
+                                        );
+                                      },
+                                    ).toList(),
+                                  )
+                                : Container(
+                                    margin: EdgeInsets.symmetric(
+                                        vertical: height * 0.01),
+                                    child: Center(
+                                      child: Text(
+                                          textAlign: TextAlign.center,
+                                          'OOps!\nYou\'ve not added any watch as favourite yet.'),
+                                    ),
                                   );
-                                },
-                              ).toList(),
-                            );
                           } else if (snapshot.hasError) {
                             // Gestisci il caso in cui si verifica un errore
                             return Text('Error: ${snapshot.error}');
                           } else {
                             // Gestisci il caso in cui non ci sono dati disponibili
-                            return const SizedBox(); // Placeholder widget when no data is available
+                            return Center(
+                              child: Text('Non ci sono orologi preferiti'),
+                            ); // Placeholder widget when no data is available
                           }
                         })),
               ),

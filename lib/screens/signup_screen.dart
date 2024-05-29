@@ -410,68 +410,77 @@ class _SignUpState extends State<SignUpScreen> {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () async {
-          try {
-            Map<String, String> requestBody = {
-              /* 'username': 'matteooo',
-              'firstname': 'Matteo',
-              'lastname': 'Artuso',
-              "birthdate": '1999-01-04',
-              "birthcountry": 'italy',
-              "nationality": 'italy',
-              "address": 'via ferrari 1',
-              "phonenr": '+393662167868',
-              'email': 'matteo@artuso.it',
-              'password': 'password', */
-              'username': usernameController.text,
-              'firstname': firstnameController.text,
-              'lastname': lastnameController.text,
-              "birthdate": birthdateController.text,
-              "birthcountry": birthcountryController.text,
-              "nationality": nationalityController.text,
-              "address": addressController.text,
-              "phonenr": phonenrController.text,
-              'email': emailController.text,
-              'password': passwordController.text,
-             
-            };
+          if (usernameController.text.isEmpty) {
+            snackbar(context, 'Username is Missing');
+          } else if (firstnameController.text.isEmpty) {
+            snackbar(context, 'Firstname is Missing');
+          } else if (lastnameController.text.isEmpty) {
+            snackbar(context, 'Lastname is Missing');
+          } else if (birthdateController.text.isEmpty) {
+            snackbar(context, 'Birthdate is Missing');
+          } else if (birthcountryController.text.isEmpty) {
+            snackbar(context, 'Birthcountry is Missing');
+          } else if (nationalityController.text.isEmpty) {
+            snackbar(context, 'Nationality is Missing');
+          } else if (addressController.text.isEmpty) {
+            snackbar(context, 'Address is Missing');
+          } else if (phonenrController.text.isEmpty) {
+            snackbar(context, 'Phone number is Missing');
+          } else if (emailController.text.isEmpty) {
+            snackbar(context, 'Email is Missing');
+          } else if (passwordController.text.isEmpty) {
+            snackbar(context, 'Password is Missing');
+          } else {
+            try {
+              Map<String, String> requestBody = {
+                'username': usernameController.text,
+                'firstname': firstnameController.text,
+                'lastname': lastnameController.text,
+                "birthdate": birthdateController.text,
+                "birthcountry": birthcountryController.text,
+                "nationality": nationalityController.text,
+                "address": addressController.text,
+                "phonenr": phonenrController.text,
+                'email': emailController.text,
+                'password': passwordController.text,
+              };
 
-            final response = await http.post(
-              Uri.parse('$apiURL/auth/signup'),
-              headers: <String, String>{
-                'Content-Type': 'application/json; charset=UTF-8',
-              },
-              body: jsonEncode(requestBody),
-            );
+              final response = await http.post(
+                Uri.parse('$apiURL/auth/signup'),
+                headers: <String, String>{
+                  'Content-Type': 'application/json; charset=UTF-8',
+                },
+                body: jsonEncode(requestBody),
+              );
 
-            Map<String, dynamic> myMap = jsonDecode(response.body);
-            if (response.statusCode == 200) {
-              for (var v in myMap['user'].entries) {
-                saveData(v.key, v.value);
+              Map<String, dynamic> myMap = jsonDecode(response.body);
+              if (response.statusCode == 200) {
+                for (var v in myMap['user'].entries) {
+                  saveData(v.key, v.value);
+                }
+                token = myMap['jwt_token'];
+                saveData('token', token);
+                Navigator.pushReplacementNamed(context, FrameScreen.id);
+              } else if (response.statusCode == 409) {
+                if (myMap['error']['meta']['target'].contains('email')) {
+                  snackbar(context,
+                      'User already registered, please proceed to login');
+                  Navigator.pop(context);
+                } else if (myMap['error']['meta']['target']
+                    .contains('username')) {
+                  snackbar(context, 'Username already used by another account');
+                } else if (myMap['error']['meta']['target']
+                    .contains('phonenr')) {
+                  snackbar(context,
+                      'Phone number already used, have you already created an account?');
+                }
+              } else {
+                snackbar(context, 'Server error, please try again later');
               }
-              token = myMap['token'];
-              saveData('token', token);
-              Navigator.pushReplacementNamed(context, FrameScreen.id);
-            } else if (response.statusCode == 409) {
-              print(myMap['error']);
-              print(myMap['error']['meta']);
-              print(myMap['error']['meta']['target']);
-              if (myMap['error']['meta']['target'].contains('email')) {
-                snackbar(context, 'utente già registrato, procedi al login');
-                Navigator.pop(context);
-              } else if (myMap['error']['meta']['target']
-                  .contains('username')) {
-                snackbar(
-                    context, 'username già utilizzato da un altro account');
-              } else if (myMap['error']['meta']['target'].contains('phonenr')) {
-                snackbar(context,
-                    'numero di telefono già utilizzato da un altro account');
-              }
-            } else {
-              snackbar(context, 'Errore lato server, riprova tra poco');
+            } catch (e) {
+              snackbar(context, 'Connection error with the server');
+              throw Exception('[FLUTTER] SignUpScreen Error: $e');
             }
-          } catch (e) {
-            snackbar(context, 'Errore di connessione col server');
-            throw Exception('[FLUTTER] SignUpScreen Error: $e');
           }
         },
         style: ElevatedButton.styleFrom(

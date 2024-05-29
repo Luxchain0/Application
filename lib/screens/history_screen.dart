@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class HistoryScreen extends StatefulWidget {
   static const String id = 'HistoryScreen';
+
   const HistoryScreen({super.key});
 
   @override
@@ -18,7 +19,7 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _MySharesScreenState extends State<HistoryScreen> {
-  late Future<List<Trade>> futureTradeHistory;
+  late Future<List<Trade>> futureTradeHistory = Future.value([]);
 
   @override
   void initState() {
@@ -32,7 +33,7 @@ class _MySharesScreenState extends State<HistoryScreen> {
 
     // Assume that you have a specific key in SharedPreferences
     int userId = user.getInt('accountid') ?? 0;
-    
+
     setState(() {
       futureTradeHistory = getTradeHistory(userId);
     });
@@ -58,7 +59,7 @@ class _MySharesScreenState extends State<HistoryScreen> {
                 Container(
                   margin: EdgeInsets.symmetric(vertical: heigh * 0.02),
                   child: Text(
-                    'Storico operazioni',
+                    'Trade History',
                     style: TextStyle(
                         color: Colors.black87,
                         height: 1,
@@ -75,12 +76,9 @@ class _MySharesScreenState extends State<HistoryScreen> {
                       return Column(
                         children: snapshot.data!
                             .map((trade) => CustomCard(
-                                  watchID: trade.watchId,
                                   screenWidth: width,
+                                  trade: trade,
                                   imgUrl: getDownloadURL(trade.imageuri),
-                                  modelName: trade.modelName,
-                                  brandName: trade.brandName,
-                                  reference: trade.reference,
                                   shareTraded: trade.sharesTraded,
                                   buySell: trade.type,
                                   price: trade.price,
@@ -106,23 +104,17 @@ class _MySharesScreenState extends State<HistoryScreen> {
 class CustomCard extends StatelessWidget {
   const CustomCard({
     super.key,
-    required this.watchID,
     required this.screenWidth,
+    required this.trade,
     required this.imgUrl,
-    required this.modelName,
-    required this.brandName,
-    required this.reference,
     required this.shareTraded,
     required this.buySell,
     required this.price,
   });
 
-  final int watchID;
   final double screenWidth;
-  final String modelName;
-  final String brandName;
+  final Trade trade;
   final Future<String> imgUrl;
-  final String reference;
   final int shareTraded;
   final String buySell;
   final double price;
@@ -131,8 +123,19 @@ class CustomCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () => {
-              Navigator.of(context)
-                  .pushNamed(WatchScreen.id, arguments: watchID)
+              Navigator.of(context).pushNamed(WatchScreen.id,
+                  arguments: Watch(
+                      watchId: trade.watchId,
+                      condition: trade.condition,
+                      numberOfShares: trade.numberOfShares,
+                      initialPrice: trade.initialPrice,
+                      actualPrice: trade.actualPrice,
+                      dialcolor: trade.dialcolor,
+                      year: trade.year,
+                      imageuri: trade.imageuri,
+                      description: trade.description,
+                      modelTypeId: trade.modelTypeId,
+                      modelType: trade.modelType))
             },
         child: Container(
           margin: const EdgeInsets.symmetric(vertical: 7),
@@ -179,7 +182,7 @@ class CustomCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  modelName,
+                  trade.modelType.model.modelname,
                   style: TextStyle(
                       color: Colors.black38,
                       height: 1,
@@ -187,21 +190,19 @@ class CustomCard extends StatelessWidget {
                       fontFamily: 'Bebas'),
                 ),
                 Text(
-                  brandName,
+                  trade.modelType.model.brandname,
                   style: TextStyle(
                       color: Colors.black87,
                       height: 1,
                       fontSize: screenWidth * 0.055,
                       fontFamily: 'Bebas'),
                 ),
-                Text('Reference: $reference'),
-                Text('Serial: $watchID'),
+                Text('Reference: ${trade.modelType.reference}'),
+                Text('Serial: ${trade.watchId}'),
                 SizedBox(height: screenWidth * 0.02),
-                Text('Quote scambiate: $shareTraded'),
-                Text('Tipologia: $buySell'),
-                Text('Totale: ' +
-                    formatAmountFromDouble(price * shareTraded) +
-                    '€'),
+                Text('Traded shares: $shareTraded'),
+                Text('Trade type: $buySell'),
+                Text('Total: ${formatAmountFromDouble(price * shareTraded)}€'),
               ],
             )
           ]),

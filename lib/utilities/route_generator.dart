@@ -10,7 +10,7 @@ import 'package:lux_chain/screens/watch_screen.dart';
 import 'package:lux_chain/screens/home_screen.dart';
 import 'package:lux_chain/screens/settings_screen.dart';
 import 'package:lux_chain/screens/wallet_timeline_screen.dart';
-import 'package:lux_chain/screens/watch_tinder_screen.dart';
+import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/models.dart';
 
@@ -28,8 +28,6 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const SettingsScreen());
       case PersonalDataScreen.id:
         return MaterialPageRoute(builder: (_) => const PersonalDataScreen());
-      case WatchTinderScreen.id:
-        return MaterialPageRoute(builder: (_) => const WatchTinderScreen());
       case BuyScreen.id:
         if (args is BuyInfo) {
           return MaterialPageRoute(builder: (_) => BuyScreen(buyInfo: args));
@@ -58,10 +56,10 @@ class RouteGenerator {
         }
         break;
       case WatchScreen.id:
-        if (args is int) {
-          return MaterialPageRoute(
-              builder: (_) => WatchScreen(
-                  watchID: args));
+        if (args is Watch) {
+          return MaterialPageRoute(builder: (_) => WatchScreen(watch: args));
+        } else {
+          print("args is not Watch");
         }
         break;
       default:

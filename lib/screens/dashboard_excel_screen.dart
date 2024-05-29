@@ -15,7 +15,7 @@ class DashboardExcelScreen extends StatefulWidget {
 }
 
 class _DashboardExcelScreenState extends State<DashboardExcelScreen> {
-  bool isFilePresente = true;
+  bool isFilePresente = false;
 
   //questo è corretto e serve per trovare il path dei Documenti
   Future<String> get _localPath async {
