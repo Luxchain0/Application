@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/frame.dart';
@@ -191,9 +192,9 @@ class _BuyScreenState extends State<BuyScreen> {
                 SizedBox(
                   height: heigh * 0.02,
                 ),
-                Text('Actual Price: ${buyInfo.actualPrice}€'),
                 Text('Total shares: ${buyInfo.numberOfShares}'),
                 Text('Share on sale: ${buyInfo.sharesOnSale}'),
+                Text('Actual Price: ${formatAmountFromDouble(buyInfo.actualPrice)}€'),
                 Text(
                     'Proposal price: ${formatAmountFromDouble(buyInfo.proposalPrice)} €'),
                 SizedBox(
@@ -207,6 +208,9 @@ class _BuyScreenState extends State<BuyScreen> {
                       height: heigh * 0.04,
                       child: TextFormField(
                           keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
                           autofocus: false,
                           style: const TextStyle(
                               fontWeight: FontWeight.normal,

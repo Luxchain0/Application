@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/models.dart';
@@ -186,6 +187,9 @@ class _SellScreenState extends State<SellScreen> {
                       height: heigh * 0.04,
                       child: TextFormField(
                         keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
                         autofocus: false,
                         style: const TextStyle(
                             fontWeight: FontWeight.normal,
@@ -203,7 +207,9 @@ class _SellScreenState extends State<SellScreen> {
                               _shareSelected = int.parse(value);
                             });
                           } else {
-                            _shareSelected = 0;
+                            setState(() {
+                              _shareSelected = 0;
+                            });
                           }
                         },
                       ),
@@ -226,11 +232,22 @@ class _SellScreenState extends State<SellScreen> {
                         ),
                         onChanged: (value) {
                           if (value.isNotEmpty) {
-                            setState(() {
-                              _priceOfOneShare = double.parse(value);
-                            });
+                            // Sostituire la virgola con un punto
+                            String correctedValue = value.replaceAll(',', '.');
+                            try {
+                              setState(() {
+                                _priceOfOneShare = double.parse(correctedValue);
+                              });
+                            } catch (e) {
+                              // Gestire il caso in cui la stringa non possa essere convertita in double
+                              setState(() {
+                                _priceOfOneShare = 0;
+                              });
+                            }
                           } else {
-                            _priceOfOneShare = 0;
+                            setState(() {
+                              _priceOfOneShare = 0;
+                            });
                           }
                         },
                       ),

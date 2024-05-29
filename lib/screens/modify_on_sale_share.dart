@@ -9,6 +9,7 @@ import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:lux_chain/utilities/utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ModifyOnSaleShareScreen extends StatefulWidget {
   static const String id = 'ModifyOnSaleShareScreen';
@@ -41,9 +42,14 @@ class _ModifyOnSaleShareScreenState extends State<ModifyOnSaleShareScreen> {
   Future<void> _saveChanges() async {
     // ignore: avoid_print
     print("SAVING");
+    Future<SharedPreferences> userFuture = getUserData();
+    SharedPreferences user = await userFuture;
+
+    int userId = user.getInt('accountid') ?? 0;
+    
     var result = await updateSharesOnSale(
       modifySharesOnSale.watchid, // watchId
-      1, // TODO: get this
+      userId,
       modifySharesOnSale.proposalPrice, // oldPrice
       modifySharesOnSale.proposalPrice, // newPrice
       modifySharesOnSale.onSaleAtPrice, // numberOfShares
