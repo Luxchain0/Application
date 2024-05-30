@@ -69,6 +69,10 @@ double customDoubleParser(num value) {
   }
 }
 
+double customDoubleParserString(String value) {
+  return double.parse(value);
+}
+
 Future<SharedPreferences> getUserData() async {
   SharedPreferences user = await SharedPreferences.getInstance();
 

@@ -121,7 +121,7 @@ class WalletWatch extends Watch {
       modelTypeId: json['modeltypeid'] as int,
       modelType: ModelType.fromJson(json['modeltype'] as Map<String, dynamic>),
       owned: json['owned'] as int,
-      increaseRate: json['increaseRate'] as double,
+      increaseRate: customDoubleParser(json['increaseRate']),
     );
   }
 }
