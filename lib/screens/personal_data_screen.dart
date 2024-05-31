@@ -104,7 +104,7 @@ class CustomCard extends StatelessWidget {
         Container(
           alignment: Alignment.centerLeft,
           decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 184, 216, 255),
+            color: Colors.white,
             borderRadius: BorderRadius.circular(10.0),
             boxShadow: const [
               BoxShadow(
