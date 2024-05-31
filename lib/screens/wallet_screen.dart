@@ -23,6 +23,11 @@ class _WalletScreenState extends State<WalletScreen> {
   late Future<List<WalletWatch>> futureWatches;
   late Future<WalletData> futureWalletData;
   bool isBlurred = true;
+  int pageNumber = 1;
+  int watchPerPage = 10;
+  List<WalletWatch> walletWatches = [];
+  final ScrollController _scrollController = ScrollController();
+  bool isLoadingMore = false;
 
   @override
   void initState() {
@@ -33,6 +38,13 @@ class _WalletScreenState extends State<WalletScreen> {
         liquidity: 0,
         rate: 0)); // Initialize with empty WalletData
     _initializeData();
+    _scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   void _initializeData() async {
@@ -43,9 +55,39 @@ class _WalletScreenState extends State<WalletScreen> {
     int userId = user.getInt('accountid') ?? 0;
 
     setState(() {
-      futureWatches = getUserWalletWatches(userId);
+      futureWatches = getUserWalletWatches(userId, pageNumber, watchPerPage);
       futureWalletData = getWalletData(userId);
     });
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      _loadMoreWatches();
+    }
+  }
+
+  void _loadMoreWatches() async {
+    if (isLoadingMore) return;
+
+    setState(() {
+      isLoadingMore = true;
+    });
+
+    pageNumber++;
+
+    Future<SharedPreferences> userFuture = getUserData();
+    SharedPreferences user = await userFuture;
+    int userId = user.getInt('accountid') ?? 0;
+
+    List<WalletWatch> newWatches =
+        await getUserWalletWatches(userId, pageNumber, watchPerPage);
+    if (mounted) {
+      setState(() {
+        walletWatches.addAll(newWatches);
+        isLoadingMore = false;
+      });
+    };
   }
 
   @override
@@ -72,9 +114,14 @@ class _WalletScreenState extends State<WalletScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      RefreshingWalletData(walletData: walletData, width: width, height: height, contributiNetti: contributiNetti),
+                      RefreshingWalletData(
+                          walletData: walletData,
+                          width: width,
+                          height: height,
+                          contributiNetti: contributiNetti),
                       Expanded(
                         child: SingleChildScrollView(
+                            controller: _scrollController,
                             scrollDirection: Axis.vertical,
                             child: FutureBuilder<List<WalletWatch>>(
                                 future: futureWatches,
@@ -230,6 +277,7 @@ class CustomBottomBigCard extends StatelessWidget {
               watchId: walletWatch.watchId,
               condition: walletWatch.condition,
               numberOfShares: walletWatch.numberOfShares,
+              retailPrice: walletWatch.retailPrice,
               initialPrice: walletWatch.initialPrice,
               actualPrice: walletWatch.actualPrice,
               dialcolor: walletWatch.dialcolor,
@@ -374,8 +422,7 @@ class RefreshingWalletData extends StatefulWidget {
   final double contributiNetti;
 
   const RefreshingWalletData(
-      {
-      required this.walletData,
+      {required this.walletData,
       required this.width,
       required this.height,
       required this.contributiNetti,
@@ -393,52 +440,52 @@ class _RefreshingWalletDataState extends State<RefreshingWalletData> {
     return Column(
       children: [
         Padding(
-                        padding: const EdgeInsets.only(left: 10.0),
-                        child: Row(
-                          children: [
-                            Text(
-                              'Wallet value',
-                              style: TextStyle(fontSize: widget.width * 0.05),
-                            ),
-                            SizedBox(
-                              width: widget.width * 0.02,
-                            ),
-                            IconButton(
-                                onPressed: () => { 
-                                  setState(() {
-                                    isBlur = !isBlur;
-                                  }),
-                                  },
-                                icon: Icon(Icons.visibility)),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: widget.height * 0.01,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const WalletSpecsScreen(),
-                            ),
-                          );
-                        },
-                        child: isBlur
-        ? BlurFilter(
-            child: WalletInfo(
-                walletData: widget.walletData,
-                width: widget.width,
-                contributiNetti: widget.contributiNetti,
-                height: widget.height),
-          )
-        : WalletInfo(
-            walletData: widget.walletData,
-            width: widget.width,
-            contributiNetti: widget.contributiNetti,
-            height: widget.height),
-                      ),
+          padding: const EdgeInsets.only(left: 10.0),
+          child: Row(
+            children: [
+              Text(
+                'Wallet value',
+                style: TextStyle(fontSize: widget.width * 0.05),
+              ),
+              SizedBox(
+                width: widget.width * 0.02,
+              ),
+              IconButton(
+                  onPressed: () => {
+                        setState(() {
+                          isBlur = !isBlur;
+                        }),
+                      },
+                  icon: Icon(Icons.visibility)),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: widget.height * 0.01,
+        ),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const WalletSpecsScreen(),
+              ),
+            );
+          },
+          child: isBlur
+              ? BlurFilter(
+                  child: WalletInfo(
+                      walletData: widget.walletData,
+                      width: widget.width,
+                      contributiNetti: widget.contributiNetti,
+                      height: widget.height),
+                )
+              : WalletInfo(
+                  walletData: widget.walletData,
+                  width: widget.width,
+                  contributiNetti: widget.contributiNetti,
+                  height: widget.height),
+        ),
       ],
     );
   }

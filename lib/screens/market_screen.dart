@@ -17,11 +17,53 @@ class MarketScreen extends StatefulWidget {
 
 class _MarketScreenState extends State<MarketScreen> {
   late Future<List<MarketPlaceWatch>> futureMarketPlaceWatches;
+  int pageNumber = 1;
+  int watchPerPage = 10;
+  List<MarketPlaceWatch> marketPlaceWatches = [];
+  final ScrollController _scrollController = ScrollController();
+  bool isLoadingMore = false;
 
   @override
   void initState() {
     super.initState();
-    futureMarketPlaceWatches = getMarketPlaceWatches();
+    futureMarketPlaceWatches = Future.value([]); // Initialize with an empty list
+    _initializeData();
+    _scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _initializeData() async {
+    setState(() {
+      futureMarketPlaceWatches = getMarketPlaceWatches(pageNumber, watchPerPage);
+    });
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+      _loadMoreWatches();
+    }
+  }
+
+  void _loadMoreWatches() async {
+    if (isLoadingMore) return;
+
+    setState(() {
+      isLoadingMore = true;
+    });
+
+    pageNumber++;
+
+    List<MarketPlaceWatch> newWatches = await getMarketPlaceWatches(pageNumber, watchPerPage);
+
+    setState(() {
+      marketPlaceWatches.addAll(newWatches);
+      isLoadingMore = false;
+    });
   }
 
   @override
@@ -33,6 +75,7 @@ class _MarketScreenState extends State<MarketScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
+        controller: _scrollController,
         scrollDirection: Axis.vertical,
         child: Padding(
           padding: EdgeInsets.symmetric(
@@ -52,29 +95,12 @@ class _MarketScreenState extends State<MarketScreen> {
               SizedBox(
                 height: heigh * 0.02,
               ),
-              /*TextFormField(
-                decoration: const InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                      borderSide: BorderSide(
-                        color: Colors.grey,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(color: Colors.grey),
-                    ),
-                    suffixIcon: Icon(Icons.search),
-                    alignLabelWithHint: true,
-                    labelText: 'Insert the name of the watch'),
-              ),*/
-              SizedBox(
-                height: heigh * 0.02,
-              ),
               FutureBuilder<List<MarketPlaceWatch>>(
                 future: futureMarketPlaceWatches,
                 builder: (context, snapshot) {
-                  if (snapshot.hasData) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasData) {
                     List<MarketPlaceWatch> marketWatchesList = snapshot.data!;
                     return Column(
                       children: marketWatchesList
@@ -86,12 +112,13 @@ class _MarketScreenState extends State<MarketScreen> {
                           .toList(),
                     );
                   } else if (snapshot.hasError) {
-                    return Text('${snapshot.error}');
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    return const SizedBox(); // Placeholder widget when no data is available
                   }
-
-                  return const CircularProgressIndicator();
                 },
               ),
+              if (isLoadingMore) const Center(child: CircularProgressIndicator()),
             ],
           ),
         ),
@@ -122,6 +149,7 @@ class CustomBottomBigCard extends StatelessWidget {
               watchId: marketWatch.watchId,
               condition: marketWatch.condition,
               numberOfShares: marketWatch.numberOfShares,
+              retailPrice: marketWatch.retailPrice,
               initialPrice: marketWatch.initialPrice,
               actualPrice: marketWatch.actualPrice,
               dialcolor: marketWatch.dialcolor,
@@ -189,6 +217,7 @@ class CustomBottomBigCard extends StatelessWidget {
                             watchId: marketWatch.watchId,
                             condition: marketWatch.condition,
                             numberOfShares: marketWatch.numberOfShares,
+                            retailPrice: marketWatch.retailPrice,
                             initialPrice: marketWatch.initialPrice,
                             actualPrice: marketWatch.actualPrice,
                             dialcolor: marketWatch.dialcolor,

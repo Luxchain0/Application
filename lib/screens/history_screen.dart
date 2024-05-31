@@ -128,6 +128,7 @@ class CustomCard extends StatelessWidget {
                       watchId: trade.watchId,
                       condition: trade.condition,
                       numberOfShares: trade.numberOfShares,
+                      retailPrice: trade.retailPrice,
                       initialPrice: trade.initialPrice,
                       actualPrice: trade.actualPrice,
                       dialcolor: trade.dialcolor,

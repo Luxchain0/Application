@@ -10,7 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class MySharesScreen extends StatefulWidget {
   static const String id = 'HistoryScreen';
-  const MySharesScreen({super.key});
+  const MySharesScreen({Key? key}) : super(key: key);
 
   @override
   State<MySharesScreen> createState() => _MySharesScreenState();
@@ -18,10 +18,22 @@ class MySharesScreen extends StatefulWidget {
 
 class _MySharesScreenState extends State<MySharesScreen> {
   late Future<List<MySharesOnSale>> futureMySharesOnSale = Future.value([]);
+  final ScrollController _scrollController = ScrollController();
+  bool isLoadingMore = false;
+  int pageNumber = 1;
+  int watchPerPage = 10;
+
   @override
   void initState() {
     super.initState();
     _initializeData();
+    _scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   void _initializeData() async {
@@ -31,7 +43,39 @@ class _MySharesScreenState extends State<MySharesScreen> {
     int userId = user.getInt('accountid') ?? 0;
 
     setState(() {
-      futureMySharesOnSale = getMySharesOnSale(userId);
+      futureMySharesOnSale = getMySharesOnSale(userId, pageNumber, watchPerPage);
+    });
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      _loadMoreShares();
+    }
+  }
+
+  void _loadMoreShares() async {
+    if (isLoadingMore) return;
+    
+    setState(() {
+      isLoadingMore = true;
+    });
+
+    pageNumber++;
+
+    Future<SharedPreferences> userFuture = getUserData();
+    SharedPreferences user = await userFuture;
+    int userId = user.getInt('accountid') ?? 0;
+
+    List<MySharesOnSale> newShares =
+        await getMySharesOnSale(userId, pageNumber, watchPerPage);
+
+    setState(() {
+      futureMySharesOnSale.then((shares) {
+        shares.addAll(newShares);
+        return shares;
+      });
+      isLoadingMore = false;
     });
   }
 
@@ -45,6 +89,7 @@ class _MySharesScreenState extends State<MySharesScreen> {
       body: SafeArea(
         bottom: false,
         child: SingleChildScrollView(
+          controller: _scrollController,
           child: Padding(
             padding: EdgeInsets.symmetric(
                 horizontal: width * 0.05, vertical: heigh * 0.02),
@@ -86,6 +131,11 @@ class _MySharesScreenState extends State<MySharesScreen> {
                     }
                   },
                 ),
+                if (isLoadingMore)
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
               ],
             ),
           ),
