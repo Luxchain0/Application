@@ -1,19 +1,19 @@
-// ignore_for_file: file_names
-
 import 'package:flutter/material.dart';
+import 'package:http/http.dart'
+    as http; // Aggiunto l'import per utilizzare http.post
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/size_config.dart';
+import 'package:lux_chain/utilities/utils.dart';
 
 class ReportBugScreen extends StatelessWidget {
   static const String id = 'ReportBugScreen';
   final TextEditingController reportController = TextEditingController();
 
-  ReportBugScreen({super.key});
+  ReportBugScreen({Key? key});
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-//    double height = SizeConfig.screenH!;
     double width = SizeConfig.screenW!;
 
     return Scaffold(
@@ -71,7 +71,8 @@ class ReportBugScreen extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  //api all
+                  submitBugReport(reportController
+                      .text, context); // Chiamata alla funzione per inviare il report
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
@@ -91,5 +92,54 @@ class ReportBugScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void submitBugReport(String bugDescription, BuildContext context) async {
+    final response = await http.post(
+      Uri.parse("$URL/report"),
+      body: {'message': bugDescription},
+    );
+
+    if (response.statusCode == 200) {
+      // Successo
+      // Mostra un messaggio di conferma
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Bug Reported'),
+            content: const Text('Thank you for reporting the bug!'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      // Errore
+      // Mostra un messaggio di errore
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: const Text('Failed to report the bug. Please try again later.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 }

@@ -87,7 +87,8 @@ class _WalletScreenState extends State<WalletScreen> {
         walletWatches.addAll(newWatches);
         isLoadingMore = false;
       });
-    };
+    }
+    ;
   }
 
   @override
@@ -95,7 +96,6 @@ class _WalletScreenState extends State<WalletScreen> {
     SizeConfig().init(context);
     double height = SizeConfig.screenH!;
     double width = SizeConfig.screenW!;
-    double contributiNetti = 715300.00;
 
     return Scaffold(
       body: SafeArea(
@@ -115,10 +115,10 @@ class _WalletScreenState extends State<WalletScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       RefreshingWalletData(
-                          walletData: walletData,
-                          width: width,
-                          height: height,
-                          contributiNetti: contributiNetti),
+                        walletData: walletData,
+                        width: width,
+                        height: height,
+                      ),
                       Expanded(
                         child: SingleChildScrollView(
                             controller: _scrollController,
@@ -176,13 +176,11 @@ class WalletInfo extends StatelessWidget {
     super.key,
     required this.walletData,
     required this.width,
-    required this.contributiNetti,
     required this.height,
   });
 
   final WalletData walletData;
   final double width;
-  final double contributiNetti;
   final double height;
 
   @override
@@ -224,16 +222,13 @@ class WalletInfo extends StatelessWidget {
                   padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(3)),
-                      color:
-                          walletData.rate >= 0 ? Colors.lightGreen : Colors.red),
+                      color: walletData.rate >= 0
+                          ? Colors.lightGreen
+                          : Colors.red),
                   child: Text('${walletData.rate}%'),
                 ),
               ],
             ),
-          ),
-          Text(
-            'Contributi netti: ${formatAmountFromDouble(contributiNetti)} €',
-            style: TextStyle(fontSize: width * 0.04),
           ),
           SizedBox(
             height: height * 0.01,
@@ -419,13 +414,11 @@ class RefreshingWalletData extends StatefulWidget {
   final WalletData walletData;
   final double width;
   final double height;
-  final double contributiNetti;
 
   const RefreshingWalletData(
       {required this.walletData,
       required this.width,
       required this.height,
-      required this.contributiNetti,
       super.key});
 
   @override
@@ -477,13 +470,11 @@ class _RefreshingWalletDataState extends State<RefreshingWalletData> {
                   child: WalletInfo(
                       walletData: widget.walletData,
                       width: widget.width,
-                      contributiNetti: widget.contributiNetti,
                       height: widget.height),
                 )
               : WalletInfo(
                   walletData: widget.walletData,
                   width: widget.width,
-                  contributiNetti: widget.contributiNetti,
                   height: widget.height),
         ),
       ],
