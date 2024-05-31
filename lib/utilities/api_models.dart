@@ -330,7 +330,7 @@ class Trade extends Watch {
       watchId: json['watchid'] as int,
       condition: json['condition'] as String,
       numberOfShares: json['numberofshares'] as int,
-      retailPrice: customDoubleParser(json['retailprice'] as num),
+      retailPrice: double.parse(json['retailprice'] as String),
       initialPrice: double.parse(json['initialprice'] as String),
       actualPrice: double.parse(json['actualprice'] as String),
       dialColor: json['dialcolor'] as String,

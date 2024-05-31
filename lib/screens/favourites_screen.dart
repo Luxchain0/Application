@@ -95,7 +95,7 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                                     child: Center(
                                       child: Text(
                                           textAlign: TextAlign.center,
-                                          'OOps!\nYou\'ve not added any watch as favourite yet.'),
+                                          '\nYou\'ve not added any watch as favourite yet.'),
                                     ),
                                   );
                           } else if (snapshot.hasError) {
