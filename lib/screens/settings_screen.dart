@@ -54,50 +54,43 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ],
             ),
             CustomCard(
-                icon: Icons.person,
-                text: 'Personal data',
-                onPressed: () => {
-                      Navigator.of(context).pushNamed(PersonalDataScreen.id),
-                    }),
+              icon: Icons.person,
+              text: 'Personal data',
+              onPressed: () => {
+                Navigator.of(context).pushNamed(PersonalDataScreen.id),
+              },
+            ),
             CustomCard(
-                icon: Icons.notifications,
-                text: 'Notification',
-                onPressed: () => {}),
+              icon: Icons.question_mark,
+              text: 'FAQ',
+              onPressed: () => {},
+            ),
             CustomCard(
-                icon: Icons.chat_bubble,
-                text: 'Assistance',
-                onPressed: () => {}),
-            CustomCard(
-                icon: Icons.question_mark, text: 'FAQ', onPressed: () => {}),
-            CustomCard(icon: Icons.book, text: 'Guide', onPressed: () => {}),
-            CustomCard(
-                icon: Icons.lightbulb, text: 'Hints', onPressed: () => {}),
-            CustomCard(
-                icon: Icons.translate, text: 'Language', onPressed: () => {}),
-            CustomCard(
-                icon: Icons.logout,
-                text: 'Logout',
-                onPressed: () => {
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: new Text('Are you sure?'),
-                      content: Text('This action will bring you to the LoginIn page.'),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: Text('Nope'),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            _logout(context);
-                          },
-                          child: Text('Yep'),
-                        ),
-                      ],
-                    ),
+              icon: Icons.logout,
+              text: 'Logout',
+              onPressed: () => {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Are you sure?'),
+                    content: const Text(
+                        'This action will bring you to the LoginIn page.'),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Nope'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          _logout(context);
+                        },
+                        child: const Text('Yep'),
+                      ),
+                    ],
                   ),
-                }),
+                ),
+              },
+            ),
           ],
         ),
       ),
@@ -147,5 +140,5 @@ class CustomCard extends StatelessWidget {
 _logout(context) async {
   await user.clear();
   token = '';
-  Navigator.pushReplacementNamed(context, LoginScreen.id);
+  Navigator.pushNamedAndRemoveUntil(context, LoginScreen.id, (_) => false);
 }

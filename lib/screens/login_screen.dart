@@ -179,7 +179,8 @@ class _LoginState extends State<LoginScreen> {
                 }
                 token = myMap['token'];
                 saveData('token', token);
-                Navigator.pushReplacementNamed(context, FrameScreen.id);
+                Navigator.pushNamedAndRemoveUntil(
+                    context, FrameScreen.id, (_) => false);
               } else if (response.statusCode == 401) {
                 snackbar(context, 'Incorrect email or password');
               } else {

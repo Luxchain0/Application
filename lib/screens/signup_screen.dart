@@ -460,7 +460,8 @@ class _SignUpState extends State<SignUpScreen> {
                 }
                 token = myMap['jwt_token'];
                 saveData('token', token);
-                Navigator.pushReplacementNamed(context, FrameScreen.id);
+                Navigator.pushNamedAndRemoveUntil(
+                    context, FrameScreen.id, (_) => false);
               } else if (response.statusCode == 409) {
                 if (myMap['error']['meta']['target'].contains('email')) {
                   snackbar(context,
