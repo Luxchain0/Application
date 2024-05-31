@@ -17,42 +17,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     double width = SizeConfig.screenW!;
-    double heigh = SizeConfig.screenH!;
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-            horizontal: width * 0.1, vertical: heigh * 0.02),
+      body: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 40.0,
+          vertical: 40.0,
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 15.0, vertical: 15.0),
-                  child: CircleAvatar(
-                    radius: width * 0.1,
-                    backgroundColor: Colors.amber,
-                  ),
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "${user.getString('firstname')!} ${user.getString('lastname')!}",
-                      style: TextStyle(
-                          fontFamily: 'Bebas',
-                          fontSize: width * 0.07,
-                          height: 1),
-                    ),
-                    Text(user.getString('email')!),
-                  ],
-                )
-              ],
-            ),
+            const SizedBox(height: 10.0),
+            userInfo(width),
+            const SizedBox(height: 30.0),
             CustomCard(
               icon: Icons.person,
               text: 'Personal data',
@@ -60,11 +39,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Navigator.of(context).pushNamed(PersonalDataScreen.id),
               },
             ),
+            const SizedBox(height: 30.0),
             CustomCard(
               icon: Icons.question_mark,
               text: 'FAQ',
               onPressed: () => {},
             ),
+            const SizedBox(height: 30.0),
+            CustomCard(
+              icon: Icons.bug_report,
+              text: 'Report a bug',
+              onPressed: () => {},
+            ),
+            const SizedBox(height: 30.0),
             CustomCard(
               icon: Icons.logout,
               text: 'Logout',
@@ -135,6 +122,32 @@ class CustomCard extends StatelessWidget {
           ],
         ));
   }
+}
+
+userInfo(width) {
+  return Row(
+    children: [
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
+        child: CircleAvatar(
+          radius: width * 0.1,
+          backgroundColor: Colors.amber,
+        ),
+      ),
+      Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "${user.getString('firstname')!} ${user.getString('lastname')!}",
+            style: TextStyle(
+                fontFamily: 'Bebas', fontSize: width * 0.07, height: 1),
+          ),
+          Text(user.getString('email')!),
+        ],
+      )
+    ],
+  );
 }
 
 _logout(context) async {
