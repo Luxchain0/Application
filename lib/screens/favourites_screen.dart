@@ -92,7 +92,7 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                                 : Container(
                                     margin: EdgeInsets.symmetric(
                                         vertical: height * 0.01),
-                                    child: Center(
+                                    child: const Center(
                                       child: Text(
                                           textAlign: TextAlign.center,
                                           '\nYou\'ve not added any watch as favourite yet.'),
@@ -204,7 +204,7 @@ class CustomBottomBigCard extends StatelessWidget {
                     padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(3)),
-                      color: (incremento > 0) ? Colors.lightGreen : Colors.red,
+                      color: (incremento >= 0) ? Colors.lightGreen : Colors.red,
                     ),
                     child: Text('$incremento%'),
                   ),

@@ -223,9 +223,9 @@ class WalletInfo extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(3)),
+                      borderRadius: const BorderRadius.all(Radius.circular(3)),
                       color:
-                          walletData.rate > 0 ? Colors.lightGreen : Colors.red),
+                          walletData.rate >= 0 ? Colors.lightGreen : Colors.red),
                   child: Text('${walletData.rate}%'),
                 ),
               ],
@@ -338,7 +338,7 @@ class CustomBottomBigCard extends StatelessWidget {
                     padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(3)),
-                      color: (walletWatch.increaseRate > 0)
+                      color: (walletWatch.increaseRate >= 0)
                           ? Colors.lightGreen
                           : Colors.red,
                     ),
