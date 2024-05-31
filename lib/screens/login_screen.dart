@@ -438,14 +438,6 @@ class _LoginState extends State<LoginScreen> {
   }
 }
 
-const kHintTextStyle = TextStyle(
-  color: Colors.white54,
-);
-
-const kLabelStyle = TextStyle(
-  fontWeight: FontWeight.bold,
-);
-
 final kBoxDecorationStyle = BoxDecoration(
   color: const Color(0xFF6CA8F1),
   borderRadius: BorderRadius.circular(10.0),

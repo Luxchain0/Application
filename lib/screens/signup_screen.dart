@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lux_chain/utilities/frame.dart';
@@ -126,7 +125,6 @@ class _SignUpState extends State<SignUpScreen> {
       ],
     );
   }
-
 
   Widget _buildEmailTF() {
     return Column(
@@ -317,7 +315,6 @@ class _SignUpState extends State<SignUpScreen> {
     birthdateController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
   }
 
-
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -378,23 +375,3 @@ class _SignUpState extends State<SignUpScreen> {
     );
   }
 }
-
-const kHintTextStyle = TextStyle(
-  color: Colors.white54,
-);
-
-const kLabelStyle = TextStyle(
-  fontWeight: FontWeight.bold,
-);
-
-final kBoxDecorationStyle = BoxDecoration(
-  color: const Color(0xFF6CA8F1),
-  borderRadius: BorderRadius.circular(10.0),
-  boxShadow: const [
-    BoxShadow(
-      color: Colors.black12,
-      blurRadius: 6.0,
-      offset: Offset(0, 2),
-    ),
-  ],
-);
