@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lux_chain/screens/FAQ_screen.dart';
 import 'package:lux_chain/screens/login_screen.dart';
 import 'package:lux_chain/screens/personal_data_screen.dart';
+import 'package:lux_chain/screens/report_bug_screen.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 
@@ -43,13 +45,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
             CustomCard(
               icon: Icons.question_mark,
               text: 'FAQ',
-              onPressed: () => {},
+              onPressed: () => {
+                Navigator.of(context).pushNamed(FAQScreen.id),
+              },
             ),
             const SizedBox(height: 30.0),
             CustomCard(
               icon: Icons.bug_report,
               text: 'Report a bug',
-              onPressed: () => {},
+              onPressed: () => {
+                Navigator.of(context).pushNamed(ReportBugScreen.id),
+              },
             ),
             const SizedBox(height: 30.0),
             CustomCard(
