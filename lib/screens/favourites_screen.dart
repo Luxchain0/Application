@@ -236,15 +236,9 @@ class CustomBottomBigCard extends StatelessWidget {
                 Text('Serial: $serialNumber'),
                 SizedBox(height: screenWidth * 0.02),
                 Text('Quote Possedute: $quotePossedute/$quoteTotali'),
-                Text('Controvalore: ' +
-                    formatAmountFromDouble(controvalore) +
-                    ' €'),
-                Text('Valore di acquisto: ' +
-                    formatAmountFromDouble(valoreDiAcquisto) +
-                    ' €'),
-                Text('Valore attuale: ' +
-                    formatAmountFromDouble(valoreAttuale) +
-                    ' €'),
+                Text('Controvalore: ${formatAmountFromDouble(controvalore)}€'),
+                Text('Valore di acquisto: ${formatAmountFromDouble(valoreDiAcquisto)}€'),
+                Text('Valore attuale: ${formatAmountFromDouble(valoreAttuale)}€'),
               ],
             ),
           ],

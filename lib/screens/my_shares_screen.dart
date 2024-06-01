@@ -82,7 +82,7 @@ class _MySharesScreenState extends State<MySharesScreen> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    double heigh = SizeConfig.screenH!;
+    double height = SizeConfig.screenH!;
     double width = SizeConfig.screenW!;
 
     return Scaffold(
@@ -92,13 +92,13 @@ class _MySharesScreenState extends State<MySharesScreen> {
           controller: _scrollController,
           child: Padding(
             padding: EdgeInsets.symmetric(
-                horizontal: width * 0.05, vertical: heigh * 0.02),
+                horizontal: width * 0.05, vertical: height * 0.02),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  margin: EdgeInsets.symmetric(vertical: heigh * 0.02),
+                  margin: EdgeInsets.symmetric(vertical: height * 0.02),
                   child: Text(
                     'My Shares on Sale',
                     style: TextStyle(
@@ -114,7 +114,9 @@ class _MySharesScreenState extends State<MySharesScreen> {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasData) {
-                      return Column(
+                      List<MySharesOnSale> mySharesOnSale = snapshot.data!;
+                      return mySharesOnSale.isNotEmpty 
+                      ? Column(
                         children: snapshot.data!
                             .map((myShare) => CustomCard(
                                   watchID: myShare.watchId,
@@ -123,7 +125,16 @@ class _MySharesScreenState extends State<MySharesScreen> {
                                   imgUrl: getDownloadURL(myShare.imageuri),
                                 ))
                             .toList(),
-                      );
+                      )
+                      : Container(
+                                    margin: EdgeInsets.symmetric(
+                                        vertical: height * 0.01),
+                                    child: const Center(
+                                      child: Text(
+                                          textAlign: TextAlign.center,
+                                          '\nYou\'ve not put up for sale any shares of your watches.'),
+                                    ),
+                                  );
                     } else if (snapshot.hasError) {
                       return Text('${snapshot.error}');
                     } else {
@@ -256,7 +267,7 @@ class CustomCard extends StatelessWidget {
                   Text('Serial: $watchID'),
                   SizedBox(height: screenWidth * 0.02),
                   Text('Shares on Sale: ${myShare.sharesOnSale}'),
-                  Text('at this price: ${myShare.onSaleAtPrice}'),
+                  Text('At this price: ${myShare.onSaleAtPrice}'),
                   Text('Share price: ${formatAmountFromDouble(myShare.price)}€'),
             ],
           ),

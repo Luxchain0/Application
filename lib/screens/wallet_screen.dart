@@ -370,6 +370,7 @@ class CustomBottomBigCard extends StatelessWidget {
                   ),
                 ),
                 Text('Reference: ${walletWatch.modelType.reference}'),
+                Text('Retail Price: ${formatAmountFromDouble(walletWatch.retailPrice)}€'),
                 SizedBox(height: screenWidth * 0.02),
                 Text(
                     'Owned Shares: ${walletWatch.owned}/${walletWatch.numberOfShares}'),
