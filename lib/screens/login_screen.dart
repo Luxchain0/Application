@@ -110,7 +110,6 @@ class _LoginState extends State<LoginScreen> {
       alignment: Alignment.centerRight,
       child: TextButton(
         onPressed: () async {
-          print('Forgot Password Button Pressed');
           if (emailController.text.isNotEmpty) {
             _forgotPassword(emailController.text, context);
           } else {

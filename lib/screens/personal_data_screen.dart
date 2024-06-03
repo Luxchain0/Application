@@ -1,7 +1,12 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:lux_chain/screens/reset_password_screen.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:lux_chain/screens/settings_screen.dart';
+import 'package:http/http.dart' as http;
+
+const String authURL = 'https://luxchain-flame.vercel.app/api/auth';
 
 class PersonalDataScreen extends StatefulWidget {
   static const String id = 'PersonalDataScreen';
@@ -58,7 +63,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
               style: const ButtonStyle(
                   minimumSize: MaterialStatePropertyAll(Size(30, 50))),
               onPressed: () async {
-                // api call
+                _changePassword(user.getString('email')!, context);
               },
               child: const Row(
                 mainAxisSize: MainAxisSize.max,
@@ -80,6 +85,32 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
         ),
       ),
     );
+  }
+
+  void _changePassword(String email, BuildContext context) async {
+    try {
+      final response = await http
+          .post(
+            Uri.parse("$authURL/reset_pwd_code"),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: jsonEncode({'email': email}),
+          )
+          .timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        // Successo
+        Navigator.pushNamed(context, ResetPasswordScreen.id);
+      } else {
+        // Errore
+        // Mostra un messaggio di errore
+        snackbar(context, 'Server error, please try again later');
+      }
+    } catch (e) {
+      snackbar(context, 'Connection error with the server');
+      throw Exception('[FLUTTER] Login Error: $e');
+    }
   }
 }
 
