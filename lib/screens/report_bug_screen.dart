@@ -71,8 +71,8 @@ class ReportBugScreen extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  submitBugReport(reportController
-                      .text, context); // Chiamata alla funzione per inviare il report
+                  _submitBugReport(reportController.text,
+                      context); // Chiamata alla funzione per inviare il report
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
@@ -94,7 +94,7 @@ class ReportBugScreen extends StatelessWidget {
     );
   }
 
-  void submitBugReport(String bugDescription, BuildContext context) async {
+  void _submitBugReport(String bugDescription, BuildContext context) async {
     final response = await http.post(
       Uri.parse("$URL/report"),
       body: {'message': bugDescription},
@@ -128,7 +128,8 @@ class ReportBugScreen extends StatelessWidget {
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Error'),
-            content: const Text('Failed to report the bug. Please try again later.'),
+            content:
+                const Text('Failed to report the bug. Please try again later.'),
             actions: <Widget>[
               TextButton(
                 onPressed: () {

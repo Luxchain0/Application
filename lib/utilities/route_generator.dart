@@ -6,6 +6,7 @@ import 'package:lux_chain/screens/market_screen.dart';
 import 'package:lux_chain/screens/modify_on_sale_share.dart';
 import 'package:lux_chain/screens/personal_data_screen.dart';
 import 'package:lux_chain/screens/report_bug_screen.dart';
+import 'package:lux_chain/screens/reset_password_screen.dart';
 import 'package:lux_chain/screens/sell_screen.dart';
 import 'package:lux_chain/screens/wallet_screen.dart';
 import 'package:lux_chain/screens/watch_screen.dart';
@@ -26,6 +27,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const HomeScreen());
       case LoginScreen.id:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
+      case ResetPasswordScreen.id:
+        return MaterialPageRoute(builder: (_) => const ResetPasswordScreen());
       case SettingsScreen.id:
         return MaterialPageRoute(builder: (_) => const SettingsScreen());
       case PersonalDataScreen.id:

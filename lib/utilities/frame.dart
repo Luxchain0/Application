@@ -107,7 +107,6 @@ void snackbar(context, text) {
         text,
         textAlign: TextAlign.center,
       ),
-      backgroundColor: const Color.fromARGB(255, 49, 115, 168),
       duration: const Duration(milliseconds: 10000),
     ),
   );

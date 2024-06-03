@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:lux_chain/screens/reset_password_screen.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:lux_chain/screens/signup_screen.dart';
@@ -7,7 +8,7 @@ import 'package:http/http.dart' as http;
 //import 'package:google_sign_in/google_sign_in.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-const String apiURL = 'https://luxchain-flame.vercel.app/api/auth';
+const String authURL = 'https://luxchain-flame.vercel.app/api/auth';
 
 /*
 const List<String> scopes = <String>[
@@ -104,13 +105,17 @@ class _LoginState extends State<LoginScreen> {
     );
   }
 
-/*
   Widget _buildForgotPasswordBtn() {
     return Container(
       alignment: Alignment.centerRight,
       child: TextButton(
-        onPressed: () {
+        onPressed: () async {
           print('Forgot Password Button Pressed');
+          if (emailController.text.isNotEmpty) {
+            _forgotPassword(emailController.text, context);
+          } else {
+            snackbar(context, 'email missing');
+          }
         },
         child: const Text(
           'Forgot Password?',
@@ -119,7 +124,6 @@ class _LoginState extends State<LoginScreen> {
       ),
     );
   }
-*/
 
   Widget _buildShowPasswordBox() {
     return SizedBox(
@@ -164,7 +168,7 @@ class _LoginState extends State<LoginScreen> {
 
               final response = await http
                   .post(
-                    Uri.parse('$apiURL/login'),
+                    Uri.parse('$authURL/login'),
                     headers: <String, String>{
                       'Content-Type': 'application/json; charset=UTF-8',
                     },
@@ -263,7 +267,7 @@ class _LoginState extends State<LoginScreen> {
               print('Google Login Pressed');
 
               // login via browser:
-              final Uri url = Uri.parse('$apiURL/login/google');
+              final Uri url = Uri.parse('$authURL/login/google');
               if (!await launchUrl(url)) {
                 throw Exception('Could not launch $url');
               }
@@ -371,6 +375,32 @@ class _LoginState extends State<LoginScreen> {
     );
   }
 
+  void _forgotPassword(String email, BuildContext context) async {
+    try {
+      final response = await http
+          .post(
+            Uri.parse("$authURL/reset_pwd_code"),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: jsonEncode({'email': email}),
+          )
+          .timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        // Successo
+        Navigator.pushNamed(context, ResetPasswordScreen.id);
+      } else {
+        // Errore
+        // Mostra un messaggio di errore
+        snackbar(context, 'Server error, please try again later');
+      }
+    } catch (e) {
+      snackbar(context, 'Connection error with the server');
+      throw Exception('[FLUTTER] Login Error: $e');
+    }
+  }
+
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
@@ -419,10 +449,9 @@ class _LoginState extends State<LoginScreen> {
                     _buildEmailTF(),
                     const SizedBox(height: 30.0),
                     _buildPasswordTF(),
-                    const SizedBox(height: 10.0),
+                    _buildForgotPasswordBtn(),
                     _buildShowPasswordBox(),
                     const SizedBox(height: 10.0),
-                    //_buildForgotPasswordBtn(),
                     _buildLoginBtn(),
                     _buildSignInWithText(),
                     _buildSocialBtnRow(),

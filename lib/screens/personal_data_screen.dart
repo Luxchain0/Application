@@ -57,7 +57,9 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
             OutlinedButton(
               style: const ButtonStyle(
                   minimumSize: MaterialStatePropertyAll(Size(30, 50))),
-              onPressed: () => {},
+              onPressed: () async {
+                // api call
+              },
               child: const Row(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
