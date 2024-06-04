@@ -58,8 +58,12 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return const Center(
-                                child: CircularProgressIndicator());
+                            return Container(
+                              constraints: BoxConstraints(minHeight: height*0.8, maxWidth: width),
+                              child: const Center(
+                                child: CircularProgressIndicator()
+                              )
+                            );
                           } else if (snapshot.hasData) {
                             List<Favorite> favorites = snapshot.data!;
                             return favorites.isNotEmpty

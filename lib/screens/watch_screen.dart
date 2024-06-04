@@ -76,23 +76,30 @@ class _WatchScreenState extends State<WatchScreen> {
                 SizedBox(height: height * 0.02),
                 _buildDescription(),
                 SizedBox(height: height * 0.03),
-                Expanded(child: FutureBuilder(
-                  future: candles,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
-                    } else if (snapshot.hasData) {
-                      final List<Candle> candles = snapshot.data as List<Candle>;
-                      return Candlesticks(
-                        candles: candles,
-                      );
-                    } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    } else {
-                      return const SizedBox();
-                    }
-                  },
-                )),
+                //TODO: questa è la parte del grafico
+                // Container(
+                //   constraints: BoxConstraints(maxHeight: height * 0.6),
+                //   child: FutureBuilder(
+                //     future: candles,
+                //     builder: (context, snapshot) {
+                //       if (snapshot.connectionState == ConnectionState.waiting) {
+                //         return const CircularProgressIndicator();
+                //       } else if (snapshot.hasData) {
+                //         print('Qua ci arriviamo');
+                //         print(snapshot.data);
+                //         final List<Candle> candles =
+                //             snapshot.data as List<Candle>;
+                //         return Candlesticks(
+                //           candles: candles,
+                //         );
+                //       } else if (snapshot.hasError) {
+                //         return Text('Error: ${snapshot.error}');
+                //       } else {
+                //         return const SizedBox();
+                //       }
+                //     },
+                //   ),
+                // ),
                 SizedBox(height: height * 0.01),
                 _buildSellButton(),
                 SizedBox(height: height * 0.02),

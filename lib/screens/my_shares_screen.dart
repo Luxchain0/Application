@@ -112,7 +112,12 @@ class _MySharesScreenState extends State<MySharesScreen> {
                   future: futureMySharesOnSale,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
+                      return Container(
+                          constraints: BoxConstraints(minHeight: height*0.6, maxWidth: width),
+                          child: const Center(
+                            child: CircularProgressIndicator()
+                          )
+                        );
                     } else if (snapshot.hasData) {
                       List<MySharesOnSale> mySharesOnSale = snapshot.data!;
                       return mySharesOnSale.isNotEmpty 

@@ -431,7 +431,7 @@ class RefreshingWalletData extends StatefulWidget {
 }
 
 class _RefreshingWalletDataState extends State<RefreshingWalletData> {
-  bool isBlur = false;
+  bool isBlur = true;
 
   @override
   Widget build(BuildContext context) {
@@ -454,7 +454,9 @@ class _RefreshingWalletDataState extends State<RefreshingWalletData> {
                           isBlur = !isBlur;
                         }),
                       },
-                  icon: Icon(Icons.visibility)),
+                  icon: isBlur
+                  ? const Icon(Icons.visibility_off)
+                  : const Icon(Icons.visibility)),
             ],
           ),
         ),
