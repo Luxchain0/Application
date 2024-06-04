@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:candlesticks/candlesticks.dart';
 import 'package:http/http.dart' as http;
 import 'package:lux_chain/utilities/api_models.dart';
 
@@ -377,15 +378,14 @@ Future<APIStatus> removeFromFavourite(int userID, int watchID) async {
   }
 }
 
-Future<List<MyCandle>> getCandles(String timeFrame, int watchID) async {
+Future<List<Candle>> getCandles(String timeFrame, int watchID) async {
   try {
     final response = await http.get(
       Uri.parse('$apiURL/graph/$timeFrame/$watchID'),
     );
     if (response.statusCode == 200) {
-      //TODO:
       final List<dynamic> data = jsonDecode(response.body);
-      return data.map((e) => MyCandle.fromJson(e)).toList();
+      return data.map((e) => Candle.fromJson([DateTime.parse(e['date']).millisecondsSinceEpoch, e['first_trade_price'], e['max'], e['min'], e['last_trade_price'], e['avg']])).toList();
     } else {
       throw Exception('[FLUTTER] Failed to load candles');
     }

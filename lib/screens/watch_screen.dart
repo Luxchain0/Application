@@ -1,5 +1,8 @@
+import 'package:candlesticks/candlesticks.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:lux_chain/screens/buy_screen.dart';
 import 'package:lux_chain/screens/sell_screen.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
@@ -24,9 +27,8 @@ class _WatchScreenState extends State<WatchScreen> {
   late Future<List<ShareOnSale>> futureSharesData = Future.value([]);
   late int sharesOwned = 0;
   late double increaseRate = 0;
-  late Future<List<MyCandle>> candlesMin;
-  late Future<List<MyCandle>> candlesHour;
-  late Future<List<MyCandle>> candlesDay;
+  late Future<List<Candle>> candles = Future.value([]);
+  final String interval = 'day';
 
   @override
   void initState() {
@@ -47,11 +49,7 @@ class _WatchScreenState extends State<WatchScreen> {
       increaseRate = additionalData.increaseRate;
     });
 
-    //TODO: implementare questa roba qua per le candele del grafico
-    //candlesDay = getCandles('day', widget.watch.watchId);
-    //candlesHour = getCandles('hour', widget.watch.watchId);
-    //candlesMin = getCandles('min', widget.watch.watchId);
-
+    candles = getCandles(interval, widget.watch.watchId);
   }
 
   @override
@@ -78,7 +76,23 @@ class _WatchScreenState extends State<WatchScreen> {
                 SizedBox(height: height * 0.02),
                 _buildDescription(),
                 SizedBox(height: height * 0.03),
-                _buildLineChart(),
+                Expanded(child: FutureBuilder(
+                  future: candles,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshot.hasData) {
+                      final List<Candle> candles = snapshot.data as List<Candle>;
+                      return Candlesticks(
+                        candles: candles,
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      return const SizedBox();
+                    }
+                  },
+                )),
                 SizedBox(height: height * 0.01),
                 _buildSellButton(),
                 SizedBox(height: height * 0.02),
