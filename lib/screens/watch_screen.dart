@@ -47,9 +47,10 @@ class _WatchScreenState extends State<WatchScreen> {
       increaseRate = additionalData.increaseRate;
     });
 
-    candlesDay = getCandles('day', widget.watch.watchId);
-    candlesHour = getCandles('hour', widget.watch.watchId);
-    candlesMin = getCandles('min', widget.watch.watchId);
+    //TODO: implementare questa roba qua per le candele del grafico
+    //candlesDay = getCandles('day', widget.watch.watchId);
+    //candlesHour = getCandles('hour', widget.watch.watchId);
+    //candlesMin = getCandles('min', widget.watch.watchId);
 
   }
 

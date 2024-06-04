@@ -228,8 +228,12 @@ Future<List<MarketPlaceWatch>> getSearchedWatches(
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);
-      return data.map((e) => MarketPlaceWatch.fromJson(e)).toList();
+      if (response.body == "\"no watch found\"") {
+        return [];
+      } else {
+        final List<dynamic> data = jsonDecode(response.body);
+        return data.map((e) => MarketPlaceWatch.fromJson(e)).toList();
+      }
     } else {
       throw Exception('[FLUTTER] Failed to load market place watches');
     }
@@ -379,7 +383,6 @@ Future<List<MyCandle>> getCandles(String timeFrame, int watchID) async {
       Uri.parse('$apiURL/graph/$timeFrame/$watchID'),
     );
     if (response.statusCode == 200) {
-      
       //TODO:
       final List<dynamic> data = jsonDecode(response.body);
       return data.map((e) => MyCandle.fromJson(e)).toList();
