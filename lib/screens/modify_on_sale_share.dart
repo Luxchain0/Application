@@ -40,51 +40,92 @@ class _ModifyOnSaleShareScreenState extends State<ModifyOnSaleShareScreen> {
     super.dispose();
   }
 
+  showLoaderDialog(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      content: Row(
+        children: [
+          const CircularProgressIndicator(),
+          Container(
+              margin: const EdgeInsets.only(left: 7),
+              child: const Text("Loading...")),
+        ],
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   Future<void> _saveChanges() async {
     print("SAVING");
 
-    try {
-      SharedPreferences user = await getUserData();
-      int userId = user.getInt('accountid') ?? 0;
-
-      var result = await updateSharesOnSale(
-        modifySharesOnSale.watchid, // watchId
-        userId,
-        modifySharesOnSale.proposalPrice, // oldPrice
-        double.parse(myController.text), // newPrice
-        onSaleAtPrice, // numberOfShares
-      );
-
-      if (result == APIStatus.success) {
-        _showDialog(
-          'Successo',
-          'The change of shares for sale was successful',
-          onClose: () {
-            Navigator.pushNamed(context, FrameScreen.id);
-          },
-        );
-      } else {
-        _showDialog('Errore', 'Something went wrong. Try again in a while');
-      }
-    } catch (error) {
-      print('Errore: $error');
-      _showDialog('Errore', 'An unexpected error occurred. Please try again.');
-    }
-  }
-
-  void _showDialog(String title, String message, {VoidCallback? onClose}) {
-    showDialog(
+    return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(title),
-        content: Text(message),
-        actions: [
+        title: const Text('Are you sure?'),
+        content: const Text(
+            'This action will modify the price and/or the quantity of your on sale shares'),
+        actions: <Widget>[
           TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              if (onClose != null) onClose();
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Nope'),
+          ),
+          TextButton(
+            onPressed: () async {
+              showLoaderDialog(context);
+              SharedPreferences user = await getUserData();
+              int userId = user.getInt('accountid') ?? 0;
+
+              var result = await updateSharesOnSale(
+                modifySharesOnSale.watchid, // watchId
+                userId,
+                modifySharesOnSale.proposalPrice, // oldPrice
+                double.parse(myController.text), // newPrice
+                onSaleAtPrice, // numberOfShares
+              );
+              if (APIStatus.success == result) {
+                showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pushNamedAndRemoveUntil(context,
+                                    FrameScreen.id, (_) => false);
+                              },
+                              child: const Text('Close'),
+                            ),
+                          ],
+                          title: const Text('Action performed'),
+                          contentPadding: const EdgeInsets.all(20.0),
+                          content: const Text(
+                              'The on sale shares have been correctly modified'),
+                        ));
+              } else {
+                showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pushNamedAndRemoveUntil(context,
+                                    FrameScreen.id, (_) => false);
+                              },
+                              child: const Text('Close'),
+                            ),
+                          ],
+                          title: const Text('Warning'),
+                          contentPadding: const EdgeInsets.all(20.0),
+                          content: const Text(
+                              'Something went wrong. Try to redo the operations.\nIf the problem consist contuct us.'),
+                        ));
+              }
             },
-            child: const Text('Close'),
+            child: Text('Yep'),
           ),
         ],
       ),
