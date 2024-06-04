@@ -461,3 +461,57 @@ class Favorite {
     );
   }
 }
+
+class MyCandle {
+  /// DateTime for the candle
+  final DateTime date;
+
+  /// The highet price during this candle lifetime
+  final double high;
+
+  /// The lowest price during this candle lifetime
+  final double low;
+
+  /// Price at the beginnig of the period
+  final double open;
+
+  /// Price at the end of the period
+  final double close;
+
+  /// Volume is the number of shares of a
+  /// security traded during a given period of time.
+  final double volume;
+
+  bool get isBull => open <= close;
+
+  MyCandle({
+    required this.date,
+    required this.high,
+    required this.low,
+    required this.open,
+    required this.close,
+    required this.volume,
+  });
+
+  factory MyCandle.fromJson(Map<String, dynamic> json) {
+    return MyCandle(
+      date: json['date'] as DateTime,
+      high: json['high'] as double,
+      low: json['low'] as double,
+      open: json['open'] as double,
+      close: json['close'] as double,
+      volume: json['volume'] as double
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
+

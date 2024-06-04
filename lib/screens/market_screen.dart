@@ -113,9 +113,7 @@ class _MarketScreenState extends State<MarketScreen> {
                     ),
                     Expanded(
                         child: GestureDetector(
-                      onTap: () {
-                        print('Ghe semo');
-                      },
+                      onTap: () {},
                       child: TextFormField(
                         autofocus: false,
                         style: const TextStyle(
@@ -124,14 +122,13 @@ class _MarketScreenState extends State<MarketScreen> {
                         decoration: const InputDecoration(
                             hintText: 'Search the name of the watch',
                             border: InputBorder.none),
-                        onChanged: (value) {
+                        onChanged: (value) async {
                           if (value.isNotEmpty) {
                             try {
                               setState(() {
                                 _nameSearchedWatch = value;
                               });
                             } catch (e) {
-                              // Gestire il caso in cui la stringa non possa essere convertita in double
                               print(e.toString());
                             }
                           }
@@ -153,19 +150,18 @@ class _MarketScreenState extends State<MarketScreen> {
                     List<MarketPlaceWatch> marketWatchesList = snapshot.data!;
                     List<MarketPlaceWatch> filteredList = [];
 
-                      for (MarketPlaceWatch w in marketWatchesList) {
-                        if (_nameSearchedWatch == '') {
-                          filteredList = marketWatchesList;
-                        } else if (w.modelType.model.brandname
-                                .contains(_nameSearchedWatch) 
-                                || w.modelType.model.modelname
-                                .contains(_nameSearchedWatch)
-                                ) {
-                          filteredList.add(w);
-                        } else {
-                          filteredList = marketWatchesList;
-                        }
+                    for (MarketPlaceWatch w in marketWatchesList) {
+                      if (_nameSearchedWatch == '') {
+                        filteredList = marketWatchesList;
+                      } else if (w.modelType.model.brandname
+                              .contains(_nameSearchedWatch) ||
+                          w.modelType.model.modelname
+                              .contains(_nameSearchedWatch)) {
+                        filteredList.add(w);
+                      } else {
+                        filteredList = marketWatchesList;
                       }
+                    }
                     return Column(
                       children: filteredList
                           .map((watch) => CustomBottomBigCard(

@@ -54,8 +54,8 @@ class _SellScreenState extends State<SellScreen> {
                           actions: [
                             TextButton(
                               onPressed: () {
-                                Navigator.pushReplacementNamed(
-                                    context, FrameScreen.id);
+                                Navigator.pushNamedAndRemoveUntil(
+                                    context, FrameScreen.id, (_) => false);
                               },
                               child: const Text('Close'),
                             ),
@@ -72,7 +72,8 @@ class _SellScreenState extends State<SellScreen> {
                           actions: [
                             TextButton(
                               onPressed: () {
-                                Navigator.pushNamed(context, FrameScreen.id);
+                               Navigator.pushNamedAndRemoveUntil(
+                                    context, FrameScreen.id, (_) => false);
                               },
                               child: const Text('Close'),
                             ),

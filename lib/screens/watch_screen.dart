@@ -24,6 +24,9 @@ class _WatchScreenState extends State<WatchScreen> {
   late Future<List<ShareOnSale>> futureSharesData = Future.value([]);
   late int sharesOwned = 0;
   late double increaseRate = 0;
+  late Future<List<MyCandle>> candlesMin;
+  late Future<List<MyCandle>> candlesHour;
+  late Future<List<MyCandle>> candlesDay;
 
   @override
   void initState() {
@@ -43,6 +46,11 @@ class _WatchScreenState extends State<WatchScreen> {
       sharesOwned = additionalData.sharesOwned;
       increaseRate = additionalData.increaseRate;
     });
+
+    candlesDay = getCandles('day', widget.watch.watchId);
+    candlesHour = getCandles('hour', widget.watch.watchId);
+    candlesMin = getCandles('min', widget.watch.watchId);
+
   }
 
   @override
@@ -157,7 +165,8 @@ class _WatchScreenState extends State<WatchScreen> {
         Text("Year: ${widget.watch.year}"),
         Text("Case material: ${widget.watch.modelType.casematerial}"),
         Text("Bracelet material: ${widget.watch.modelType.braceletmaterial}"),
-        Text("Retail Price: ${formatAmountFromDouble(widget.watch.retailPrice)} €"),
+        Text(
+            "Retail Price: ${formatAmountFromDouble(widget.watch.retailPrice)} €"),
         Text(
             'Actual Price: ${formatAmountFromDouble(widget.watch.actualPrice)} €'),
         Text("Conditions: ${widget.watch.condition}"),
@@ -165,7 +174,8 @@ class _WatchScreenState extends State<WatchScreen> {
         RefreshingAdditionalData(
             sharesOwned: sharesOwned, increaseRate: increaseRate),
         SizedBox(height: SizeConfig.screenW! * 0.05),
-        const Text('Description:', style: TextStyle(fontWeight: FontWeight.bold)),
+        const Text('Description:',
+            style: TextStyle(fontWeight: FontWeight.bold)),
         Text(widget.watch.description, textAlign: TextAlign.justify),
       ],
     );

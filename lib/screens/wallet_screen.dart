@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:lux_chain/screens/wallet_specs_screen.dart';
 import 'package:lux_chain/screens/watch_screen.dart';
@@ -22,6 +21,7 @@ class WalletScreen extends StatefulWidget {
 class _WalletScreenState extends State<WalletScreen> {
   late Future<List<WalletWatch>> futureWatches;
   late Future<WalletData> futureWalletData;
+
   bool isBlurred = true;
   int pageNumber = 1;
   int watchPerPage = 10;
@@ -267,20 +267,23 @@ class CustomBottomBigCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.of(context).pushNamed(WatchScreen.id,
-          arguments: Watch(
-              watchId: walletWatch.watchId,
-              condition: walletWatch.condition,
-              numberOfShares: walletWatch.numberOfShares,
-              retailPrice: walletWatch.retailPrice,
-              initialPrice: walletWatch.initialPrice,
-              actualPrice: walletWatch.actualPrice,
-              dialcolor: walletWatch.dialcolor,
-              year: walletWatch.year,
-              imageuri: walletWatch.imageuri,
-              description: walletWatch.description,
-              modelTypeId: walletWatch.modelTypeId,
-              modelType: walletWatch.modelType)),
+      onTap: () => {
+        print(watchID),
+        Navigator.of(context).pushNamed(WatchScreen.id,
+            arguments: Watch(
+                watchId: walletWatch.watchId,
+                condition: walletWatch.condition,
+                numberOfShares: walletWatch.numberOfShares,
+                retailPrice: walletWatch.retailPrice,
+                initialPrice: walletWatch.initialPrice,
+                actualPrice: walletWatch.actualPrice,
+                dialcolor: walletWatch.dialcolor,
+                year: walletWatch.year,
+                imageuri: walletWatch.imageuri,
+                description: walletWatch.description,
+                modelTypeId: walletWatch.modelTypeId,
+                modelType: walletWatch.modelType))
+      },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 7),
         padding: const EdgeInsets.only(top: 10, bottom: 10),
@@ -365,7 +368,8 @@ class CustomBottomBigCard extends StatelessWidget {
                   ),
                 ),
                 Text('Reference: ${walletWatch.modelType.reference}'),
-                Text('Retail Price: ${formatAmountFromDouble(walletWatch.retailPrice)}€'),
+                Text(
+                    'Retail Price: ${formatAmountFromDouble(walletWatch.retailPrice)}€'),
                 SizedBox(height: screenWidth * 0.02),
                 Text(
                     'Owned Shares: ${walletWatch.owned}/${walletWatch.numberOfShares}'),

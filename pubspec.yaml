@@ -29,6 +29,7 @@ dependencies:
   path_provider: ^2.1.3
   excel: ^4.0.3
   country_picker: ^2.0.26
+  candlesticks: ^2.1.0
 
 dev_dependencies:
   flutter_test:

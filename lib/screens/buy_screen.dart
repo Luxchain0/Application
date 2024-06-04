@@ -80,8 +80,8 @@ class _BuyScreenState extends State<BuyScreen> {
                           actions: [
                             TextButton(
                               onPressed: () {
-                                Navigator.pushReplacementNamed(
-                                    context, FrameScreen.id);
+                                Navigator.pushNamedAndRemoveUntil(
+                                    context, FrameScreen.id, (_) => false);
                               },
                               child: const Text('Close'),
                             ),
@@ -98,14 +98,15 @@ class _BuyScreenState extends State<BuyScreen> {
                           actions: [
                             TextButton(
                               onPressed: () {
-                                Navigator.pushNamed(context, FrameScreen.id);
+                                Navigator.pushNamedAndRemoveUntil(
+                                    context, FrameScreen.id, (_) => false);
                               },
                               child: const Text('Close'),
                             ),
                           ],
                           title: const Text('Warning'),
                           contentPadding: const EdgeInsets.all(20.0),
-                          content: Text('Something went wrong'),
+                          content: Text('Something went wrong. Try to redo the operations. If the problem consist contuct us.'),
                         ));
               }
             },
