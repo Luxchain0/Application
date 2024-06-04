@@ -52,6 +52,27 @@ class _BuyScreenState extends State<BuyScreen> {
         : false;
   }
 
+  showLoaderDialog(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      content: Row(
+        children: [
+          const CircularProgressIndicator(),
+          Container(
+            margin: const EdgeInsets.only(left: 7), 
+            child: const Text("Loading...")
+          ),
+        ],
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   handleBuy() async {
     // ignore: avoid_print
     print("BUYING");
@@ -59,15 +80,17 @@ class _BuyScreenState extends State<BuyScreen> {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: new Text('Are you sure?'),
-        content: Text('This action will irreversibly buy the selected shares.'),
+        title: const Text('Are you sure?'),
+        content: const Text(
+            'This action will irreversibly buy the selected shares.'),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Nope'),
+            child: const Text('Nope'),
           ),
           TextButton(
             onPressed: () async {
+              showLoaderDialog(context);
               Future<SharedPreferences> userFuture = getUserData();
               SharedPreferences user = await userFuture;
               int userId = user.getInt('accountid') ?? 0;
@@ -106,7 +129,8 @@ class _BuyScreenState extends State<BuyScreen> {
                           ],
                           title: const Text('Warning'),
                           contentPadding: const EdgeInsets.all(20.0),
-                          content: Text('Something went wrong. Try to redo the operations. If the problem consist contuct us.'),
+                          content: Text(
+                              'Something went wrong. Try to redo the operations. If the problem consist contuct us.'),
                         ));
               }
             },
@@ -195,7 +219,8 @@ class _BuyScreenState extends State<BuyScreen> {
                 ),
                 Text('Total shares: ${buyInfo.numberOfShares}'),
                 Text('Share on sale: ${buyInfo.sharesOnSale}'),
-                Text('Actual Price: ${formatAmountFromDouble(buyInfo.actualPrice)}€'),
+                Text(
+                    'Actual Price: ${formatAmountFromDouble(buyInfo.actualPrice)}€'),
                 Text(
                     'Proposal price: ${formatAmountFromDouble(buyInfo.proposalPrice)} €'),
                 SizedBox(
