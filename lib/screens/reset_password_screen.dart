@@ -157,6 +157,7 @@ class _ResetPasswordState extends State<ResetPasswordScreen> {
                         onPressed: () {
                           Navigator.pop(context);
                           Navigator.pop(context);
+                          Navigator.pop(context);
                         },
                         child: const Text('OK'),
                       ),

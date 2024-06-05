@@ -110,11 +110,28 @@ class _LoginState extends State<LoginScreen> {
       alignment: Alignment.centerRight,
       child: TextButton(
         onPressed: () async {
-          if (emailController.text.isNotEmpty) {
-            _forgotPassword(emailController.text, context);
-          } else {
-            snackbar(context, 'email missing');
-          }
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Do you want to reset your password?'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('No'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    if (emailController.text.isNotEmpty) {
+                      _forgotPassword(emailController.text, context);
+                    } else {
+                      snackbar(context, 'email missing');
+                    }
+                  },
+                  child: const Text('Yes'),
+                ),
+              ],
+            ),
+          );
         },
         child: const Text(
           'Forgot Password?',
@@ -272,8 +289,11 @@ class _LoginState extends State<LoginScreen> {
               }
 
               try {
-                final Uri callbackUrl = Uri.parse('$apiURL/'); // modificare con nuova chiamata
-                final response = await http.get(callbackUrl).timeout(const Duration(seconds: 10));
+                final Uri callbackUrl =
+                    Uri.parse('$apiURL/'); // modificare con nuova chiamata
+                final response = await http
+                    .get(callbackUrl)
+                    .timeout(const Duration(seconds: 10));
                 if (response.statusCode == 200) {
                   Map<String, dynamic> myMap = jsonDecode(response.body);
                   for (var v in myMap['user'].entries) {
@@ -289,7 +309,6 @@ class _LoginState extends State<LoginScreen> {
                 snackbar(context, 'Connection error with the server');
                 throw Exception('[FLUTTER] Login Error: $e');
               }
-
 
               /* login via google_sign_in plugin
               try {
@@ -412,8 +431,8 @@ class _LoginState extends State<LoginScreen> {
           context: context,
           builder: (BuildContext context) => AlertDialog(
             title: const Text(
-                'An email with the password reset code has been sent'),
-            content: const Text('Insert it in the next screen'),
+                'An email with the password reset code has been sent to you'),
+            content: const Text('Insert the code in the next screen'),
             actions: <Widget>[
               TextButton(
                 onPressed: () {
