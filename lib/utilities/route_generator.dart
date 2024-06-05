@@ -24,6 +24,15 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const HomeScreen());
       case LoginScreen.id:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
+<<<<<<< Updated upstream
+=======
+      case ResetPasswordScreen.id:
+        if (args is String) {
+          return MaterialPageRoute(
+              builder: (_) => ResetPasswordScreen(email: args));
+        }
+        break;
+>>>>>>> Stashed changes
       case SettingsScreen.id:
         return MaterialPageRoute(builder: (_) => const SettingsScreen());
       case PersonalDataScreen.id:

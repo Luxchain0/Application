@@ -390,6 +390,54 @@ class _LoginState extends State<LoginScreen> {
     );
   }
 
+<<<<<<< Updated upstream
+=======
+  void _forgotPassword(String email, BuildContext context) async {
+    try {
+      final response = await http
+          .post(
+            Uri.parse("$authURL/reset_pwd_code"),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: jsonEncode({'email': email}),
+          )
+          .timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        // Successo
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: const Text(
+                'An email with the password reset code has been sent'),
+            content: const Text('Insert it in the next screen'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, ResetPasswordScreen.id,
+                      arguments: email);
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      } else if (response.statusCode == 401) {
+        // Errore
+        snackbar(context, 'Incorrect email');
+      } else {
+        // Errore
+        snackbar(context, 'Server error, please try again later');
+      }
+    } catch (e) {
+      snackbar(context, 'Connection error with the server');
+      throw Exception('[FLUTTER] Login Error: $e');
+    }
+  }
+
+>>>>>>> Stashed changes
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
