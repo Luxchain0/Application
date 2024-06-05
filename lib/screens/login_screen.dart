@@ -446,11 +446,12 @@ class _LoginState extends State<LoginScreen> {
           ),
         );
       } else if (response.statusCode == 401) {
-        // Errore
+        // chiudi dialog e manda messaggio di errore
+        Navigator.pop(context);
         snackbar(context, 'Incorrect email');
       } else {
-        // Errore
-        // Mostra un messaggio di errore
+        // chiudi dialog e manda messaggio di errore
+        Navigator.pop(context);
         snackbar(context, 'Server error, please try again later');
       }
     } catch (e) {
