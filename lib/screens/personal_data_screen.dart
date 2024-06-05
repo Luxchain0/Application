@@ -101,7 +101,24 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
 
       if (response.statusCode == 200) {
         // Successo
-        Navigator.pushNamed(context, ResetPasswordScreen.id);
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: const Text(
+                'An email with the password reset code has been sent'),
+            content: const Text('Insert it in the next screen'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, ResetPasswordScreen.id,
+                      arguments: email);
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
       } else {
         // Errore
         // Mostra un messaggio di errore

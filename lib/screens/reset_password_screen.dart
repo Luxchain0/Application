@@ -9,7 +9,9 @@ const String authURL = 'https://luxchain-flame.vercel.app/api/auth';
 
 class ResetPasswordScreen extends StatefulWidget {
   static const String id = 'ResetPasswordScreen';
-  const ResetPasswordScreen({Key? key}) : super(key: key);
+  final String email;
+
+  const ResetPasswordScreen({required this.email, super.key});
 
   @override
   State<ResetPasswordScreen> createState() => _ResetPasswordState();
@@ -18,7 +20,6 @@ class ResetPasswordScreen extends StatefulWidget {
 class _ResetPasswordState extends State<ResetPasswordScreen> {
   bool _showPassword = false;
   final TextEditingController codeController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   Widget _buildResetCodeTF() {
@@ -48,41 +49,6 @@ class _ResetPasswordState extends State<ResetPasswordScreen> {
                 color: Colors.white,
               ),
               hintText: 'Enter your reset code',
-              hintStyle: kHintTextStyle,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildEmailTF() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        const Text(
-          'Email',
-          style: kLabelStyle,
-        ),
-        const SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
-          height: 60.0,
-          child: TextField(
-            controller: emailController,
-            keyboardType: TextInputType.emailAddress,
-            style: const TextStyle(
-              color: Colors.white,
-            ),
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.account_box,
-                color: Colors.white,
-              ),
-              hintText: 'Enter your email',
               hintStyle: kHintTextStyle,
             ),
           ),
@@ -161,16 +127,14 @@ class _ResetPasswordState extends State<ResetPasswordScreen> {
         onPressed: () async {
           if (codeController.text.isEmpty) {
             snackbar(context, 'Code missing');
-          } else if (emailController.text.isEmpty) {
-            snackbar(context, 'Email missing');
           } else if (passwordController.text.isEmpty) {
             snackbar(context, 'New password missing');
           } else {
             try {
               Map<String, String> requestBody = {
-                'code': emailController.text,
+                'code': codeController.text,
                 'new_password': passwordController.text,
-                'email': emailController.text,
+                'email': widget.email,
               };
 
               final response = await http
@@ -186,27 +150,23 @@ class _ResetPasswordState extends State<ResetPasswordScreen> {
               if (response.statusCode == 200) {
                 showDialog(
                   context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: const Text('Password changed successfully'),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text('OK'),
-                        ),
-                      ],
-                    );
-                  },
+                  builder: (BuildContext context) => AlertDialog(
+                    title: const Text('Password changed successfully'),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        },
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  ),
                 );
-                Navigator.pop(context);
-              } else if (response.statusCode == 400) {
-                snackbar(context, 'Incorrect email');
               } else if (response.statusCode == 401) {
                 snackbar(context, 'Incorrect reset code');
               } else {
-                snackbar(context, 'Server error, please try again later');
+                snackbar(context, response.body);
               }
             } catch (e) {
               snackbar(context, 'Connection error with the server');
@@ -233,7 +193,6 @@ class _ResetPasswordState extends State<ResetPasswordScreen> {
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    emailController.dispose();
     passwordController.dispose();
     super.dispose();
   }
@@ -276,8 +235,6 @@ class _ResetPasswordState extends State<ResetPasswordScreen> {
                     ),
                     const SizedBox(height: 30.0),
                     _buildResetCodeTF(),
-                    const SizedBox(height: 30.0),
-                    _buildEmailTF(),
                     const SizedBox(height: 30.0),
                     _buildPasswordTF(),
                     const SizedBox(height: 10.0),

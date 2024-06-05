@@ -271,6 +271,26 @@ class _LoginState extends State<LoginScreen> {
                 throw Exception('Could not launch $url');
               }
 
+              try {
+                final Uri callbackUrl = Uri.parse('$apiURL/'); // modificare con nuova chiamata
+                final response = await http.get(callbackUrl).timeout(const Duration(seconds: 10));
+                if (response.statusCode == 200) {
+                  Map<String, dynamic> myMap = jsonDecode(response.body);
+                  for (var v in myMap['user'].entries) {
+                    saveData(v.key, v.value);
+                  }
+                  token = myMap['token'];
+                  saveData('token', token);
+                  Navigator.pushReplacementNamed(context, FrameScreen.id);
+                } else {
+                  snackbar(context, 'Server error, please try again later');
+                }
+              } catch (e) {
+                snackbar(context, 'Connection error with the server');
+                throw Exception('[FLUTTER] Login Error: $e');
+              }
+
+
               /* login via google_sign_in plugin
               try {
                 //await _googleSignIn.disconnect();
@@ -388,7 +408,27 @@ class _LoginState extends State<LoginScreen> {
 
       if (response.statusCode == 200) {
         // Successo
-        Navigator.pushNamed(context, ResetPasswordScreen.id);
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: const Text(
+                'An email with the password reset code has been sent'),
+            content: const Text('Insert it in the next screen'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, ResetPasswordScreen.id,
+                      arguments: email);
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      } else if (response.statusCode == 401) {
+        // Errore
+        snackbar(context, 'Incorrect email');
       } else {
         // Errore
         // Mostra un messaggio di errore
