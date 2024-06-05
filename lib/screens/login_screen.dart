@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:lux_chain/screens/reset_password_screen.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:lux_chain/screens/signup_screen.dart';
@@ -7,7 +8,7 @@ import 'package:http/http.dart' as http;
 //import 'package:google_sign_in/google_sign_in.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-const String apiURL = 'https://luxchain-flame.vercel.app/api/auth';
+const String authURL = 'https://luxchain-flame.vercel.app/api/auth';
 
 /*
 const List<String> scopes = <String>[
@@ -104,13 +105,16 @@ class _LoginState extends State<LoginScreen> {
     );
   }
 
-/*
   Widget _buildForgotPasswordBtn() {
     return Container(
       alignment: Alignment.centerRight,
       child: TextButton(
-        onPressed: () {
-          print('Forgot Password Button Pressed');
+        onPressed: () async {
+          if (emailController.text.isNotEmpty) {
+            _forgotPassword(emailController.text, context);
+          } else {
+            snackbar(context, 'email missing');
+          }
         },
         child: const Text(
           'Forgot Password?',
@@ -119,7 +123,6 @@ class _LoginState extends State<LoginScreen> {
       ),
     );
   }
-*/
 
   Widget _buildShowPasswordBox() {
     return SizedBox(
@@ -164,7 +167,7 @@ class _LoginState extends State<LoginScreen> {
 
               final response = await http
                   .post(
-                    Uri.parse('$apiURL/login'),
+                    Uri.parse('$authURL/login'),
                     headers: <String, String>{
                       'Content-Type': 'application/json; charset=UTF-8',
                     },
@@ -179,7 +182,8 @@ class _LoginState extends State<LoginScreen> {
                 }
                 token = myMap['token'];
                 saveData('token', token);
-                Navigator.pushReplacementNamed(context, FrameScreen.id);
+                Navigator.pushNamedAndRemoveUntil(
+                    context, FrameScreen.id, (_) => false);
               } else if (response.statusCode == 401) {
                 snackbar(context, 'Incorrect email or password');
               } else {
@@ -262,7 +266,7 @@ class _LoginState extends State<LoginScreen> {
               print('Google Login Pressed');
 
               // login via browser:
-              final Uri url = Uri.parse('$apiURL/login/google');
+              final Uri url = Uri.parse('$authURL/login/google');
               if (!await launchUrl(url)) {
                 throw Exception('Could not launch $url');
               }
@@ -390,8 +394,6 @@ class _LoginState extends State<LoginScreen> {
     );
   }
 
-<<<<<<< Updated upstream
-=======
   void _forgotPassword(String email, BuildContext context) async {
     try {
       final response = await http
@@ -429,6 +431,7 @@ class _LoginState extends State<LoginScreen> {
         snackbar(context, 'Incorrect email');
       } else {
         // Errore
+        // Mostra un messaggio di errore
         snackbar(context, 'Server error, please try again later');
       }
     } catch (e) {
@@ -437,7 +440,6 @@ class _LoginState extends State<LoginScreen> {
     }
   }
 
->>>>>>> Stashed changes
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
@@ -486,10 +488,9 @@ class _LoginState extends State<LoginScreen> {
                     _buildEmailTF(),
                     const SizedBox(height: 30.0),
                     _buildPasswordTF(),
-                    const SizedBox(height: 10.0),
+                    _buildForgotPasswordBtn(),
                     _buildShowPasswordBox(),
                     const SizedBox(height: 10.0),
-                    //_buildForgotPasswordBtn(),
                     _buildLoginBtn(),
                     _buildSignInWithText(),
                     _buildSocialBtnRow(),
@@ -504,14 +505,6 @@ class _LoginState extends State<LoginScreen> {
     );
   }
 }
-
-const kHintTextStyle = TextStyle(
-  color: Colors.white54,
-);
-
-const kLabelStyle = TextStyle(
-  fontWeight: FontWeight.bold,
-);
 
 final kBoxDecorationStyle = BoxDecoration(
   color: const Color(0xFF6CA8F1),

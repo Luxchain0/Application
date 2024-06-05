@@ -1,5 +1,3 @@
-import 'dart:math';
-
 class BuyInfo {
   final int watchid;
   final String brandName;

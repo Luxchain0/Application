@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:lux_chain/screens/FAQ_screen.dart';
 import 'package:lux_chain/screens/buy_screen.dart';
 import 'package:lux_chain/screens/login_screen.dart';
 import 'package:lux_chain/screens/market_screen.dart';
 import 'package:lux_chain/screens/modify_on_sale_share.dart';
 import 'package:lux_chain/screens/personal_data_screen.dart';
+import 'package:lux_chain/screens/report_bug_screen.dart';
+import 'package:lux_chain/screens/reset_password_screen.dart';
 import 'package:lux_chain/screens/sell_screen.dart';
 import 'package:lux_chain/screens/wallet_screen.dart';
 import 'package:lux_chain/screens/watch_screen.dart';
@@ -24,19 +27,20 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const HomeScreen());
       case LoginScreen.id:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
-<<<<<<< Updated upstream
-=======
       case ResetPasswordScreen.id:
         if (args is String) {
           return MaterialPageRoute(
               builder: (_) => ResetPasswordScreen(email: args));
         }
         break;
->>>>>>> Stashed changes
       case SettingsScreen.id:
         return MaterialPageRoute(builder: (_) => const SettingsScreen());
       case PersonalDataScreen.id:
         return MaterialPageRoute(builder: (_) => const PersonalDataScreen());
+      case FAQScreen.id:
+        return MaterialPageRoute(builder: (_) => const FAQScreen());
+      case ReportBugScreen.id:
+        return MaterialPageRoute(builder: (_) => ReportBugScreen());
       case BuyScreen.id:
         if (args is BuyInfo) {
           return MaterialPageRoute(builder: (_) => BuyScreen(buyInfo: args));

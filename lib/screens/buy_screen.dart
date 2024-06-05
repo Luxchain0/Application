@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/frame.dart';
@@ -51,6 +52,27 @@ class _BuyScreenState extends State<BuyScreen> {
         : false;
   }
 
+  showLoaderDialog(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      content: Row(
+        children: [
+          const CircularProgressIndicator(),
+          Container(
+            margin: const EdgeInsets.only(left: 7), 
+            child: const Text("Loading...")
+          ),
+        ],
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   handleBuy() async {
     // ignore: avoid_print
     print("BUYING");
@@ -58,15 +80,17 @@ class _BuyScreenState extends State<BuyScreen> {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: new Text('Are you sure?'),
-        content: Text('This action will irreversibly buy the selected shares.'),
+        title: const Text('Are you sure?'),
+        content: const Text(
+            'This action will irreversibly buy the selected shares.'),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Nope'),
+            child: const Text('Nope'),
           ),
           TextButton(
             onPressed: () async {
+              showLoaderDialog(context);
               Future<SharedPreferences> userFuture = getUserData();
               SharedPreferences user = await userFuture;
               int userId = user.getInt('accountid') ?? 0;
@@ -79,8 +103,8 @@ class _BuyScreenState extends State<BuyScreen> {
                           actions: [
                             TextButton(
                               onPressed: () {
-                                Navigator.pushReplacementNamed(
-                                    context, FrameScreen.id);
+                                Navigator.pushNamedAndRemoveUntil(
+                                    context, FrameScreen.id, (_) => false);
                               },
                               child: const Text('Close'),
                             ),
@@ -97,14 +121,16 @@ class _BuyScreenState extends State<BuyScreen> {
                           actions: [
                             TextButton(
                               onPressed: () {
-                                Navigator.pushNamed(context, FrameScreen.id);
+                                Navigator.pushNamedAndRemoveUntil(
+                                    context, FrameScreen.id, (_) => false);
                               },
                               child: const Text('Close'),
                             ),
                           ],
                           title: const Text('Warning'),
                           contentPadding: const EdgeInsets.all(20.0),
-                          content: Text('Something went wrong'),
+                          content: Text(
+                              'Something went wrong. Try to redo the operations. If the problem consist contuct us.'),
                         ));
               }
             },
@@ -191,9 +217,10 @@ class _BuyScreenState extends State<BuyScreen> {
                 SizedBox(
                   height: heigh * 0.02,
                 ),
-                Text('Actual Price: ${buyInfo.actualPrice}€'),
                 Text('Total shares: ${buyInfo.numberOfShares}'),
                 Text('Share on sale: ${buyInfo.sharesOnSale}'),
+                Text(
+                    'Actual Price: ${formatAmountFromDouble(buyInfo.actualPrice)}€'),
                 Text(
                     'Proposal price: ${formatAmountFromDouble(buyInfo.proposalPrice)} €'),
                 SizedBox(
@@ -207,6 +234,9 @@ class _BuyScreenState extends State<BuyScreen> {
                       height: heigh * 0.04,
                       child: TextFormField(
                           keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
                           autofocus: false,
                           style: const TextStyle(
                               fontWeight: FontWeight.normal,

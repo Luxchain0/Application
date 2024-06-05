@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lux_chain/screens/FAQ_screen.dart';
 import 'package:lux_chain/screens/login_screen.dart';
 import 'package:lux_chain/screens/personal_data_screen.dart';
+import 'package:lux_chain/screens/report_bug_screen.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 
@@ -17,87 +19,71 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     double width = SizeConfig.screenW!;
-    double heigh = SizeConfig.screenH!;
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-            horizontal: width * 0.1, vertical: heigh * 0.02),
+      body: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 40.0,
+          vertical: 40.0,
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 15.0, vertical: 15.0),
-                  child: CircleAvatar(
-                    radius: width * 0.1,
-                    backgroundColor: Colors.amber,
+            const SizedBox(height: 10.0),
+            userInfo(width),
+            const SizedBox(height: 30.0),
+            CustomCard(
+              icon: Icons.person,
+              text: 'Personal data',
+              onPressed: () => {
+                Navigator.of(context).pushNamed(PersonalDataScreen.id),
+              },
+            ),
+            const SizedBox(height: 30.0),
+            CustomCard(
+              icon: Icons.question_mark,
+              text: 'FAQ',
+              onPressed: () => {
+                Navigator.of(context).pushNamed(FAQScreen.id),
+              },
+            ),
+            const SizedBox(height: 30.0),
+            CustomCard(
+              icon: Icons.bug_report,
+              text: 'Report a bug',
+              onPressed: () => {
+                Navigator.of(context).pushNamed(ReportBugScreen.id),
+              },
+            ),
+            const SizedBox(height: 30.0),
+            CustomCard(
+              icon: Icons.logout,
+              text: 'Logout',
+              onPressed: () => {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Are you sure?'),
+                    content: const Text(
+                        'This action will bring you to the LoginIn page.'),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Nope'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          _logout(context);
+                        },
+                        child: const Text('Yep'),
+                      ),
+                    ],
                   ),
                 ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "${user.getString('firstname')!} ${user.getString('lastname')!}",
-                      style: TextStyle(
-                          fontFamily: 'Bebas',
-                          fontSize: width * 0.07,
-                          height: 1),
-                    ),
-                    Text(user.getString('email')!),
-                  ],
-                )
-              ],
+              },
             ),
-            CustomCard(
-                icon: Icons.person,
-                text: 'Personal data',
-                onPressed: () => {
-                      Navigator.of(context).pushNamed(PersonalDataScreen.id),
-                    }),
-            CustomCard(
-                icon: Icons.notifications,
-                text: 'Notification',
-                onPressed: () => {}),
-            CustomCard(
-                icon: Icons.chat_bubble,
-                text: 'Assistance',
-                onPressed: () => {}),
-            CustomCard(
-                icon: Icons.question_mark, text: 'FAQ', onPressed: () => {}),
-            CustomCard(icon: Icons.book, text: 'Guide', onPressed: () => {}),
-            CustomCard(
-                icon: Icons.lightbulb, text: 'Hints', onPressed: () => {}),
-            CustomCard(
-                icon: Icons.translate, text: 'Language', onPressed: () => {}),
-            CustomCard(
-                icon: Icons.logout,
-                text: 'Logout',
-                onPressed: () => {
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: new Text('Are you sure?'),
-                      content: Text('This action will bring you to the LoginIn page.'),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: Text('Nope'),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            _logout(context);
-                          },
-                          child: Text('Yep'),
-                        ),
-                      ],
-                    ),
-                  ),
-                }),
           ],
         ),
       ),
@@ -144,8 +130,34 @@ class CustomCard extends StatelessWidget {
   }
 }
 
+userInfo(width) {
+  return Row(
+    children: [
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
+        child: CircleAvatar(
+          radius: width * 0.1,
+          backgroundColor: Colors.amber,
+        ),
+      ),
+      Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "${user.getString('firstname')!} ${user.getString('lastname')!}",
+            style: TextStyle(
+                fontFamily: 'Bebas', fontSize: width * 0.07, height: 1),
+          ),
+          Text(user.getString('email')!),
+        ],
+      )
+    ],
+  );
+}
+
 _logout(context) async {
   await user.clear();
   token = '';
-  Navigator.pushReplacementNamed(context, LoginScreen.id);
+  Navigator.pushNamedAndRemoveUntil(context, LoginScreen.id, (_) => false);
 }

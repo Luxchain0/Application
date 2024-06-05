@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:lux_chain/screens/dashboard_excel_screen.dart';
 import 'package:lux_chain/screens/history_screen.dart';
-//import 'package:lux_chain/screens/home_screen.dart';
 import 'package:lux_chain/screens/market_screen.dart';
 import 'package:lux_chain/screens/my_shares_screen.dart';
 import 'package:lux_chain/screens/settings_screen.dart';
 import 'package:lux_chain/screens/wallet_screen.dart';
 import 'package:lux_chain/screens/favourites_screen.dart';
-import 'package:lux_chain/screens/watch_screen.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -110,8 +107,27 @@ void snackbar(context, text) {
         text,
         textAlign: TextAlign.center,
       ),
-      backgroundColor: const Color.fromARGB(255, 49, 115, 168),
       duration: const Duration(milliseconds: 10000),
     ),
   );
 }
+
+const kHintTextStyle = TextStyle(
+  color: Colors.white54,
+);
+
+const kLabelStyle = TextStyle(
+  fontWeight: FontWeight.bold,
+);
+
+final kBoxDecorationStyle = BoxDecoration(
+  color: const Color(0xFF6CA8F1),
+  borderRadius: BorderRadius.circular(10.0),
+  boxShadow: const [
+    BoxShadow(
+      color: Colors.black12,
+      blurRadius: 6.0,
+      offset: Offset(0, 2),
+    ),
+  ],
+);

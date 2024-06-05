@@ -1,5 +1,8 @@
+import 'package:candlesticks/candlesticks.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:lux_chain/screens/buy_screen.dart';
 import 'package:lux_chain/screens/sell_screen.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
@@ -9,13 +12,12 @@ import 'package:lux_chain/utilities/models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/utils.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class WatchScreen extends StatefulWidget {
   static const String id = 'WatchScreen';
   final Watch watch;
 
-  const WatchScreen({required this.watch, super.key});
+  const WatchScreen({required this.watch, Key? key}) : super(key: key);
 
   @override
   State<WatchScreen> createState() => _WatchScreenState();
@@ -25,6 +27,8 @@ class _WatchScreenState extends State<WatchScreen> {
   late Future<List<ShareOnSale>> futureSharesData = Future.value([]);
   late int sharesOwned = 0;
   late double increaseRate = 0;
+  late Future<List<Candle>> candles = Future.value([]);
+  final String interval = 'day';
 
   @override
   void initState() {
@@ -32,244 +36,306 @@ class _WatchScreenState extends State<WatchScreen> {
     _initializeData();
   }
 
-  void _initializeData() async {
+  Future<void> _initializeData() async {
     futureSharesData = getSharesOfTheWatchOnSell(widget.watch.watchId);
+
+    final user = await getUserData();
+    final userId = user.getInt('accountid') ?? 0;
+
+    final additionalData =
+        await getWatchAdditionalData(userId, widget.watch.watchId);
+    setState(() {
+      sharesOwned = additionalData.sharesOwned;
+      increaseRate = additionalData.increaseRate;
+    });
+
+    candles = getCandles(interval, widget.watch.watchId);
   }
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
-    double heigh = SizeConfig.screenH!;
-    double width = SizeConfig.screenW!;
-
-    List<FlSpot> chartData = const [
-      FlSpot(0, 1),
-      FlSpot(1, 3),
-      FlSpot(2, 10),
-      FlSpot(3, 7),
-      FlSpot(4, 12),
-      FlSpot(5, 13),
-      FlSpot(6, 17),
-      FlSpot(7, 15),
-      FlSpot(8, 20),
-    ];
+    final SizeConfig sizeConfig = SizeConfig();
+    sizeConfig.init(context);
+    final double height = SizeConfig.screenH!;
+    final double width = SizeConfig.screenW!;
 
     return Scaffold(
       appBar: appBar(width),
       body: SafeArea(
         bottom: false,
         child: SingleChildScrollView(
-            child: Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: width * 0.05, vertical: heigh * 0.02),
-          child: Column(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: width * 0.05, vertical: height * 0.02),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.watch.modelType.model.brandname,
-                          style: TextStyle(
-                              color: Colors.black38,
-                              height: 1,
-                              fontSize: width * 0.07,
-                              fontFamily: 'Bebas'),
-                        ),
-                        Text(
-                          widget.watch.modelType.model.modelname,
-                          style: TextStyle(
-                              color: Colors.black87,
-                              height: 1,
-                              fontSize: width * 0.08,
-                              fontFamily: 'Bebas'),
-                        ),
-                      ],
-                    ),
-                    RefreshingButton(watchID: widget.watch.watchId),
-                  ],
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: heigh * 0.02),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(
-                      color: Colors.black26,
-                      width: 1,
-                    ),
-                    borderRadius: const BorderRadius.all(Radius.circular(7)),
-                  ),
-                  alignment: Alignment.center,
-                  child: FutureBuilder<String>(
-                    future: getDownloadURL(widget.watch.imageuri),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator();
-                      } else if (snapshot.hasData) {
-                        return ClipRRect(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(7)),
-                          child: Image.network(
-                            snapshot.data!,
-                            fit: BoxFit.cover,
-                          ),
-                        );
-                      } else if (snapshot.hasError) {
-                        return const Icon(Icons.error);
-                      } else {
-                        return const SizedBox();
-                      }
-                    },
-                  ),
-                ),
-                Text("Reference: ${widget.watch.modelType.reference}"),
-                Text("Seriale: ${widget.watch.watchId}"),
-                Text("Year: ${widget.watch.year}"),
-                Text("Case material: ${widget.watch.modelType.casematerial}"),
-                Text(
-                    "Bracelet material: ${widget.watch.modelType.braceletmaterial}"),
-                Text(
-                    'Initial Price: ${formatAmountFromDouble(widget.watch.initialPrice)} €'),
-                Text(
-                    'Actual Price: ${formatAmountFromDouble(widget.watch.actualPrice)} €'),
-                Text("Conditions: ${widget.watch.condition}"),
-                Text("Shares: ${widget.watch.numberOfShares}"),
-                RefreshingAdditionalData(watchID: widget.watch.watchId),
-                SizedBox(height: width * 0.05),
-                const Text(
-                  'Description: ',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  widget.watch.description,
-                  textAlign: TextAlign.justify,
-                ),
-                SizedBox(
-                  height: heigh * 0.03,
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  width: double.infinity,
-                  height: 300,
-                  child: LineChart(
-                    LineChartData(
-                        borderData: FlBorderData(show: false),
-                        lineBarsData: [
-                          LineChartBarData(spots: chartData),
-                        ]),
-                  ),
-                ),
-                SizedBox(
-                  height: heigh * 0.01,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    OutlinedButton(
-                      onPressed: () => {
-                        Navigator.pushNamed(context, SellScreen.id,
-                            arguments: SellInfo(
-                              watchid: widget.watch.watchId,
-                              brandName: widget.watch.modelType.model.brandname,
-                              modelName: widget.watch.modelType.model.modelname,
-                              actualPrice: widget.watch.actualPrice,
-                              sharesOwned: sharesOwned,
-                              image: getDownloadURL(widget.watch.imageuri),
-                              proposalPrice: widget.watch.actualPrice,
-                              numberOfShares: widget.watch.numberOfShares,
-                            ))
-                      },
-                      style: ButtonStyle(
-                          backgroundColor:
-                              const MaterialStatePropertyAll(Colors.blueAccent),
-                          foregroundColor:
-                              MaterialStateProperty.all<Color>(Colors.white),
-                          minimumSize: MaterialStateProperty.all<Size>(
-                              Size(width * 0.25, width * 0.08))),
-                      child: const Text(
-                        'Sell',
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: heigh * 0.02,
-                ),
-                Text(
-                  'Best shares for sale: ',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: heigh * 0.02),
-                ),
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        'Price share',
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 1, vertical: 20),
-                        child: Text(
-                          'n° shares',
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                    Expanded(flex: 2, child: SizedBox())
-                  ],
-                ),
-                FutureBuilder<List<ShareOnSale>>(
-                    future: futureSharesData,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
-                      } else if (snapshot.hasData) {
-                        List<ShareOnSale> sharesOnSale = snapshot.data!;
-                        return sharesOnSale.isNotEmpty
-                            ? Column(
-                                children: sharesOnSale.map(
-                                  (share) {
-                                    return CustomRowForQuote(
-                                        width: width,
-                                        numberOfQuotes: share.shareCount,
-                                        quotePrice: share.price,
-                                        buyInfo: BuyInfo(
-                                          watchid: widget.watch.watchId,
-                                          brandName: widget
-                                              .watch.modelType.model.brandname,
-                                          modelName: widget
-                                              .watch.modelType.model.modelname,
-                                          actualPrice: widget.watch.actualPrice,
-                                          sharesOnSale:
-                                              widget.watch.numberOfShares,
-                                          image: getDownloadURL(
-                                              widget.watch.imageuri),
-                                          proposalPrice: share.price,
-                                          numberOfShares: share.shareCount,
-                                        ));
-                                  },
-                                ).toList(),
-                              )
-                            : const SizedBox();
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else {
-                        return const SizedBox();
-                      }
-                    })
-              ]),
-        )),
+                _buildWatchInfo(),
+                SizedBox(height: height * 0.02),
+                _buildImageContainer(height),
+                SizedBox(height: height * 0.02),
+                _buildDescription(),
+                SizedBox(height: height * 0.03),
+                //TODO: questa è la parte del grafico
+                // Container(
+                //   constraints: BoxConstraints(maxHeight: height * 0.6),
+                //   child: FutureBuilder(
+                //     future: candles,
+                //     builder: (context, snapshot) {
+                //       if (snapshot.connectionState == ConnectionState.waiting) {
+                //         return const CircularProgressIndicator();
+                //       } else if (snapshot.hasData) {
+                //         print('Qua ci arriviamo');
+                //         print(snapshot.data);
+                //         final List<Candle> candles =
+                //             snapshot.data as List<Candle>;
+                //         return Candlesticks(
+                //           candles: candles,
+                //         );
+                //       } else if (snapshot.hasError) {
+                //         return Text('Error: ${snapshot.error}');
+                //       } else {
+                //         return const SizedBox();
+                //       }
+                //     },
+                //   ),
+                // ),
+                SizedBox(height: height * 0.01),
+                _buildSellButton(),
+                SizedBox(height: height * 0.02),
+                _buildBestSharesForSale(),
+                SizedBox(height: height * 0.02),
+                _buildSharesOnSaleList(),
+              ],
+            ),
+          ),
+        ),
       ),
+    );
+  }
+
+  Widget _buildWatchInfo() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.watch.modelType.model.brandname,
+              style: TextStyle(
+                color: Colors.black38,
+                height: 1,
+                fontSize: SizeConfig.screenW! * 0.07,
+                fontFamily: 'Bebas',
+              ),
+            ),
+            Text(
+              widget.watch.modelType.model.modelname,
+              style: TextStyle(
+                color: Colors.black87,
+                height: 1,
+                fontSize: SizeConfig.screenW! * 0.08,
+                fontFamily: 'Bebas',
+              ),
+            ),
+          ],
+        ),
+        RefreshingButton(watchID: widget.watch.watchId),
+      ],
+    );
+  }
+
+  Widget _buildImageContainer(double height) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: height * 0.02),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: Colors.black26, width: 1),
+        borderRadius: BorderRadius.circular(7),
+      ),
+      alignment: Alignment.center,
+      child: FutureBuilder<String>(
+        future: getDownloadURL(widget.watch.imageuri),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          } else if (snapshot.hasData) {
+            return ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(7)),
+              child: Image.network(
+                snapshot.data!,
+                fit: BoxFit.cover,
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return const Icon(Icons.error);
+          } else {
+            return const SizedBox();
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildDescription() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Reference: ${widget.watch.modelType.reference}"),
+        Text("Serial: ${widget.watch.watchId}"),
+        Text("Year: ${widget.watch.year}"),
+        Text("Case material: ${widget.watch.modelType.casematerial}"),
+        Text("Bracelet material: ${widget.watch.modelType.braceletmaterial}"),
+        Text(
+            "Retail Price: ${formatAmountFromDouble(widget.watch.retailPrice)} €"),
+        Text(
+            'Actual Price: ${formatAmountFromDouble(widget.watch.actualPrice)} €'),
+        Text("Conditions: ${widget.watch.condition}"),
+        Text("Shares: ${widget.watch.numberOfShares}"),
+        RefreshingAdditionalData(
+            sharesOwned: sharesOwned, increaseRate: increaseRate),
+        SizedBox(height: SizeConfig.screenW! * 0.05),
+        const Text('Description:',
+            style: TextStyle(fontWeight: FontWeight.bold)),
+        Text(widget.watch.description, textAlign: TextAlign.justify),
+      ],
+    );
+  }
+
+  Widget _buildLineChart() {
+    final List<FlSpot> chartData = [
+      const FlSpot(0, 1),
+      const FlSpot(2, 3),
+      const FlSpot(2, 10),
+      const FlSpot(3, 7),
+      const FlSpot(4, 12),
+      const FlSpot(5, 13),
+      const FlSpot(6, 17),
+      const FlSpot(7, 15),
+      const FlSpot(8, 20),
+    ];
+
+    return Container(
+      padding: const EdgeInsets.all(10),
+      width: double.infinity,
+      height: 300,
+      child: LineChart(
+        LineChartData(
+          borderData: FlBorderData(show: false),
+          lineBarsData: [
+            LineChartBarData(
+              spots: chartData,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSellButton() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        OutlinedButton(
+          onPressed: () => Navigator.pushNamed(
+            context,
+            SellScreen.id,
+            arguments: SellInfo(
+              watchid: widget.watch.watchId,
+              brandName: widget.watch.modelType.model.brandname,
+              modelName: widget.watch.modelType.model.modelname,
+              actualPrice: widget.watch.actualPrice,
+              sharesOwned: sharesOwned,
+              image: getDownloadURL(widget.watch.imageuri),
+              proposalPrice: widget.watch.actualPrice,
+              numberOfShares: widget.watch.numberOfShares,
+            ),
+          ),
+          style: ButtonStyle(
+            backgroundColor:
+                MaterialStateProperty.all<Color>(Colors.blueAccent),
+            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+            minimumSize: MaterialStateProperty.all<Size>(
+                Size(SizeConfig.screenW! * 0.25, SizeConfig.screenW! * 0.08)),
+          ),
+          child: const Text('Sell'),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBestSharesForSale() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Best shares for sale:',
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: SizeConfig.screenH! * 0.02),
+        ),
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 2,
+              child: Text('Price share', textAlign: TextAlign.center),
+            ),
+            Expanded(
+              flex: 1,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 1, vertical: 20),
+                child: Text('n° shares', textAlign: TextAlign.center),
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: SizedBox(),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSharesOnSaleList() {
+    return FutureBuilder<List<ShareOnSale>>(
+      future: futureSharesData,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasData) {
+          List<ShareOnSale> sharesOnSale = snapshot.data!;
+          return sharesOnSale.isNotEmpty
+              ? Column(
+                  children: sharesOnSale.map(
+                    (share) {
+                      return CustomRowForQuote(
+                        width: SizeConfig.screenW!,
+                        numberOfQuotes: share.shareCount,
+                        quotePrice: share.price,
+                        buyInfo: BuyInfo(
+                          watchid: widget.watch.watchId,
+                          brandName: widget.watch.modelType.model.brandname,
+                          modelName: widget.watch.modelType.model.modelname,
+                          actualPrice: widget.watch.actualPrice,
+                          sharesOnSale: widget.watch.numberOfShares,
+                          image: getDownloadURL(widget.watch.imageuri),
+                          proposalPrice: share.price,
+                          numberOfShares: share.shareCount,
+                        ),
+                      );
+                    },
+                  ).toList(),
+                )
+              : const SizedBox();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          return const SizedBox();
+        }
+      },
     );
   }
 }
@@ -281,12 +347,12 @@ class CustomRowForQuote extends StatelessWidget {
   final BuyInfo buyInfo;
 
   const CustomRowForQuote({
-    super.key,
     required this.width,
     required this.numberOfQuotes,
     required this.quotePrice,
     required this.buyInfo,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -310,16 +376,17 @@ class CustomRowForQuote extends StatelessWidget {
           ),
         ),
         Expanded(
-            flex: 1,
-            child: Text(
-              numberOfQuotes.toString(),
-              textAlign: TextAlign.center,
-            )),
+          flex: 1,
+          child: Text(
+            numberOfQuotes.toString(),
+            textAlign: TextAlign.center,
+          ),
+        ),
         Expanded(
           flex: 2,
           child: CustomButton(
             screenWidth: width,
-            backgorundColor: const Color.fromARGB(255, 17, 45, 68),
+            backgroundColor: const Color.fromARGB(255, 17, 45, 68),
             textColor: Colors.white,
             text: 'Buy',
             buyInfo: buyInfo,
@@ -332,32 +399,33 @@ class CustomRowForQuote extends StatelessWidget {
 
 class CustomButton extends StatelessWidget {
   final double screenWidth;
-  final Color backgorundColor;
+  final Color backgroundColor;
   final Color textColor;
   final String text;
   final BuyInfo buyInfo;
 
-  const CustomButton(
-      {super.key,
-      required this.screenWidth,
-      required this.backgorundColor,
-      required this.textColor,
-      required this.text,
-      required this.buyInfo});
+  const CustomButton({
+    required this.screenWidth,
+    required this.backgroundColor,
+    required this.textColor,
+    required this.text,
+    required this.buyInfo,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
-      onPressed: () => {
-        Navigator.pushNamed(context, BuyScreen.id, arguments: buyInfo),
-      },
+      onPressed: () =>
+          Navigator.pushNamed(context, BuyScreen.id, arguments: buyInfo),
       style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(backgorundColor),
-          foregroundColor: MaterialStateProperty.all<Color>(textColor),
-          minimumSize: MaterialStateProperty.all<Size>(
-              Size(screenWidth * 0.05, screenWidth * 0.08)),
-          maximumSize: MaterialStateProperty.all<Size>(
-              Size(screenWidth * 0.05, screenWidth * 0.08))),
+        backgroundColor: MaterialStateProperty.all<Color>(backgroundColor),
+        foregroundColor: MaterialStateProperty.all<Color>(textColor),
+        minimumSize: MaterialStateProperty.all<Size>(
+            Size(screenWidth * 0.05, screenWidth * 0.08)),
+        maximumSize: MaterialStateProperty.all<Size>(
+            Size(screenWidth * 0.05, screenWidth * 0.08)),
+      ),
       child: Text(
         text,
         style: const TextStyle(
@@ -371,7 +439,7 @@ class CustomButton extends StatelessWidget {
 class RefreshingButton extends StatefulWidget {
   final int watchID;
 
-  const RefreshingButton({required this.watchID, super.key});
+  const RefreshingButton({required this.watchID, Key? key}) : super(key: key);
 
   @override
   _RefreshingButtonState createState() => _RefreshingButtonState();
@@ -386,12 +454,9 @@ class _RefreshingButtonState extends State<RefreshingButton> {
     _initializeData();
   }
 
-  void _initializeData() async {
-    Future<SharedPreferences> userFuture = getUserData();
-    SharedPreferences user = await userFuture;
-
-    // Assume that you have a specific key in SharedPreferences
-    int userId = user.getInt('accountid') ?? 0;
+  Future<void> _initializeData() async {
+    final user = await getUserData();
+    final userId = user.getInt('accountid') ?? 0;
 
     setState(() {
       isFavourite = getFavorite(userId, widget.watchID);
@@ -401,85 +466,58 @@ class _RefreshingButtonState extends State<RefreshingButton> {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-        onPressed: () async {
-          Future<SharedPreferences> userFuture = getUserData();
-          SharedPreferences user = await userFuture;
-
-          // Assume that you have a specific key in SharedPreferences
-          int userId = user.getInt('accountid') ?? 0;
-          bool isFav = await isFavourite;
-          if (isFav) {
-            APIStatus removeStatus =
-                await removeFromFavourite(userId, widget.watchID);
-            if (removeStatus == APIStatus.success) {
-              setState(() {
-                isFavourite = Future.value(false);
-              });
-            }
+      onPressed: () async {
+        final user = await getUserData();
+        final userId = user.getInt('accountid') ?? 0;
+        final isFav = await isFavourite;
+        if (isFav) {
+          final removeStatus =
+              await removeFromFavourite(userId, widget.watchID);
+          if (removeStatus == APIStatus.success) {
+            setState(() {
+              isFavourite = Future.value(false);
+            });
+          }
+        } else {
+          final addStatus = await addToFavourite(userId, widget.watchID);
+          if (addStatus == APIStatus.success) {
+            setState(() {
+              isFavourite = Future.value(true);
+            });
+          }
+        }
+      },
+      icon: FutureBuilder<bool>(
+        future: isFavourite,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          } else if (snapshot.hasData) {
+            final isFav = snapshot.data!;
+            return Icon(
+              isFav ? Icons.favorite_rounded : Icons.favorite_border_outlined,
+              color: Colors.red,
+            );
+          } else if (snapshot.hasError) {
+            return const Icon(Icons.error);
           } else {
-            APIStatus addStatus = await addToFavourite(userId, widget.watchID);
-            if (addStatus == APIStatus.success) {
-              setState(() {
-                isFavourite = Future.value(true);
-              });
-            }
+            return const SizedBox();
           }
         },
-        icon: FutureBuilder<bool>(
-          future: isFavourite,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator();
-            } else if (snapshot.hasData) {
-              bool isFav = snapshot.data!;
-              return Icon(
-                isFav ? Icons.favorite_rounded : Icons.favorite_border_outlined,
-                color: Colors.red,
-              );
-            } else if (snapshot.hasError) {
-              return const Icon(Icons.error);
-            } else {
-              return const SizedBox();
-            }
-          },
-        ));
+      ),
+    );
   }
 }
 
-class RefreshingAdditionalData extends StatefulWidget {
-  final int watchID;
+class RefreshingAdditionalData extends StatelessWidget {
+  final int sharesOwned;
+  final double increaseRate;
 
-  const RefreshingAdditionalData({required this.watchID, super.key});
-
-  @override
-  _RefreshingAdditionalDataState createState() =>
-      _RefreshingAdditionalDataState();
-}
-
-class _RefreshingAdditionalDataState extends State<RefreshingAdditionalData> {
-  late Future<bool> isFavourite = Future.value(false);
-  late int sharesOwned = 0;
-  late double increaseRate = 0.0;
-
-  @override
-  void initState() {
-    super.initState();
-    _initializeData();
-  }
-
-  void _initializeData() async {
-    Future<SharedPreferences> userFuture = getUserData();
-    SharedPreferences user = await userFuture;
-
-    int userId = user.getInt('accountid') ?? 0;
-
-    getWatchAdditionalData(userId, widget.watchID).then((value) {
-      setState(() {
-        sharesOwned = value.sharesOwned;
-        increaseRate = value.increaseRate;
-      });
-    });
-  }
+  const RefreshingAdditionalData({
+    required this.sharesOwned,
+    required this.increaseRate,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -492,9 +530,10 @@ class _RefreshingAdditionalDataState extends State<RefreshingAdditionalData> {
             const Text('Rate: '),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 3),
-              decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(3)),
-                  color: Colors.lightGreen),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(3),
+                color: increaseRate >= 0 ? Colors.lightGreen : Colors.red,
+              ),
               child: Text("$increaseRate%"),
             ),
           ],

@@ -10,7 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class MySharesScreen extends StatefulWidget {
   static const String id = 'HistoryScreen';
-  const MySharesScreen({super.key});
+  const MySharesScreen({Key? key}) : super(key: key);
 
   @override
   State<MySharesScreen> createState() => _MySharesScreenState();
@@ -18,10 +18,22 @@ class MySharesScreen extends StatefulWidget {
 
 class _MySharesScreenState extends State<MySharesScreen> {
   late Future<List<MySharesOnSale>> futureMySharesOnSale = Future.value([]);
+  final ScrollController _scrollController = ScrollController();
+  bool isLoadingMore = false;
+  int pageNumber = 1;
+  int watchPerPage = 10;
+
   @override
   void initState() {
     super.initState();
     _initializeData();
+    _scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   void _initializeData() async {
@@ -31,29 +43,62 @@ class _MySharesScreenState extends State<MySharesScreen> {
     int userId = user.getInt('accountid') ?? 0;
 
     setState(() {
-      futureMySharesOnSale = getMySharesOnSale(userId);
+      futureMySharesOnSale = getMySharesOnSale(userId, pageNumber, watchPerPage);
+    });
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      _loadMoreShares();
+    }
+  }
+
+  void _loadMoreShares() async {
+    if (isLoadingMore) return;
+    
+    setState(() {
+      isLoadingMore = true;
+    });
+
+    pageNumber++;
+
+    Future<SharedPreferences> userFuture = getUserData();
+    SharedPreferences user = await userFuture;
+    int userId = user.getInt('accountid') ?? 0;
+
+    List<MySharesOnSale> newShares =
+        await getMySharesOnSale(userId, pageNumber, watchPerPage);
+
+    setState(() {
+      futureMySharesOnSale.then((shares) {
+        shares.addAll(newShares);
+        return shares;
+      });
+      isLoadingMore = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    double heigh = SizeConfig.screenH!;
+    double height = SizeConfig.screenH!;
     double width = SizeConfig.screenW!;
 
     return Scaffold(
       body: SafeArea(
         bottom: false,
         child: SingleChildScrollView(
+          controller: _scrollController,
           child: Padding(
             padding: EdgeInsets.symmetric(
-                horizontal: width * 0.05, vertical: heigh * 0.02),
+                horizontal: width * 0.05, vertical: height * 0.02),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  margin: EdgeInsets.symmetric(vertical: heigh * 0.02),
+                  margin: EdgeInsets.symmetric(vertical: height * 0.02),
                   child: Text(
                     'My Shares on Sale',
                     style: TextStyle(
@@ -67,9 +112,16 @@ class _MySharesScreenState extends State<MySharesScreen> {
                   future: futureMySharesOnSale,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
+                      return Container(
+                          constraints: BoxConstraints(minHeight: height*0.6, maxWidth: width),
+                          child: const Center(
+                            child: CircularProgressIndicator()
+                          )
+                        );
                     } else if (snapshot.hasData) {
-                      return Column(
+                      List<MySharesOnSale> mySharesOnSale = snapshot.data!;
+                      return mySharesOnSale.isNotEmpty 
+                      ? Column(
                         children: snapshot.data!
                             .map((myShare) => CustomCard(
                                   watchID: myShare.watchId,
@@ -78,7 +130,16 @@ class _MySharesScreenState extends State<MySharesScreen> {
                                   imgUrl: getDownloadURL(myShare.imageuri),
                                 ))
                             .toList(),
-                      );
+                      )
+                      : Container(
+                                    margin: EdgeInsets.symmetric(
+                                        vertical: height * 0.01),
+                                    child: const Center(
+                                      child: Text(
+                                          textAlign: TextAlign.center,
+                                          '\nYou\'ve not put up for sale any shares of your watches.'),
+                                    ),
+                                  );
                     } else if (snapshot.hasError) {
                       return Text('${snapshot.error}');
                     } else {
@@ -86,6 +147,11 @@ class _MySharesScreenState extends State<MySharesScreen> {
                     }
                   },
                 ),
+                if (isLoadingMore)
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
               ],
             ),
           ),
@@ -206,6 +272,7 @@ class CustomCard extends StatelessWidget {
                   Text('Serial: $watchID'),
                   SizedBox(height: screenWidth * 0.02),
                   Text('Shares on Sale: ${myShare.sharesOnSale}'),
+                  Text('At this price: ${myShare.onSaleAtPrice}'),
                   Text('Share price: ${formatAmountFromDouble(myShare.price)}€'),
             ],
           ),

@@ -2,6 +2,9 @@ import 'dart:math';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+// ignore: constant_identifier_names
+const URL = "https://luxchain-flame.vercel.app/api";
+
 String formatAmountFromInt(int number) {
   String stringNumber = number.toString();
   String numberCorrect = "";
@@ -67,6 +70,10 @@ double customDoubleParser(num value) {
   } else {
     throw ArgumentError('Il valore fornito non è né un int né un double.');
   }
+}
+
+double customDoubleParserString(String value) {
+  return double.parse(value);
 }
 
 Future<SharedPreferences> getUserData() async {

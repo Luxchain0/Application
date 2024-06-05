@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/models.dart';
@@ -19,6 +20,28 @@ class SellScreen extends StatefulWidget {
 }
 
 class _SellScreenState extends State<SellScreen> {
+
+   showLoaderDialog(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      content: Row(
+        children: [
+          const CircularProgressIndicator(),
+          Container(
+            margin: const EdgeInsets.only(left: 7), 
+            child: const Text("Loading...")
+          ),
+        ],
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+  
   canSell() {
     return (_shareSelected <= sellInfo.numberOfShares && (_priceOfOneShare > 0))
         ? true
@@ -31,16 +54,17 @@ class _SellScreenState extends State<SellScreen> {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: new Text('Are you sure?'),
-        content: Text(
+        title: const Text('Are you sure?'),
+        content: const Text(
             'This action will put on the market the shares and other users will able to buy them.'),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Nope'),
+            child: const Text('Nope'),
           ),
           TextButton(
             onPressed: () async {
+              showLoaderDialog(context);
               Future<SharedPreferences> userFuture = getUserData();
               SharedPreferences user = await userFuture;
               int userId = user.getInt('accountid') ?? 0;
@@ -53,15 +77,15 @@ class _SellScreenState extends State<SellScreen> {
                           actions: [
                             TextButton(
                               onPressed: () {
-                                Navigator.pushReplacementNamed(
-                                    context, FrameScreen.id);
+                                Navigator.pushNamedAndRemoveUntil(
+                                    context, FrameScreen.id, (_) => false);
                               },
                               child: const Text('Close'),
                             ),
                           ],
                           title: const Text('The action ended up successfully'),
                           contentPadding: const EdgeInsets.all(20.0),
-                          content: Text(
+                          content: const Text(
                               'Your shares have been put on the market at the chosen price'),
                         ));
               } else {
@@ -71,15 +95,16 @@ class _SellScreenState extends State<SellScreen> {
                           actions: [
                             TextButton(
                               onPressed: () {
-                                Navigator.pushNamed(context, FrameScreen.id);
+                               Navigator.pushNamedAndRemoveUntil(
+                                    context, FrameScreen.id, (_) => false);
                               },
                               child: const Text('Close'),
                             ),
                           ],
                           title: const Text('Something went wrong'),
                           contentPadding: const EdgeInsets.all(20.0),
-                          content: Text(
-                              'Try to redo the wanted operation. If the problem persists contact us'),
+                          content: const Text(
+                              'Try to redo the wanted operation.\nIf the problem persists contact us.'),
                         ));
               }
             },
@@ -186,6 +211,9 @@ class _SellScreenState extends State<SellScreen> {
                       height: heigh * 0.04,
                       child: TextFormField(
                         keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
                         autofocus: false,
                         style: const TextStyle(
                             fontWeight: FontWeight.normal,
@@ -203,7 +231,9 @@ class _SellScreenState extends State<SellScreen> {
                               _shareSelected = int.parse(value);
                             });
                           } else {
-                            _shareSelected = 0;
+                            setState(() {
+                              _shareSelected = 0;
+                            });
                           }
                         },
                       ),
@@ -226,11 +256,22 @@ class _SellScreenState extends State<SellScreen> {
                         ),
                         onChanged: (value) {
                           if (value.isNotEmpty) {
-                            setState(() {
-                              _priceOfOneShare = double.parse(value);
-                            });
+                            // Sostituire la virgola con un punto
+                            String correctedValue = value.replaceAll(',', '.');
+                            try {
+                              setState(() {
+                                _priceOfOneShare = double.parse(correctedValue);
+                              });
+                            } catch (e) {
+                              // Gestire il caso in cui la stringa non possa essere convertita in double
+                              setState(() {
+                                _priceOfOneShare = 0;
+                              });
+                            }
                           } else {
-                            _priceOfOneShare = 0;
+                            setState(() {
+                              _priceOfOneShare = 0;
+                            });
                           }
                         },
                       ),

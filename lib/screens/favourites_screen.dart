@@ -58,8 +58,12 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return const Center(
-                                child: CircularProgressIndicator());
+                            return Container(
+                              constraints: BoxConstraints(minHeight: height*0.8, maxWidth: width),
+                              child: const Center(
+                                child: CircularProgressIndicator()
+                              )
+                            );
                           } else if (snapshot.hasData) {
                             List<Favorite> favorites = snapshot.data!;
                             return favorites.isNotEmpty
@@ -92,10 +96,10 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                                 : Container(
                                     margin: EdgeInsets.symmetric(
                                         vertical: height * 0.01),
-                                    child: Center(
+                                    child: const Center(
                                       child: Text(
                                           textAlign: TextAlign.center,
-                                          'OOps!\nYou\'ve not added any watch as favourite yet.'),
+                                          '\nYou\'ve not added any watch as favourite yet.'),
                                     ),
                                   );
                           } else if (snapshot.hasError) {
@@ -204,7 +208,7 @@ class CustomBottomBigCard extends StatelessWidget {
                     padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(3)),
-                      color: (incremento > 0) ? Colors.lightGreen : Colors.red,
+                      color: (incremento >= 0) ? Colors.lightGreen : Colors.red,
                     ),
                     child: Text('$incremento%'),
                   ),
@@ -236,15 +240,9 @@ class CustomBottomBigCard extends StatelessWidget {
                 Text('Serial: $serialNumber'),
                 SizedBox(height: screenWidth * 0.02),
                 Text('Quote Possedute: $quotePossedute/$quoteTotali'),
-                Text('Controvalore: ' +
-                    formatAmountFromDouble(controvalore) +
-                    ' €'),
-                Text('Valore di acquisto: ' +
-                    formatAmountFromDouble(valoreDiAcquisto) +
-                    ' €'),
-                Text('Valore attuale: ' +
-                    formatAmountFromDouble(valoreAttuale) +
-                    ' €'),
+                Text('Controvalore: ${formatAmountFromDouble(controvalore)}€'),
+                Text('Valore di acquisto: ${formatAmountFromDouble(valoreDiAcquisto)}€'),
+                Text('Valore attuale: ${formatAmountFromDouble(valoreAttuale)}€'),
               ],
             ),
           ],

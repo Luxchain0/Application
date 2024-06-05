@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lux_chain/utilities/frame.dart';
@@ -17,50 +16,11 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpState extends State<SignUpScreen> {
   bool _showPassword = false;
-  final TextEditingController usernameController = TextEditingController();
   final TextEditingController firstnameController = TextEditingController();
   final TextEditingController lastnameController = TextEditingController();
   final TextEditingController birthdateController = TextEditingController();
-  final TextEditingController birthcountryController = TextEditingController();
-  final TextEditingController nationalityController = TextEditingController();
-  final TextEditingController addressController = TextEditingController();
-  final TextEditingController phonenrController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
-  Widget _buildUsernameTF() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        const Text(
-          'Username',
-          style: kLabelStyle,
-        ),
-        const SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
-          height: 60.0,
-          child: TextField(
-            controller: usernameController,
-            style: const TextStyle(
-              color: Colors.white,
-            ),
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.account_box,
-                color: Colors.white,
-              ),
-              hintText: 'Enter your username',
-              hintStyle: kHintTextStyle,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 
   Widget _buildFirstNameTF() {
     return Column(
@@ -160,147 +120,6 @@ class _SignUpState extends State<SignUpScreen> {
               hintStyle: kHintTextStyle,
             ),
             onTap: () => datePicker(context),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildBirthCountryTF() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        const Text(
-          'Birth Country',
-          style: kLabelStyle,
-        ),
-        const SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
-          height: 60.0,
-          child: TextField(
-            controller: birthcountryController,
-            readOnly: true,
-            style: const TextStyle(
-              color: Colors.white,
-            ),
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.email,
-                color: Colors.white,
-              ),
-              hintText: 'Enter your Birth Country',
-              hintStyle: kHintTextStyle,
-            ),
-            onTap: () => birthCountryPicker(),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildNationalityTF() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        const Text(
-          'Nationality',
-          style: kLabelStyle,
-        ),
-        const SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
-          height: 60.0,
-          child: TextField(
-            controller: nationalityController,
-            readOnly: true,
-            style: const TextStyle(
-              color: Colors.white,
-            ),
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.email,
-                color: Colors.white,
-              ),
-              hintText: 'Enter your Nationality',
-              hintStyle: kHintTextStyle,
-            ),
-            onTap: () => nationalityPicker(),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildAddressTF() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        const Text(
-          'Address',
-          style: kLabelStyle,
-        ),
-        const SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
-          height: 60.0,
-          child: TextField(
-            controller: addressController,
-            style: const TextStyle(
-              color: Colors.white,
-            ),
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.account_box,
-                color: Colors.white,
-              ),
-              hintText: 'Enter your Address',
-              hintStyle: kHintTextStyle,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPhonenrTF() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        const Text(
-          'Phone Number',
-          style: kLabelStyle,
-        ),
-        const SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
-          height: 60.0,
-          child: TextField(
-            controller: phonenrController,
-            keyboardType: TextInputType.phone,
-            style: const TextStyle(
-              color: Colors.white,
-            ),
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.email,
-                color: Colors.white,
-              ),
-              hintText: 'Enter your Phone Number',
-              hintStyle: kHintTextStyle,
-            ),
           ),
         ),
       ],
@@ -410,22 +229,12 @@ class _SignUpState extends State<SignUpScreen> {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () async {
-          if (usernameController.text.isEmpty) {
-            snackbar(context, 'Username is Missing');
-          } else if (firstnameController.text.isEmpty) {
+          if (firstnameController.text.isEmpty) {
             snackbar(context, 'Firstname is Missing');
           } else if (lastnameController.text.isEmpty) {
             snackbar(context, 'Lastname is Missing');
           } else if (birthdateController.text.isEmpty) {
             snackbar(context, 'Birthdate is Missing');
-          } else if (birthcountryController.text.isEmpty) {
-            snackbar(context, 'Birthcountry is Missing');
-          } else if (nationalityController.text.isEmpty) {
-            snackbar(context, 'Nationality is Missing');
-          } else if (addressController.text.isEmpty) {
-            snackbar(context, 'Address is Missing');
-          } else if (phonenrController.text.isEmpty) {
-            snackbar(context, 'Phone number is Missing');
           } else if (emailController.text.isEmpty) {
             snackbar(context, 'Email is Missing');
           } else if (passwordController.text.isEmpty) {
@@ -433,14 +242,9 @@ class _SignUpState extends State<SignUpScreen> {
           } else {
             try {
               Map<String, String> requestBody = {
-                'username': usernameController.text,
                 'firstname': firstnameController.text,
                 'lastname': lastnameController.text,
                 "birthdate": birthdateController.text,
-                "birthcountry": birthcountryController.text,
-                "nationality": nationalityController.text,
-                "address": addressController.text,
-                "phonenr": phonenrController.text,
                 'email': emailController.text,
                 'password': passwordController.text,
               };
@@ -460,7 +264,8 @@ class _SignUpState extends State<SignUpScreen> {
                 }
                 token = myMap['jwt_token'];
                 saveData('token', token);
-                Navigator.pushReplacementNamed(context, FrameScreen.id);
+                Navigator.pushNamedAndRemoveUntil(
+                    context, FrameScreen.id, (_) => false);
               } else if (response.statusCode == 409) {
                 if (myMap['error']['meta']['target'].contains('email')) {
                   snackbar(context,
@@ -510,71 +315,6 @@ class _SignUpState extends State<SignUpScreen> {
     birthdateController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
   }
 
-  birthCountryPicker() {
-    showCountryPicker(
-      context: context,
-      onSelect: (Country country) {
-        setState(() {
-          birthcountryController.text = country.displayNameNoCountryCode;
-          nationalityController.text = country.displayNameNoCountryCode;
-          phonenrController.text = '+${country.phoneCode}';
-        });
-      },
-      countryListTheme: CountryListThemeData(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(40.0),
-          topRight: Radius.circular(40.0),
-        ),
-        inputDecoration: InputDecoration(
-          labelText: 'Search',
-          hintText: 'Start typing to search',
-          prefixIcon: const Icon(Icons.search),
-          border: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: const Color(0xFF8C98A8).withOpacity(0.2),
-            ),
-          ),
-        ),
-        searchTextStyle: const TextStyle(
-          color: Colors.black,
-          fontSize: 18,
-        ),
-      ),
-    );
-  }
-
-  nationalityPicker() {
-    showCountryPicker(
-      context: context,
-      onSelect: (Country country) {
-        setState(() {
-          nationalityController.text = country.displayNameNoCountryCode;
-          phonenrController.text = '+${country.phoneCode}';
-        });
-      },
-      countryListTheme: CountryListThemeData(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(40.0),
-          topRight: Radius.circular(40.0),
-        ),
-        inputDecoration: InputDecoration(
-          labelText: 'Search',
-          hintText: 'Start typing to search',
-          prefixIcon: const Icon(Icons.search),
-          border: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: const Color(0xFF8C98A8).withOpacity(0.2),
-            ),
-          ),
-        ),
-        searchTextStyle: const TextStyle(
-          color: Colors.black,
-          fontSize: 18,
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -612,21 +352,11 @@ class _SignUpState extends State<SignUpScreen> {
                       ),
                     ),
                     const SizedBox(height: 15.0),
-                    _buildUsernameTF(),
-                    const SizedBox(height: 30.0),
                     _buildFirstNameTF(),
                     const SizedBox(height: 15.0),
                     _buildLastnameTF(),
                     const SizedBox(height: 15.0),
                     _buildBirthDateTF(),
-                    const SizedBox(height: 15.0),
-                    _buildBirthCountryTF(),
-                    const SizedBox(height: 15.0),
-                    _buildNationalityTF(),
-                    const SizedBox(height: 15.0),
-                    _buildAddressTF(),
-                    const SizedBox(height: 15.0),
-                    _buildPhonenrTF(),
                     const SizedBox(height: 15.0),
                     _buildEmailTF(),
                     const SizedBox(height: 15.0),
@@ -645,23 +375,3 @@ class _SignUpState extends State<SignUpScreen> {
     );
   }
 }
-
-const kHintTextStyle = TextStyle(
-  color: Colors.white54,
-);
-
-const kLabelStyle = TextStyle(
-  fontWeight: FontWeight.bold,
-);
-
-final kBoxDecorationStyle = BoxDecoration(
-  color: const Color(0xFF6CA8F1),
-  borderRadius: BorderRadius.circular(10.0),
-  boxShadow: const [
-    BoxShadow(
-      color: Colors.black12,
-      blurRadius: 6.0,
-      offset: Offset(0, 2),
-    ),
-  ],
-);

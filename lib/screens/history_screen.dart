@@ -42,7 +42,7 @@ class _MySharesScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    double heigh = SizeConfig.screenH!;
+    double height = SizeConfig.screenH!;
     double width = SizeConfig.screenW!;
 
     return Scaffold(
@@ -51,13 +51,13 @@ class _MySharesScreenState extends State<HistoryScreen> {
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(
-                horizontal: width * 0.05, vertical: heigh * 0.02),
+                horizontal: width * 0.05, vertical: height * 0.02),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  margin: EdgeInsets.symmetric(vertical: heigh * 0.02),
+                  margin: EdgeInsets.symmetric(vertical: height * 0.02),
                   child: Text(
                     'Trade History',
                     style: TextStyle(
@@ -71,7 +71,12 @@ class _MySharesScreenState extends State<HistoryScreen> {
                   future: futureTradeHistory,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
+                      return Container(
+                          constraints: BoxConstraints(minHeight: height*0.6, maxWidth: width),
+                          child: const Center(
+                            child: CircularProgressIndicator()
+                          )
+                        );
                     } else if (snapshot.hasData) {
                       return Column(
                         children: snapshot.data!
@@ -128,6 +133,7 @@ class CustomCard extends StatelessWidget {
                       watchId: trade.watchId,
                       condition: trade.condition,
                       numberOfShares: trade.numberOfShares,
+                      retailPrice: trade.retailPrice,
                       initialPrice: trade.initialPrice,
                       actualPrice: trade.actualPrice,
                       dialcolor: trade.dialcolor,

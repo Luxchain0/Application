@@ -1,16 +1,22 @@
 import 'dart:convert';
 
+import 'package:candlesticks/candlesticks.dart';
 import 'package:http/http.dart' as http;
 import 'package:lux_chain/utilities/api_models.dart';
 
 const String apiURL = 'https://luxchain-flame.vercel.app/api';
 
-Future<List<WalletWatch>> getUserWalletWatches(int userID) async {
+Future<List<WalletWatch>> getUserWalletWatches(
+    int userID, int pageNumber, int watchPerPage) async {
   try {
-    // The call for retrieving all the watches whose some shares are owned by the user
-    final response = await http.get(
-      Uri.parse('$apiURL/wallet/watches/$userID'),
-    );
+    // Costruisce l'URL con i parametri di query
+    final url =
+        Uri.parse('$apiURL/wallet/watches/$userID').replace(queryParameters: {
+      'pageNumber': pageNumber.toString(),
+      'watchPerPage': watchPerPage.toString(),
+    });
+
+    final response = await http.get(url);
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
@@ -22,24 +28,6 @@ Future<List<WalletWatch>> getUserWalletWatches(int userID) async {
     throw Exception('[FLUTTER] Error retrieving user watches: $e');
   }
 }
-
-/*Future<Watch> getWatchByWatchId(int watchID) async {
-  try {
-    // Retrieving all the information about the watch
-    final response = await http.get(
-      Uri.parse('$apiURL/watch/$watchID'),
-    );
-
-    if (response.statusCode == 200) {
-      final dynamic data = jsonDecode(response.body);
-      return Watch.fromJson(data);
-    } else {
-      throw Exception('[FLUTTER] Failed to load watch\'s data');
-    }
-  } catch (e) {
-    throw Exception('[FLUTTER] Error retrieving watch\'s data: $e');
-  }
-}*/
 
 Future<WatchAdditionalData> getWatchAdditionalData(
     int userID, int watchID) async {
@@ -153,13 +141,11 @@ Future<WalletData> getWalletData(int userID) async {
 Future<APIStatus> sellShares(
     int userID, int watchID, int numberOfShares, double priceOfOneShare) async {
   try {
-    // Costruisci il corpo della richiesta come una mappa JSON
     Map<String, dynamic> requestBody = {
       'price': priceOfOneShare.toString(),
       'numberOfSharesToSell': numberOfShares,
     };
 
-    // Effettua la richiesta HTTP POST con i parametri nel body
     final response = await http.post(
       Uri.parse('$apiURL/trade/sell/$watchID/$userID'),
       headers: <String, String>{
@@ -168,7 +154,6 @@ Future<APIStatus> sellShares(
       body: jsonEncode(requestBody),
     );
 
-    // Gestisci la risposta
     if (response.statusCode == 200) {
       // ignore: avoid_print
       print("SUCCESS SELL");
@@ -211,16 +196,45 @@ Future<APIStatus> buyShares(
   }
 }
 
-Future<List<MarketPlaceWatch>> getMarketPlaceWatches() async {
+Future<List<MarketPlaceWatch>> getMarketPlaceWatches(
+    int pageNumber, int watchPerPage) async {
   try {
-    // Effettua la chiamata per ottenere tutte le azioni in vendita
-    final response = await http.get(
-      Uri.parse('$apiURL/marketplace/watches'),
-    );
+    final url =
+        Uri.parse('$apiURL/marketplace/watches').replace(queryParameters: {
+      'pageNumber': pageNumber.toString(),
+      'watchPerPage': watchPerPage.toString(),
+    });
+
+    final response = await http.get(url);
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
       return data.map((e) => MarketPlaceWatch.fromJson(e)).toList();
+    } else {
+      throw Exception('[FLUTTER] Failed to load market place watches');
+    }
+  } catch (e) {
+    throw Exception('[FLUTTER] Error retrieving market place watches: $e');
+  }
+}
+
+Future<List<MarketPlaceWatch>> getSearchedWatches(
+    int pageNumber, int watchPerPage, String name) async {
+  try {
+    final url = Uri.parse('$apiURL/search/$name').replace(queryParameters: {
+      'pageNumber': pageNumber.toString(),
+      'watchPerPage': watchPerPage.toString(),
+    });
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      if (response.body == "\"no watch found\"") {
+        return [];
+      } else {
+        final List<dynamic> data = jsonDecode(response.body);
+        return data.map((e) => MarketPlaceWatch.fromJson(e)).toList();
+      }
     } else {
       throw Exception('[FLUTTER] Failed to load market place watches');
     }
@@ -246,10 +260,12 @@ Future<List<Trade>> getTradeHistory(int userID) async {
   }
 }
 
-Future<List<MySharesOnSale>> getMySharesOnSale(int userID) async {
+Future<List<MySharesOnSale>> getMySharesOnSale(
+    int userID, int pageNumber, int watchPerPage) async {
   try {
     final response = await http.get(
-      Uri.parse('$apiURL/trade/onsale/$userID'),
+      Uri.parse(
+          '$apiURL/trade/onsale/$userID?page=$pageNumber&perPage=$watchPerPage'),
     );
 
     if (response.statusCode == 200) {
@@ -359,5 +375,21 @@ Future<APIStatus> removeFromFavourite(int userID, int watchID) async {
     }
   } catch (e) {
     throw Exception('[FLUTTER] Error removing from favourites');
+  }
+}
+
+Future<List<Candle>> getCandles(String timeFrame, int watchID) async {
+  try {
+    final response = await http.get(
+      Uri.parse('$apiURL/graph/$timeFrame/$watchID'),
+    );
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data.map((e) => Candle.fromJson([DateTime.parse(e['date']).millisecondsSinceEpoch, e['first_trade_price'], e['max'], e['min'], e['last_trade_price'], e['avg']])).toList();
+    } else {
+      throw Exception('[FLUTTER] Failed to load candles');
+    }
+  } catch (e) {
+    throw Exception('[FLUTTER] Error retrieving candles: $e');
   }
 }
