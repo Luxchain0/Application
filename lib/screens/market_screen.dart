@@ -16,67 +16,8 @@ class MarketScreen extends StatefulWidget {
 }
 
 class _MarketScreenState extends State<MarketScreen> {
-  late Future<List<MarketPlaceWatch>> futureMarketPlaceWatches;
-  int pageNumber = 1;
-  int watchPerPage = 10;
-  List<MarketPlaceWatch> marketPlaceWatches = [];
-  final ScrollController _scrollController = ScrollController();
-  bool isLoadingMore = false;
   String _nameSearchedWatch = '';
-
-  @override
-  void initState() {
-    super.initState();
-    futureMarketPlaceWatches =
-        Future.value([]); // Initialize with an empty list
-    _initializeData();
-    _scrollController.addListener(_scrollListener);
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  void _initializeData() async {
-    setState(() {
-      futureMarketPlaceWatches =
-          getMarketPlaceWatches(pageNumber, watchPerPage);
-    });
-  }
-
-  void _loadSearchedWatches() async {
-    setState(() {
-      futureMarketPlaceWatches =
-          getSearchedWatches(pageNumber, watchPerPage, _nameSearchedWatch);
-    });
-  }
-
-  void _scrollListener() {
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {
-      _loadMoreWatches();
-    }
-  }
-
-  void _loadMoreWatches() async {
-    if (isLoadingMore) return;
-
-    setState(() {
-      isLoadingMore = true;
-    });
-
-    pageNumber++;
-
-    List<MarketPlaceWatch> newWatches =
-        await getMarketPlaceWatches(pageNumber, watchPerPage);
-
-    setState(() {
-      marketPlaceWatches.addAll(newWatches);
-      isLoadingMore = false;
-    });
-  }
+  String _provvisorio = '';
 
   @override
   Widget build(BuildContext context) {
@@ -86,131 +27,205 @@ class _MarketScreenState extends State<MarketScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        controller: _scrollController,
-        scrollDirection: Axis.vertical,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-              vertical: height * 0.02, horizontal: width * 0.04),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                'MarketPlace',
-                style: TextStyle(
-                    color: Colors.black87,
-                    height: 1,
-                    fontSize: width * 0.1,
-                    fontFamily: 'Bebas'),
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+            vertical: height * 0.02, horizontal: width * 0.04),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              'MarketPlace',
+              style: TextStyle(
+                  color: Colors.black87,
+                  height: 1,
+                  fontSize: width * 0.1,
+                  fontFamily: 'Bebas'),
+            ),
+            SizedBox(
+              height: height * 0.01,
+            ),
+            Container(
+              decoration: const BoxDecoration(
+                color: Color.fromARGB(255, 239, 239, 239),
+                borderRadius: BorderRadius.all(Radius.circular(15)),
               ),
-              SizedBox(
-                height: height * 0.01,
-              ),
-              Container(
-                decoration: const BoxDecoration(
-                  color: Color.fromARGB(255, 239, 239, 239),
-                  borderRadius: BorderRadius.all(Radius.circular(15)),
-                ),
-                child: Row(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.all(9.0),
-                      child: Icon(Icons.search_rounded),
-                    ),
-                    Expanded(
-                        flex: 3,
-                        child: GestureDetector(
-                          onTap: () {},
-                          child: TextFormField(
-                            autofocus: false,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.normal,
-                                color: Colors.black87),
-                            decoration: const InputDecoration(
-                                hintText: 'Name of the watch',
-                                border: InputBorder.none),
-                            onChanged: (value) async {
-                              if (value.isNotEmpty) {
-                                try {
-                                  setState(() {
-                                    _nameSearchedWatch = value;
-                                  });
-                                } catch (e) {
-                                  print(e.toString());
-                                }
+              child: Row(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.all(9.0),
+                    child: Icon(Icons.search_rounded),
+                  ),
+                  Expanded(
+                      flex: 3,
+                      child: GestureDetector(
+                        onTap: () {},
+                        child: TextFormField(
+                          autofocus: false,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.normal,
+                              color: Colors.black87),
+                          decoration: const InputDecoration(
+                              hintText: 'Name of the watch',
+                              border: InputBorder.none),
+                          onChanged: (value) async {
+                            if (value.isNotEmpty) {
+                              try {
+                                setState(() {
+                                  _provvisorio = value;
+                                });
+                              } catch (e) {
+                                print(e.toString());
                               }
-                            },
-                          ),
-                        )),
-                    SizedBox(
-                      width: width * 0.02,
-                    ),
-                    Expanded(
-                        flex: 2,
-                        child: CustomButton(
+                            }
+                          },
+                        ),
+                      )),
+                  SizedBox(
+                    width: width * 0.02,
+                  ),
+                  Expanded(
+                      flex: 2,
+                      child: CustomButton(
                           screenWidth: width,
                           textColor: Colors.white,
                           backgorundColor: Color.fromARGB(255, 89, 126, 188),
                           text: 'Search',
                           onPressed: () {
-                            _loadSearchedWatches();
-                            }
-                        )),
-                    SizedBox(
-                      width: width * 0.02,
-                    ),
-                  ],
-                ),
+                            setState(() {
+                              _nameSearchedWatch = _provvisorio;
+                            });
+                          })),
+                  SizedBox(
+                    width: width * 0.02,
+                  ),
+                ],
               ),
-              SizedBox(
-                height: height * 0.01,
+            ),
+            SizedBox(
+              height: height * 0.01,
+            ),
+            Expanded(
+              child: MarketCardsView(
+                key: ValueKey(_nameSearchedWatch),
+                width: width,
+                searchedString: _nameSearchedWatch,
               ),
-              FutureBuilder<List<MarketPlaceWatch>>(
-                future: futureMarketPlaceWatches,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Container(
-                      constraints: BoxConstraints(minHeight: height*0.6, maxWidth: width),
-                      child: const Center(
-                        child: CircularProgressIndicator()
-                      )
-                    );
-                  } else if (snapshot.hasData) {
-                    List<MarketPlaceWatch> marketWatchesList = snapshot.data!;
-
-                    return marketWatchesList.isNotEmpty
-                        ? Column(
-                            children: marketWatchesList
-                                .map((watch) => CustomBottomBigCard(
-                                    screenWidth: width,
-                                    marketWatch: watch,
-                                    watchid: watch.watchId,
-                                    imgFuture: getDownloadURL(watch.imageuri)))
-                                .toList(),
-                          )
-                        : Container(
-                            margin:
-                                EdgeInsets.symmetric(vertical: height * 0.01),
-                            child: const Center(
-                              child: Text(
-                                  textAlign: TextAlign.center,
-                                  '\nOOps ...\nNo watch found with that name.\nRetry ...'),
-                            ),
-                          );
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    return const SizedBox(); // Placeholder widget when no data is available
-                  }
-                },
-              ),
-              if (isLoadingMore)
-                const Center(child: CircularProgressIndicator()),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
+    );
+  }
+}
+
+class MarketCardsView extends StatefulWidget {
+  final double width;
+  final String searchedString;
+
+  const MarketCardsView({
+    required this.width,
+    required this.searchedString,
+    super.key,
+  });
+
+  @override
+  _MarketCardsViewState createState() => _MarketCardsViewState();
+}
+
+class _MarketCardsViewState extends State<MarketCardsView> {
+  late bool _isLastPage;
+  int _pageNumber = 1;
+  late bool _isError;
+  late bool _isLoading;
+  final int _numberOfWatchesPerRequest = 10;
+  late List<MarketPlaceWatch> _watches;
+  final int _nextPageTrigger = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _watches = [];
+    _isLastPage = false;
+    _isLoading = true;
+    _isError = false;
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    List<MarketPlaceWatch> req;
+    if (widget.searchedString == '') {
+      req =
+          await getMarketPlaceWatches(_pageNumber, _numberOfWatchesPerRequest);
+    } else {
+      req = await getSearchedWatches(
+          _pageNumber, _numberOfWatchesPerRequest, widget.searchedString);
+    }
+
+    setState(() {
+      _watches.addAll(req);
+      _isLastPage = req.length < _numberOfWatchesPerRequest;
+      _isLoading = false;
+      _pageNumber = _pageNumber + 1;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _watches.isEmpty ? _buildEmptyListView() : _buildListView();
+  }
+
+  Widget _buildEmptyListView() {
+    if (_isLoading) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(8),
+          child: CircularProgressIndicator(),
+        ),
+      );
+    } else if (_isError) {
+      return const Center(
+        child: Text('Some errors occurr.\nPlease try again ...'),
+      );
+    } else {
+      return const Center(
+            child: Text('OOps!\nNo watch found with that name ...'),
+          );
+    }
+  }
+
+  Widget _buildListView() {
+    return ListView.builder(
+      itemCount: _watches.length + (_isLastPage ? 0 : 1),
+      itemBuilder: (context, index) {
+        if (index == _watches.length - _nextPageTrigger && !_isLastPage) {
+          fetchData();
+        }
+        if (index == _watches.length) {
+          if (_isError) {
+            return const Center(
+              child: Text('Error'),
+            );
+          } else {
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+        }
+        final MarketPlaceWatch watch = _watches[index];
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 7),
+          child: CustomBottomBigCard(
+            screenWidth: widget.width,
+            marketWatch: watch,
+            watchid: watch.watchId,
+            imgFuture: getDownloadURL(watch.imageuri),
+          ),
+        );
+      },
     );
   }
 }

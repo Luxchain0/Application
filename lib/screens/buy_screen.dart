@@ -23,6 +23,7 @@ class _BuyScreenState extends State<BuyScreen> {
   final BuyInfo buyInfo;
   int _shareSelected = 0;
   double _moneyInTheWallet = 0.0;
+  bool _isButtonBuyAbled = false;
 
   _BuyScreenState({required this.buyInfo});
 
@@ -47,9 +48,12 @@ class _BuyScreenState extends State<BuyScreen> {
 
   doesTheUserHaveEnoughMoney() {
     return (_shareSelected <= buyInfo.numberOfShares &&
+            _shareSelected > 0 &&
             (_shareSelected * buyInfo.proposalPrice) <= _moneyInTheWallet)
-        ? true
-        : false;
+        ? setState(() {
+            _isButtonBuyAbled = true;
+          })
+        : _isButtonBuyAbled = false;
   }
 
   showLoaderDialog(BuildContext context) {
@@ -58,9 +62,8 @@ class _BuyScreenState extends State<BuyScreen> {
         children: [
           const CircularProgressIndicator(),
           Container(
-            margin: const EdgeInsets.only(left: 7), 
-            child: const Text("Loading...")
-          ),
+              margin: const EdgeInsets.only(left: 7),
+              child: const Text("Loading...")),
         ],
       ),
     );
@@ -255,6 +258,7 @@ class _BuyScreenState extends State<BuyScreen> {
                                   } else {
                                     _shareSelected = int.parse(value);
                                   }
+                                  doesTheUserHaveEnoughMoney();
                                 })
                               }),
                     ),
@@ -269,16 +273,22 @@ class _BuyScreenState extends State<BuyScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     OutlinedButton(
-                      onPressed: doesTheUserHaveEnoughMoney()
-                          ? () => handleBuy()
-                          : null,
-                      style: ButtonStyle(
-                          backgroundColor:
-                              const MaterialStatePropertyAll(Colors.blueAccent),
-                          foregroundColor:
-                              MaterialStateProperty.all<Color>(Colors.white),
-                          minimumSize: MaterialStateProperty.all<Size>(
-                              Size(width * 0.25, width * 0.08))),
+                      onPressed: _isButtonBuyAbled ? () => handleBuy() : null,
+                      style: _isButtonBuyAbled
+                          ? ButtonStyle(
+                              backgroundColor: const MaterialStatePropertyAll(
+                                  Colors.blueAccent),
+                              foregroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.white),
+                              minimumSize: MaterialStateProperty.all<Size>(
+                                  Size(width * 0.25, width * 0.08)))
+                          : ButtonStyle(
+                              backgroundColor: const MaterialStatePropertyAll(
+                                  Color.fromARGB(101, 68, 68, 68)),
+                              foregroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.white),
+                              minimumSize: MaterialStateProperty.all<Size>(
+                                  Size(width * 0.25, width * 0.08))),
                       child: const Text(
                         'Buy',
                       ),
