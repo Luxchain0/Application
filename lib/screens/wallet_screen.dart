@@ -308,7 +308,6 @@ class CustomBottomBigCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print(watchID);
         Navigator.of(context).pushNamed(WatchScreen.id, arguments: Watch(
           watchId: walletWatch.watchId,
           condition: walletWatch.condition,

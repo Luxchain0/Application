@@ -1,5 +1,6 @@
 import 'package:candlesticks/candlesticks.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:lux_chain/screens/buy_screen.dart';
 import 'package:lux_chain/screens/sell_screen.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
@@ -24,7 +25,8 @@ class _WatchScreenState extends State<WatchScreen> {
   late Future<List<ShareOnSale>> futureSharesData = Future.value([]);
   late int sharesOwned = 0;
   late double increaseRate = 0;
-  
+  late bool _isLoading = true;
+
   late Future<List<Candle>> candles = Future.value([]);
   final String interval = 'day';
 
@@ -46,6 +48,7 @@ class _WatchScreenState extends State<WatchScreen> {
     setState(() {
       sharesOwned = additionalData.sharesOwned;
       increaseRate = additionalData.increaseRate;
+      _isLoading = false;
     });
 
     //TODO: da mettere a posto quesa cosa delle candele
@@ -63,7 +66,11 @@ class _WatchScreenState extends State<WatchScreen> {
       appBar: appBar(width),
       body: SafeArea(
         bottom: false,
-        child: SingleChildScrollView(
+        child: _isLoading 
+          ? const Center(
+             child: CircularProgressIndicator(),
+            )
+          : SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(
                 horizontal: width * 0.05, vertical: height * 0.02),
@@ -101,7 +108,7 @@ class _WatchScreenState extends State<WatchScreen> {
                 //   ),
                 // ),
                 SizedBox(height: height * 0.01),
-                if(sharesOwned > 0 ) _buildSellButton(),
+                if (sharesOwned > 0) _buildSellButton(),
                 SizedBox(height: height * 0.02),
                 _buildBestSharesForSale(),
                 SizedBox(height: height * 0.02),
@@ -202,6 +209,7 @@ class _WatchScreenState extends State<WatchScreen> {
       ],
     );
   }
+
   Widget _buildSellButton() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
