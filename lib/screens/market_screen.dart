@@ -5,6 +5,7 @@ import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/firestore.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:lux_chain/utilities/utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MarketScreen extends StatefulWidget {
   static const String id = 'MarketScreen';
@@ -72,7 +73,7 @@ class _MarketScreenState extends State<MarketScreen> {
                             if (value.isNotEmpty) {
                               try {
                                 setState(() {
-                                  _provvisorio = value;
+                                  _nameSearchedWatch = value;
                                 });
                               } catch (e) {
                                 print(e.toString());
@@ -154,13 +155,11 @@ class _MarketCardsViewState extends State<MarketCardsView> {
 
   Future<void> fetchData() async {
     List<MarketPlaceWatch> req;
-    if (widget.searchedString == '') {
-      req =
-          await getMarketPlaceWatches(_pageNumber, _numberOfWatchesPerRequest);
-    } else {
-      req = await getSearchedWatches(
-          _pageNumber, _numberOfWatchesPerRequest, widget.searchedString);
-    }
+    SharedPreferences user = await getUserData();
+    int userId = user.getInt('accountid') ?? 0;
+
+    req = await getMarketPlaceWatches(
+        _pageNumber, _numberOfWatchesPerRequest, widget.searchedString, userId);
 
     setState(() {
       _watches.addAll(req);
@@ -189,8 +188,8 @@ class _MarketCardsViewState extends State<MarketCardsView> {
       );
     } else {
       return const Center(
-            child: Text('OOps!\nNo watch found with that name ...'),
-          );
+        child: Text('OOps!\nNo watch found with that name ...'),
+      );
     }
   }
 

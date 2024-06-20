@@ -59,11 +59,10 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
                             return Container(
-                              constraints: BoxConstraints(minHeight: height*0.8, maxWidth: width),
-                              child: const Center(
-                                child: CircularProgressIndicator()
-                              )
-                            );
+                                constraints: BoxConstraints(
+                                    minHeight: height * 0.8, maxWidth: width),
+                                child: const Center(
+                                    child: CircularProgressIndicator()));
                           } else if (snapshot.hasData) {
                             List<Favorite> favorites = snapshot.data!;
                             return favorites.isNotEmpty
@@ -75,19 +74,7 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                                           screenWidth: width,
                                           imgUrl: getDownloadURL(
                                               favorite.watch.imageuri),
-                                          modelName:
-                                              favorite.watch.modelType.model.modelname,
-                                          brandName: favorite
-                                              .watch.modelType.model.brandname,
-                                          serialNumber:
-                                              favorite.watch.watchId.toString(),
-                                          retailPrice: favorite.watch.retailPrice,
-                                          valoreDiAcquisto:
-                                              favorite.watch.initialPrice,
-                                          quotePossedute: 0,
-                                          quoteTotali:
-                                              favorite.watch.numberOfShares,
-                                          incremento: 0,
+                                          favoriteWatch: favorite.watch,
                                         );
                                       },
                                     ).toList(),
@@ -106,8 +93,9 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                             return Text('Error: ${snapshot.error}');
                           } else {
                             // Gestisci il caso in cui non ci sono dati disponibili
-                            return Center(
-                              child: Text('Non ci sono orologi preferiti'),
+                            return const Center(
+                              child: Text(
+                                  "\nYou've not added any watch as favourite yet."),
                             ); // Placeholder widget when no data is available
                           }
                         })),
@@ -126,33 +114,19 @@ class CustomBottomBigCard extends StatelessWidget {
     required this.watchID,
     required this.screenWidth, //
     required this.imgUrl, //
-    required this.modelName, //
-    required this.brandName, //
-    required this.serialNumber, //
-    required this.retailPrice, //
-    required this.valoreDiAcquisto, //
-    required this.quotePossedute, //
-    required this.quoteTotali, //
-    required this.incremento, //
+    required this.favoriteWatch, //
   });
 
   final int watchID;
   final double screenWidth;
-  final String modelName;
-  final String brandName;
+  final Watch favoriteWatch;
   final Future<String> imgUrl;
-  final String serialNumber;
-  final int quotePossedute; // TODO: add this
-  final int quoteTotali;
-  final double valoreDiAcquisto;
-  final double retailPrice;
-  final double incremento;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () =>
-          Navigator.of(context).pushNamed(WatchScreen.id, arguments: watchID),
+      onTap: () => Navigator.of(context)
+          .pushNamed(WatchScreen.id, arguments: favoriteWatch),
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 7),
         padding: const EdgeInsets.only(top: 10, bottom: 10),
@@ -201,14 +175,6 @@ class CustomBottomBigCard extends StatelessWidget {
                     },
                   ),
                   SizedBox(height: screenWidth * 0.05),
-                  Container(
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(3)),
-                      color: (incremento >= 0) ? Colors.lightGreen : Colors.red,
-                    ),
-                    child: Text('$incremento%'),
-                  ),
                 ],
               ),
             ),
@@ -217,7 +183,7 @@ class CustomBottomBigCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  brandName,
+                  favoriteWatch.modelType.model.brandname,
                   style: TextStyle(
                     color: Colors.black38,
                     height: 1,
@@ -226,7 +192,7 @@ class CustomBottomBigCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  modelName,
+                  favoriteWatch.modelType.model.modelname,
                   style: TextStyle(
                     color: Colors.black87,
                     height: 1,
@@ -234,11 +200,14 @@ class CustomBottomBigCard extends StatelessWidget {
                     fontFamily: 'Bebas',
                   ),
                 ),
-                Text('Serial: $serialNumber'),
+                Text('Reference: ${favoriteWatch.modelType.reference}'),
+                Text('Serial: ${favoriteWatch.watchId}'),
                 SizedBox(height: screenWidth * 0.02),
-                Text('Quote Possedute: $quotePossedute/$quoteTotali'),
-                Text('Retail Price: ${formatAmountFromDouble(retailPrice)}€'),
-                Text('Valore di acquisto: ${formatAmountFromDouble(valoreDiAcquisto)}€'),
+                Text('Number of Shares: ${favoriteWatch.numberOfShares}'),
+                Text(
+                    'Retail Price: ${formatAmountFromDouble(favoriteWatch.retailPrice)}€'),
+                Text(
+                    'Actual Price: ${formatAmountFromDouble(favoriteWatch.actualPrice)}€'),
               ],
             ),
           ],

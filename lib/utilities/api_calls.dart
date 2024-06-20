@@ -195,48 +195,30 @@ Future<APIStatus> buyShares(
     return APIStatus.error;
   }
 }
-
 Future<List<MarketPlaceWatch>> getMarketPlaceWatches(
-    int pageNumber, int watchPerPage) async {
+    int pageNumber, int watchPerPage, String query, int userId) async {
+
   try {
-    final url =
-        Uri.parse('$baseUrl/marketplace/watches').replace(queryParameters: {
+    final Map<String, String> queryParams = {
       'pageNumber': pageNumber.toString(),
       'watchPerPage': watchPerPage.toString(),
-    });
+      'userId': userId.toString(),
+    };
+
+    if (query.isNotEmpty) {
+      queryParams['query'] = query;
+    }
+
+    final Uri url = Uri.parse('$baseUrl/marketplace/watches').replace(queryParameters: queryParams);
 
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
-      return data.map((e) => MarketPlaceWatch.fromJson(e)).toList();
+      List<MarketPlaceWatch> watches = data.map((e) => MarketPlaceWatch.fromJson(e)).toList();
+      return watches;
     } else {
-      throw Exception('[FLUTTER] Failed to load market place watches');
-    }
-  } catch (e) {
-    throw Exception('[FLUTTER] Error retrieving market place watches: $e');
-  }
-}
-
-Future<List<MarketPlaceWatch>> getSearchedWatches(
-    int pageNumber, int watchPerPage, String name) async {
-  try {
-    final url = Uri.parse('$baseUrl/search/$name').replace(queryParameters: {
-      'pageNumber': pageNumber.toString(),
-      'watchPerPage': watchPerPage.toString(),
-    });
-
-    final response = await http.get(url);
-
-    if (response.statusCode == 200) {
-      if (response.body == "\"no watch found\"") {
-        return [];
-      } else {
-        final List<dynamic> data = jsonDecode(response.body);
-        return data.map((e) => MarketPlaceWatch.fromJson(e)).toList();
-      }
-    } else {
-      throw Exception('[FLUTTER] Failed to load market place watches');
+      throw Exception('[FLUTTER] Failed to load market place watches: ${response.statusCode}');
     }
   } catch (e) {
     throw Exception('[FLUTTER] Error retrieving market place watches: $e');
