@@ -21,7 +21,6 @@ class WalletScreen extends StatefulWidget {
 class _WalletScreenState extends State<WalletScreen> {
   late Future<WalletData> futureWalletData;
 
-  bool isBlurred = true;
   late double _width;
   late double _height;
 
@@ -477,7 +476,7 @@ class RefreshingWalletData extends StatefulWidget {
 }
 
 class _RefreshingWalletDataState extends State<RefreshingWalletData> {
-  bool isBlur = true;
+  bool isBlur = false;
 
   @override
   Widget build(BuildContext context) {

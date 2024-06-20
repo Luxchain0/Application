@@ -188,7 +188,7 @@ class CustomCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  trade.modelType.model.modelname,
+                  trade.modelType.model.brandname,
                   style: TextStyle(
                       color: Colors.black38,
                       height: 1,
@@ -196,7 +196,7 @@ class CustomCard extends StatelessWidget {
                       fontFamily: 'Bebas'),
                 ),
                 Text(
-                  trade.modelType.model.brandname,
+                  trade.modelType.model.modelname,
                   style: TextStyle(
                       color: Colors.black87,
                       height: 1,

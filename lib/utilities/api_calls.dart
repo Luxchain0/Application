@@ -3,15 +3,15 @@ import 'dart:convert';
 import 'package:candlesticks/candlesticks.dart';
 import 'package:http/http.dart' as http;
 import 'package:lux_chain/utilities/api_models.dart';
+import 'package:lux_chain/utilities/utils.dart';
 
-const String apiURL = 'https://luxchain-flame.vercel.app/api';
 
 Future<List<WalletWatch>> getUserWalletWatches(
     int userID, int pageNumber, int watchPerPage) async {
   try {
     // Costruisce l'URL con i parametri di query
     final url =
-        Uri.parse('$apiURL/wallet/watches/$userID').replace(queryParameters: {
+        Uri.parse('$baseUrl/wallet/watches/$userID').replace(queryParameters: {
       'pageNumber': pageNumber.toString(),
       'watchPerPage': watchPerPage.toString(),
     });
@@ -34,7 +34,7 @@ Future<WatchAdditionalData> getWatchAdditionalData(
   try {
     // Retrieving all the additional information about the watch
     final response = await http.get(
-      Uri.parse('$apiURL/wallet/watch/$userID/$watchID'),
+      Uri.parse('$baseUrl/wallet/watch/$userID/$watchID'),
     );
 
     if (response.statusCode == 200) {
@@ -52,7 +52,7 @@ Future<List<WalletWatch>> getSharesByUser(int userID) async {
   try {
     //Retrieving all the shares owned by the user
     final response = await http.get(
-      Uri.parse('$apiURL/shares/$userID'),
+      Uri.parse('$baseUrl/shares/$userID'),
     );
 
     if (response.statusCode == 200) {
@@ -70,7 +70,7 @@ Future<List<WalletWatch>> getSharesByWatch(int watchID) async {
   try {
     //Retreieving watch's shares
     final response = await http.get(
-      Uri.parse('$apiURL/watches/shares/$watchID'),
+      Uri.parse('$baseUrl/watches/shares/$watchID'),
     );
 
     if (response.statusCode == 200) {
@@ -88,7 +88,7 @@ Future<List<WalletWatch>> getSharesOfUserOnSale(int userID) async {
   try {
     // Retreieving user's on sale shares
     final response = await http.get(
-      Uri.parse('$apiURL/shares/onSale/$userID'),
+      Uri.parse('$baseUrl/shares/onSale/$userID'),
     );
 
     if (response.statusCode == 200) {
@@ -106,7 +106,7 @@ Future<List<ShareOnSale>> getSharesOfTheWatchOnSell(int watchID) async {
   try {
     // Retrieving all the on sale shares of a watch
     final response = await http.get(
-      Uri.parse('$apiURL/marketplace/watch/$watchID'),
+      Uri.parse('$baseUrl/marketplace/watch/$watchID'),
     );
 
     if (response.statusCode == 200) {
@@ -124,7 +124,7 @@ Future<WalletData> getWalletData(int userID) async {
   try {
     // Retrieiving wallet data
     final response = await http.get(
-      Uri.parse('$apiURL/wallet/data/$userID'),
+      Uri.parse('$baseUrl/wallet/data/$userID'),
     );
 
     if (response.statusCode == 200) {
@@ -147,7 +147,7 @@ Future<APIStatus> sellShares(
     };
 
     final response = await http.post(
-      Uri.parse('$apiURL/trade/sell/$watchID/$userID'),
+      Uri.parse('$baseUrl/trade/sell/$watchID/$userID'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -176,7 +176,7 @@ Future<APIStatus> buyShares(
     };
 
     final response = await http.post(
-      Uri.parse('$apiURL/trade/buy/$watchID/$userID'),
+      Uri.parse('$baseUrl/trade/buy/$watchID/$userID'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -200,7 +200,7 @@ Future<List<MarketPlaceWatch>> getMarketPlaceWatches(
     int pageNumber, int watchPerPage) async {
   try {
     final url =
-        Uri.parse('$apiURL/marketplace/watches').replace(queryParameters: {
+        Uri.parse('$baseUrl/marketplace/watches').replace(queryParameters: {
       'pageNumber': pageNumber.toString(),
       'watchPerPage': watchPerPage.toString(),
     });
@@ -221,7 +221,7 @@ Future<List<MarketPlaceWatch>> getMarketPlaceWatches(
 Future<List<MarketPlaceWatch>> getSearchedWatches(
     int pageNumber, int watchPerPage, String name) async {
   try {
-    final url = Uri.parse('$apiURL/search/$name').replace(queryParameters: {
+    final url = Uri.parse('$baseUrl/search/$name').replace(queryParameters: {
       'pageNumber': pageNumber.toString(),
       'watchPerPage': watchPerPage.toString(),
     });
@@ -246,7 +246,7 @@ Future<List<MarketPlaceWatch>> getSearchedWatches(
 Future<List<Trade>> getTradeHistory(int userID) async {
   try {
     final response = await http.get(
-      Uri.parse('$apiURL/trade/history/$userID'),
+      Uri.parse('$baseUrl/trade/history/$userID'),
     );
 
     if (response.statusCode == 200) {
@@ -265,7 +265,7 @@ Future<List<MySharesOnSale>> getMySharesOnSale(
   try {
     final response = await http.get(
       Uri.parse(
-          '$apiURL/trade/onsale/$userID?page=$pageNumber&perPage=$watchPerPage'),
+          '$baseUrl/trade/onsale/$userID?page=$pageNumber&perPage=$watchPerPage'),
     );
 
     if (response.statusCode == 200) {
@@ -282,7 +282,7 @@ Future<List<MySharesOnSale>> getMySharesOnSale(
 Future<List<Favorite>> getFavorites(int userID) async {
   try {
     final response = await http.get(
-      Uri.parse('$apiURL/wallet/favorites/$userID'),
+      Uri.parse('$baseUrl/wallet/favorites/$userID'),
     );
 
     if (response.statusCode == 200) {
@@ -306,7 +306,7 @@ Future<APIStatus> updateSharesOnSale(int watchId, int userId, double oldPrice,
     };
 
     final response = await http.put(
-      Uri.parse('$apiURL/trade/onsale/$watchId/$userId'),
+      Uri.parse('$baseUrl/trade/onsale/$watchId/$userId'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -326,7 +326,7 @@ Future<APIStatus> updateSharesOnSale(int watchId, int userId, double oldPrice,
 Future<bool> getFavorite(int userID, int watchID) async {
   try {
     final response = await http.get(
-      Uri.parse('$apiURL/wallet/favorite/$userID/$watchID'),
+      Uri.parse('$baseUrl/wallet/favorite/$userID/$watchID'),
     );
 
     if (response.statusCode == 200) {
@@ -343,7 +343,7 @@ Future<bool> getFavorite(int userID, int watchID) async {
 Future<APIStatus> addToFavourite(int userID, int watchID) async {
   try {
     final response = await http.post(
-      Uri.parse('$apiURL/wallet/favorite/$userID/$watchID'),
+      Uri.parse('$baseUrl/wallet/favorite/$userID/$watchID'),
     );
 
     if (response.statusCode == 201) {
@@ -362,7 +362,7 @@ Future<APIStatus> addToFavourite(int userID, int watchID) async {
 Future<APIStatus> removeFromFavourite(int userID, int watchID) async {
   try {
     final response = await http.delete(
-      Uri.parse('$apiURL/wallet/favorite/$userID/$watchID'),
+      Uri.parse('$baseUrl/wallet/favorite/$userID/$watchID'),
     );
 
     if (response.statusCode == 200) {
@@ -381,7 +381,7 @@ Future<APIStatus> removeFromFavourite(int userID, int watchID) async {
 Future<List<Candle>> getCandles(String timeFrame, int watchID) async {
   try {
     final response = await http.get(
-      Uri.parse('$apiURL/graph/$timeFrame/$watchID'),
+      Uri.parse('$baseUrl/graph/$timeFrame/$watchID'),
     );
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);

@@ -5,10 +5,10 @@ import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:lux_chain/screens/signup_screen.dart';
 import 'package:http/http.dart' as http;
-//import 'package:google_sign_in/google_sign_in.dart';
+import 'package:lux_chain/utilities/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-const String authURL = 'https://luxchain-flame.vercel.app/api/auth';
+const String authURL = '$baseUrl/auth';
 
 /*
 const List<String> scopes = <String>[
@@ -290,7 +290,7 @@ class _LoginState extends State<LoginScreen> {
 
               try {
                 final Uri callbackUrl =
-                    Uri.parse('$apiURL/'); // modificare con nuova chiamata
+                    Uri.parse('$baseUrl/'); // modificare con nuova chiamata
                 final response = await http
                     .get(callbackUrl)
                     .timeout(const Duration(seconds: 10));

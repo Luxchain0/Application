@@ -338,7 +338,7 @@ class CustomBottomBigCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  marketWatch.modelType.model.modelname,
+                  marketWatch.modelType.model.brandname,
                   style: TextStyle(
                     color: Colors.black38,
                     height: 1,
@@ -347,7 +347,7 @@ class CustomBottomBigCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  marketWatch.modelType.model.brandname,
+                  marketWatch.modelType.model.modelname,
                   style: TextStyle(
                     color: Colors.black87,
                     height: 1,

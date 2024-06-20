@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:http/http.dart' as http;
+import 'package:lux_chain/utilities/utils.dart';
 //import 'package:google_sign_in/google_sign_in.dart';
 
-const String authURL = 'https://luxchain-flame.vercel.app/api/auth';
+const String authURL = '$baseUrl/auth';
 
 class ResetPasswordScreen extends StatefulWidget {
   static const String id = 'ResetPasswordScreen';

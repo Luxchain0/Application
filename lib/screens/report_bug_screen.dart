@@ -96,7 +96,7 @@ class ReportBugScreen extends StatelessWidget {
 
   void _submitBugReport(String bugDescription, BuildContext context) async {
     final response = await http.post(
-      Uri.parse("$URL/report"),
+      Uri.parse("$baseUrl/report"),
       body: {'message': bugDescription},
     );
 

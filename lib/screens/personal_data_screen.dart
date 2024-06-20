@@ -5,8 +5,9 @@ import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:lux_chain/screens/settings_screen.dart';
 import 'package:http/http.dart' as http;
+import 'package:lux_chain/utilities/utils.dart';
 
-const String authURL = 'https://luxchain-flame.vercel.app/api/auth';
+const String authURL = '$baseUrl/auth';
 
 class PersonalDataScreen extends StatefulWidget {
   static const String id = 'PersonalDataScreen';

@@ -76,18 +76,17 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                                           imgUrl: getDownloadURL(
                                               favorite.watch.imageuri),
                                           modelName:
-                                              favorite.watch.watchId.toString(),
+                                              favorite.watch.modelType.model.modelname,
                                           brandName: favorite
-                                              .watch.modelType.model.modelname,
+                                              .watch.modelType.model.brandname,
                                           serialNumber:
                                               favorite.watch.watchId.toString(),
-                                          valoreAttuale: 0,
+                                          retailPrice: favorite.watch.retailPrice,
                                           valoreDiAcquisto:
                                               favorite.watch.initialPrice,
                                           quotePossedute: 0,
                                           quoteTotali:
                                               favorite.watch.numberOfShares,
-                                          controvalore: 0,
                                           incremento: 0,
                                         );
                                       },
@@ -130,11 +129,10 @@ class CustomBottomBigCard extends StatelessWidget {
     required this.modelName, //
     required this.brandName, //
     required this.serialNumber, //
-    required this.valoreAttuale, //
+    required this.retailPrice, //
     required this.valoreDiAcquisto, //
     required this.quotePossedute, //
     required this.quoteTotali, //
-    required this.controvalore, //
     required this.incremento, //
   });
 
@@ -146,9 +144,8 @@ class CustomBottomBigCard extends StatelessWidget {
   final String serialNumber;
   final int quotePossedute; // TODO: add this
   final int quoteTotali;
-  final double controvalore;
   final double valoreDiAcquisto;
-  final double valoreAttuale;
+  final double retailPrice;
   final double incremento;
 
   @override
@@ -240,9 +237,8 @@ class CustomBottomBigCard extends StatelessWidget {
                 Text('Serial: $serialNumber'),
                 SizedBox(height: screenWidth * 0.02),
                 Text('Quote Possedute: $quotePossedute/$quoteTotali'),
-                Text('Controvalore: ${formatAmountFromDouble(controvalore)}€'),
+                Text('Retail Price: ${formatAmountFromDouble(retailPrice)}€'),
                 Text('Valore di acquisto: ${formatAmountFromDouble(valoreDiAcquisto)}€'),
-                Text('Valore attuale: ${formatAmountFromDouble(valoreAttuale)}€'),
               ],
             ),
           ],

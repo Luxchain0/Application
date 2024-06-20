@@ -4,8 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:http/http.dart' as http;
-
-const String apiURL = 'https://luxchain-flame.vercel.app/api';
+import 'package:lux_chain/utilities/utils.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -250,7 +249,7 @@ class _SignUpState extends State<SignUpScreen> {
               };
 
               final response = await http.post(
-                Uri.parse('$apiURL/auth/signup'),
+                Uri.parse('$baseUrl/auth/signup'),
                 headers: <String, String>{
                   'Content-Type': 'application/json; charset=UTF-8',
                 },
