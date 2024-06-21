@@ -48,7 +48,7 @@ class _BuyScreenState extends State<BuyScreen> {
 
   doesTheUserHaveEnoughMoney() {
     return (_shareSelected <= buyInfo.numberOfShares &&
-            _shareSelected > 0 &&
+            _shareSelected > 0 && _shareSelected <= 30 &&
             (_shareSelected * buyInfo.proposalPrice) <= _moneyInTheWallet)
         ? setState(() {
             _isButtonBuyAbled = true;
@@ -132,12 +132,12 @@ class _BuyScreenState extends State<BuyScreen> {
                           ],
                           title: const Text('Warning'),
                           contentPadding: const EdgeInsets.all(20.0),
-                          content: Text(
+                          content: const Text(
                               'Something went wrong. Try to redo the operations. If the problem consist contuct us.'),
                         ));
               }
             },
-            child: Text('Yep'),
+            child: const Text('Yep'),
           ),
         ],
       ),
@@ -171,7 +171,7 @@ class _BuyScreenState extends State<BuyScreen> {
                       fontFamily: 'Bebas'),
                 ),
                 Container(
-                  margin: EdgeInsets.symmetric(vertical: heigh * 0.02),
+                  margin: EdgeInsets.symmetric(vertical: heigh * 0.018),
                   decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(
@@ -220,12 +220,19 @@ class _BuyScreenState extends State<BuyScreen> {
                 SizedBox(
                   height: heigh * 0.02,
                 ),
-                Text('Total shares: ${buyInfo.numberOfShares}'),
-                Text('Share on sale: ${buyInfo.sharesOnSale}'),
+                Text('Shares on sale at this price: ${buyInfo.numberOfShares}'),
                 Text(
-                    'Actual Price: ${formatAmountFromDouble(buyInfo.actualPrice)}€'),
+                    'Price for one share: ${formatAmountFromDouble(buyInfo.proposalPrice)} €'),
+                SizedBox(
+                  height: heigh * 0.004,
+                ),
+                Text('Total shares on sale of this watch: ${buyInfo.sharesOnSale}'),
                 Text(
-                    'Proposal price: ${formatAmountFromDouble(buyInfo.proposalPrice)} €'),
+                    'Actual Price of the watch: ${formatAmountFromDouble(buyInfo.actualPrice)}€'),
+                SizedBox(
+                  height: heigh * 0.03,
+                ),
+                const Text('Buying more than 30 shares at once is not allowed. If you want to buy more than 30 shares please repeat the transaction more than once.'),
                 SizedBox(
                   height: heigh * 0.03,
                 ),
@@ -270,8 +277,16 @@ class _BuyScreenState extends State<BuyScreen> {
                   ],
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    _shareSelected > 30 ?
+                    const Text(
+                      '  Too many shares!',
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 176, 55, 46),
+                      ),
+                    )
+                    : const Text(''),
                     OutlinedButton(
                       onPressed: _isButtonBuyAbled ? () => handleBuy() : null,
                       style: _isButtonBuyAbled

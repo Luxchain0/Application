@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 const String baseUrl = "https://luxchain-backend.vercel.app/api";
+const int maxQuotes = 30;
 
 String formatAmountFromInt(int number) {
   String stringNumber = number.toString();
