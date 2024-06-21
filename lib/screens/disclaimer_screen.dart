@@ -75,7 +75,8 @@ class _DisclaimerScreenState extends State<DisclaimerScreen> {
               if (token == null) {
                 Navigator.pushNamed(context, LoginScreen.id);
               } else {
-                Navigator.pushNamed(context, FrameScreen.id);
+                Navigator.pushNamedAndRemoveUntil(
+                    context, FrameScreen.id, (_) => false);
               }
             },
             style: ElevatedButton.styleFrom(
