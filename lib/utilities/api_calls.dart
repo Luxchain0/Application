@@ -102,11 +102,13 @@ Future<List<WalletWatch>> getSharesOfUserOnSale(int userID) async {
   }
 }
 
-Future<List<ShareOnSale>> getSharesOfTheWatchOnSell(int watchID, int b) async {
+Future<List<ShareOnSale>> getSharesOfTheWatchOnSell(int watchID, int userID) async {
   try {
     // Retrieving all the on sale shares of a watch
     final response = await http.get(
-      Uri.parse('$baseUrl/marketplace/watch/$watchID'),
+      Uri.parse('$baseUrl/marketplace/watch/$watchID').replace(queryParameters: {
+        'userId': userID.toString(),
+      }),
     );
 
     if (response.statusCode == 200) {
