@@ -49,7 +49,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                 };
 
                 await http.post(
-                  Uri.parse('$baseUrl/request_verification_code'),
+                  Uri.parse('$baseUrl/auth/request_verification_code'),
                   headers: <String, String>{
                     'Content-Type': 'application/json; charset=UTF-8',
                   },
@@ -74,7 +74,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                 };
 
                 final response = await http.post(
-                  Uri.parse('$baseUrl/check_email'),
+                  Uri.parse('$baseUrl/auth/check_email'),
                   headers: <String, String>{
                     'Content-Type': 'application/json; charset=UTF-8',
                   },

@@ -272,7 +272,7 @@ class _SignUpState extends State<SignUpScreen> {
                   };
 
                   final response = await http.post(
-                    Uri.parse('$baseUrl/request_verification_code'),
+                    Uri.parse('$baseUrl/auth/request_verification_code'),
                     headers: <String, String>{
                       'Content-Type': 'application/json; charset=UTF-8',
                     },
@@ -283,8 +283,7 @@ class _SignUpState extends State<SignUpScreen> {
                   } else if (response.statusCode == 404) {
                     snackbar(
                         context, 'Account not recognized, try re-signing up');
-                    //Navigator.pop(context);
-                    Navigator.pushNamed(context, EmailVerificationScreen.id);
+                    Navigator.pop(context);
                   } else {
                     snackbar(context, 'Server error, please try again later');
                   }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:lux_chain/screens/email_verification_screen.dart';
 import 'package:lux_chain/screens/reset_password_screen.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/size_config.dart';
@@ -199,8 +200,13 @@ class _LoginState extends State<LoginScreen> {
                 }
                 token = myMap['token'];
                 saveData('token', token);
-                Navigator.pushNamedAndRemoveUntil(
-                    context, FrameScreen.id, (_) => false);
+
+                if (user.getBool("verified") == true) {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, FrameScreen.id, (_) => false);
+                } else {
+                  Navigator.pushNamed(context, EmailVerificationScreen.id);
+                }
               } else if (response.statusCode == 401) {
                 snackbar(context, 'Incorrect email or password');
               } else {

@@ -72,11 +72,11 @@ class _DisclaimerScreenState extends State<DisclaimerScreen> {
           ),
           ElevatedButton(
             onPressed: () {
-              if (token == null) {
-                Navigator.pushNamed(context, LoginScreen.id);
-              } else {
+              if (user.getBool("verified") == true) {
                 Navigator.pushNamedAndRemoveUntil(
                     context, FrameScreen.id, (_) => false);
+              } else {
+                Navigator.pushNamed(context, LoginScreen.id);
               }
             },
             style: ElevatedButton.styleFrom(
