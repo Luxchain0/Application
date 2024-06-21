@@ -1,5 +1,7 @@
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:lux_chain/screens/wallet_specs_screen.dart';
 import 'package:lux_chain/screens/watch_screen.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
@@ -88,6 +90,7 @@ class _WalletScreenState extends State<WalletScreen> {
                     Expanded(
                       child: CardsView(
                         width: _width,
+                        height: _height,
                       ),
                     ),
                   ],
@@ -107,9 +110,11 @@ class _WalletScreenState extends State<WalletScreen> {
 
 class CardsView extends StatefulWidget {
   final double width;
+  final double height;
 
   const CardsView({
     required this.width,
+    required this.height,
     super.key,
   });
 
@@ -200,6 +205,7 @@ class _CardsViewState extends State<CardsView> {
           child: CustomBottomBigCard(
             watchID: watch.watchId,
             screenWidth: widget.width,
+            screenHeight: widget.height,
             walletWatch: watch,
             imgUrl: getDownloadURL(watch.imageuri),
           ),
@@ -295,12 +301,14 @@ class CustomBottomBigCard extends StatelessWidget {
     Key? key,
     required this.watchID,
     required this.screenWidth,
+    required this.screenHeight,
     required this.walletWatch,
     required this.imgUrl,
   }) : super(key: key);
 
   final int watchID;
   final double screenWidth;
+  final double screenHeight;
   final WalletWatch walletWatch;
   final Future<String> imgUrl;
 
@@ -325,8 +333,8 @@ class CustomBottomBigCard extends StatelessWidget {
             ));
       },
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 7),
-        padding: const EdgeInsets.only(top: 10, bottom: 10),
+        margin: EdgeInsets.symmetric(vertical: screenHeight*0.003),
+        padding: EdgeInsets.symmetric(vertical: screenHeight*0.015),
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(
@@ -398,25 +406,49 @@ class CustomBottomBigCard extends StatelessWidget {
                     fontFamily: 'Bebas',
                   ),
                 ),
-                Text(
-                  walletWatch.modelType.model.modelname,
-                  style: TextStyle(
-                    color: Colors.black87,
-                    height: 1,
-                    fontSize: screenWidth * 0.055,
-                    fontFamily: 'Bebas',
+                Container(
+                  constraints: BoxConstraints(
+                    maxWidth: screenWidth*0.4,
+                  ),
+                  child: Text(
+                    walletWatch.modelType.model.modelname,
+                    style: TextStyle(
+                      color: Colors.black87,
+                      height: 1,
+                      fontSize: screenWidth * 0.055,
+                      fontFamily: 'Bebas',
+                    ),
                   ),
                 ),
-                Text('Reference: ${walletWatch.modelType.reference}'),
-                Text(
-                    'Retail Price: ${formatAmountFromDouble(walletWatch.retailPrice)}€'),
+                Container(
+                  constraints: BoxConstraints(
+                    maxWidth: screenWidth*0.4,
+                  ),
+                  child: Text('Reference: ${walletWatch.modelType.reference}')),
+                Container(
+                  constraints: BoxConstraints(
+                    maxWidth: screenWidth*0.4,
+                  ),
+                  child: Text(
+                      'Retail Price: ${formatAmountFromDouble(walletWatch.retailPrice)}€'),
+                ),
                 SizedBox(height: screenWidth * 0.02),
                 Text(
                     'Owned Shares: ${walletWatch.owned}/${walletWatch.numberOfShares}'),
-                Text(
-                    'Initial Price: ${formatAmountFromDouble(walletWatch.initialPrice)}€'),
-                Text(
-                    'Actual Price: ${formatAmountFromDouble(walletWatch.actualPrice)}€'),
+                Container(
+                  constraints: BoxConstraints(
+                    maxWidth: screenWidth*0.4,
+                  ),
+                  child: Text(
+                      'Initial Price: ${formatAmountFromDouble(walletWatch.initialPrice)}€'),
+                ),
+                Container(
+                  constraints: BoxConstraints(
+                    maxWidth: screenWidth*0.4,
+                  ),
+                  child: Text(
+                      'Actual Price: ${formatAmountFromDouble(walletWatch.actualPrice)}€'),
+                ),
               ],
             ),
           ],

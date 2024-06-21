@@ -37,17 +37,17 @@ String formatAmountFromDouble(double number) {
   String numberCorrect = "";
 
   if (stringX.length == 4) {
-    numberCorrect = "${stringX[0]} ${stringX.substring(1, 4)}";
+    numberCorrect = "${stringX[0]}\u{00A0}${stringX.substring(1, 4)}";
   } else if (stringX.length == 5) {
-    numberCorrect = "${stringX.substring(0, 2)} ${stringX.substring(2, 5)}";
+    numberCorrect = "${stringX.substring(0, 2)}\u{00A0}${stringX.substring(2, 5)}";
   } else if (stringX.length == 6) {
-    numberCorrect = "${stringX.substring(0, 3)} ${stringX.substring(3, 6)}";
+    numberCorrect = "${stringX.substring(0, 3)}\u{00A0}${stringX.substring(3, 6)}";
   } else if (stringX.length == 7) {
     numberCorrect =
-        "${stringX[0]} ${stringX.substring(1, 4)} ${stringX.substring(4, 7)}";
+        "${stringX[0]} ${stringX.substring(1, 4)}\u{00A0}${stringX.substring(4, 7)}";
   } else if (stringX.length == 8) {
     numberCorrect =
-        "${stringX.substring(0, 2)} ${stringX.substring(2, 5)} ${stringX.substring(5, 8)}";
+        "${stringX.substring(0, 2)}\u{00A0}${stringX.substring(2, 5)}\u{00A0}${stringX.substring(5, 8)}";
   } else {
     numberCorrect = stringX;
   }
