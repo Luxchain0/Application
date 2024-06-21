@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:lux_chain/screens/FAQ_screen.dart';
 import 'package:lux_chain/screens/buy_screen.dart';
 import 'package:lux_chain/screens/disclaimer_screen.dart';
+import 'package:lux_chain/screens/email_verification_screen.dart';
 import 'package:lux_chain/screens/login_screen.dart';
+import 'package:lux_chain/screens/signup_screen.dart';
 import 'package:lux_chain/screens/market_screen.dart';
 import 'package:lux_chain/screens/modify_on_sale_share.dart';
 import 'package:lux_chain/screens/personal_data_screen.dart';
@@ -36,6 +38,11 @@ class RouteGenerator {
               builder: (_) => ResetPasswordScreen(email: args));
         }
         break;
+      case SignUpScreen.id:
+        return MaterialPageRoute(builder: (_) => const SignUpScreen());
+      case EmailVerificationScreen.id:
+        return MaterialPageRoute(
+            builder: (_) => const EmailVerificationScreen());
       case SettingsScreen.id:
         return MaterialPageRoute(builder: (_) => const SettingsScreen());
       case PersonalDataScreen.id:

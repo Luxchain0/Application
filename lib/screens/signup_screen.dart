@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lux_chain/screens/email_verification_screen.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:http/http.dart' as http;
 import 'package:lux_chain/utilities/utils.dart';
 
 class SignUpScreen extends StatefulWidget {
+  static const String id = 'SignUpScreen';
   const SignUpScreen({Key? key}) : super(key: key);
 
   @override
@@ -263,8 +265,33 @@ class _SignUpState extends State<SignUpScreen> {
                 }
                 token = myMap['jwt_token'];
                 saveData('token', token);
-                Navigator.pushNamedAndRemoveUntil(
-                    context, FrameScreen.id, (_) => false);
+                saveData('verified', false);
+                try {
+                  Map<String, String> requestBody = {
+                    'email': user.getString('email')!,
+                  };
+
+                  final response = await http.post(
+                    Uri.parse('$baseUrl/request_verification_code'),
+                    headers: <String, String>{
+                      'Content-Type': 'application/json; charset=UTF-8',
+                    },
+                    body: jsonEncode(requestBody),
+                  );
+                  if (response.statusCode == 200) {
+                    Navigator.pushNamed(context, EmailVerificationScreen.id);
+                  } else if (response.statusCode == 404) {
+                    snackbar(
+                        context, 'Account not recognized, try re-signing up');
+                    //Navigator.pop(context);
+                    Navigator.pushNamed(context, EmailVerificationScreen.id);
+                  } else {
+                    snackbar(context, 'Server error, please try again later');
+                  }
+                } catch (e) {
+                  snackbar(context, 'Connection error with the server');
+                  throw Exception('[FLUTTER] Login Error: $e');
+                }
               } else if (response.statusCode == 409) {
                 if (myMap['error']['meta']['target'].contains('email')) {
                   snackbar(context,

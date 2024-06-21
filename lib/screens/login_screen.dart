@@ -381,12 +381,7 @@ class _LoginState extends State<LoginScreen> {
   Widget _buildSignupBtn() {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const SignUpScreen(),
-          ),
-        );
+        Navigator.pushNamed(context, SignUpScreen.id);
       },
       child: RichText(
         text: const TextSpan(
