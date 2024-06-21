@@ -182,32 +182,57 @@ class CustomBottomBigCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  favoriteWatch.modelType.model.brandname,
-                  style: TextStyle(
-                    color: Colors.black38,
-                    height: 1,
-                    fontSize: screenWidth * 0.05,
-                    fontFamily: 'Bebas',
+                Container(
+                  constraints: BoxConstraints(
+                    maxWidth: screenWidth*0.4,
+                  ),
+                  child: Text(
+                    favoriteWatch.modelType.model.brandname,
+                    style: TextStyle(
+                      color: Colors.black38,
+                      height: 1,
+                      fontSize: screenWidth * 0.05,
+                      fontFamily: 'Bebas',
+                    ),
                   ),
                 ),
-                Text(
-                  favoriteWatch.modelType.model.modelname,
-                  style: TextStyle(
-                    color: Colors.black87,
-                    height: 1,
-                    fontSize: screenWidth * 0.055,
-                    fontFamily: 'Bebas',
+                Container(
+                  constraints: BoxConstraints(
+                    maxWidth: screenWidth*0.4,
+                  ),
+                  child: Text(
+                    favoriteWatch.modelType.model.modelname,
+                    style: TextStyle(
+                      color: Colors.black87,
+                      height: 1,
+                      fontSize: screenWidth * 0.055,
+                      fontFamily: 'Bebas',
+                    ),
                   ),
                 ),
-                Text('Reference: ${favoriteWatch.modelType.reference}'),
+                Container(
+                  constraints: BoxConstraints(
+                    maxWidth: screenWidth*0.4,
+                  ),
+                  child: Text('Reference: ${favoriteWatch.modelType.reference}')
+                ),
                 Text('Serial: ${favoriteWatch.watchId}'),
                 SizedBox(height: screenWidth * 0.02),
                 Text('Number of Shares: ${favoriteWatch.numberOfShares}'),
-                Text(
-                    'Retail Price: ${formatAmountFromDouble(favoriteWatch.retailPrice)}€'),
-                Text(
-                    'Actual Price: ${formatAmountFromDouble(favoriteWatch.actualPrice)}€'),
+                Container(
+                  constraints: BoxConstraints(
+                    maxWidth: screenWidth*0.4,
+                  ),
+                  child: Text(
+                      'Retail Price: ${formatAmountFromDouble(favoriteWatch.retailPrice)}€'),
+                ),
+                Container(
+                  constraints: BoxConstraints(
+                    maxWidth: screenWidth*0.4,
+                  ),
+                  child: Text(
+                      'Actual Price: ${formatAmountFromDouble(favoriteWatch.actualPrice)}€'),
+                ),
               ],
             ),
           ],

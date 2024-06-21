@@ -259,21 +259,29 @@ class CustomCard extends StatelessWidget {
                   fontFamily: 'Bebas',
                 ),
               ),
-              Text(
-                myShare.modelType.model.modelname,
-                style: TextStyle(
-                  color: Colors.black87,
-                  height: 1,
-                  fontSize: screenWidth * 0.055,
-                  fontFamily: 'Bebas',
+              Container(
+                constraints: BoxConstraints(
+                    maxWidth: screenWidth*0.4,
+                  ),
+                child: Text(
+                  myShare.modelType.model.modelname,
+                  style: TextStyle(
+                    color: Colors.black87,
+                    height: 1,
+                    fontSize: screenWidth * 0.055,
+                    fontFamily: 'Bebas',
+                  ),
                 ),
               ),
-              Text('Reference: ${myShare.modelType.reference}'),
-                  Text('Serial: $watchID'),
-                  SizedBox(height: screenWidth * 0.02),
-                  Text('Shares on Sale: ${myShare.sharesOnSale}'),
-                  Text('At this price: ${myShare.onSaleAtPrice}'),
-                  Text('Share price: ${formatAmountFromDouble(myShare.price)}€'),
+              Container(
+                constraints: BoxConstraints(
+                    maxWidth: screenWidth*0.4,
+                  ),
+                child: Text('Reference: ${myShare.modelType.reference}')),
+              Text('Serial: $watchID'),
+              SizedBox(height: screenWidth * 0.02),
+              Text('Shares on Sale: ${myShare.sharesOnSale}'),
+              Text('At this price: ${myShare.onSaleAtPrice}'),                Text('Share price: ${formatAmountFromDouble(myShare.price)}€'),
             ],
           ),
           ],

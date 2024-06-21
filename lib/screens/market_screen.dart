@@ -358,21 +358,40 @@ class CustomBottomBigCard extends StatelessWidget {
                     fontFamily: 'Bebas',
                   ),
                 ),
-                Text(
-                  marketWatch.modelType.model.modelname,
-                  style: TextStyle(
-                    color: Colors.black87,
-                    height: 1,
-                    fontSize: screenWidth * 0.055,
-                    fontFamily: 'Bebas',
+                Container(
+                  constraints: BoxConstraints(
+                    maxWidth: screenWidth*0.4,
+                  ),
+                  child: Text(
+                    marketWatch.modelType.model.modelname,
+                    style: TextStyle(
+                      color: Colors.black87,
+                      height: 1,
+                      fontSize: screenWidth * 0.055,
+                      fontFamily: 'Bebas',
+                    ),
                   ),
                 ),
-                Text('Serial: ${marketWatch.modelType.reference}'),
-                Text(
-                    'Retail Price: ${formatAmountFromDouble(marketWatch.retailPrice)}€'),
+                Container(
+                  constraints: BoxConstraints(
+                    maxWidth: screenWidth*0.4,
+                  ),
+                  child: Text('Serial: ${marketWatch.modelType.reference}')),
+                Container(
+                  constraints: BoxConstraints(
+                    maxWidth: screenWidth*0.4,
+                  ),
+                  child: Text(
+                      'Retail Price: ${formatAmountFromDouble(marketWatch.retailPrice)}€'),
+                ),
                 SizedBox(height: screenWidth * 0.02),
-                Text(
-                    'Initial Price: ${formatAmountFromDouble(marketWatch.initialPrice)}€'),
+                Container(
+                  constraints: BoxConstraints(
+                    maxWidth: screenWidth*0.4,
+                  ),
+                  child: Text(
+                      'Initial Price: ${formatAmountFromDouble(marketWatch.initialPrice)}€'),
+                ),
                 Text('Total Shares: ${marketWatch.numberOfShares}'),
                 Text('Shares available: ${marketWatch.sharesOnSale}'),
                 SizedBox(height: screenWidth * 0.02),

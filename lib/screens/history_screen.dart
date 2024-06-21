@@ -187,24 +187,42 @@ class CustomCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  trade.modelType.model.brandname,
-                  style: TextStyle(
-                      color: Colors.black38,
-                      height: 1,
-                      fontSize: screenWidth * 0.05,
-                      fontFamily: 'Bebas'),
+                Container(
+                  constraints: BoxConstraints(
+                    maxWidth: screenWidth*0.4,
+                  ),
+                  child: Text(
+                    trade.modelType.model.brandname,
+                    style: TextStyle(
+                        color: Colors.black38,
+                        height: 1,
+                        fontSize: screenWidth * 0.05,
+                        fontFamily: 'Bebas'),
+                  ),
                 ),
-                Text(
-                  trade.modelType.model.modelname,
-                  style: TextStyle(
-                      color: Colors.black87,
-                      height: 1,
-                      fontSize: screenWidth * 0.055,
-                      fontFamily: 'Bebas'),
+                Container(
+                  constraints: BoxConstraints(
+                    maxWidth: screenWidth*0.4,
+                  ),
+                  child: Text(
+                    trade.modelType.model.modelname,
+                    style: TextStyle(
+                        color: Colors.black87,
+                        height: 1,
+                        fontSize: screenWidth * 0.055,
+                        fontFamily: 'Bebas'),
+                  ),
                 ),
-                Text('Reference: ${trade.modelType.reference}'),
-                Text('Serial: ${trade.watchId}'),
+                Container(
+                  constraints: BoxConstraints(
+                    maxWidth: screenWidth*0.4,
+                  ),
+                  child: Text('Reference: ${trade.modelType.reference}')
+                ),
+                Container(
+                  constraints: BoxConstraints(
+                    maxWidth: screenWidth*0.4,
+                  ),child: Text('Serial: ${trade.watchId}')),
                 SizedBox(height: screenWidth * 0.02),
                 Text('Traded shares: $shareTraded'),
                 Text('Trade type: $buySell'),
