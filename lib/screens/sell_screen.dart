@@ -248,7 +248,7 @@ class _SellScreenState extends State<SellScreen> {
                             fontWeight: FontWeight.normal,
                             color: Colors.black87),
                         decoration: InputDecoration(
-                          hintText: 'Price',
+                          hintText: 'Price per share',
                           contentPadding:
                               const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                           border: OutlineInputBorder(

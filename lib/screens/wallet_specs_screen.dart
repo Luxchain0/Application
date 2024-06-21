@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:lux_chain/utilities/utils.dart';
 
 class WalletSpecsScreen extends StatelessWidget {
   static const String id = 'WalletSpecsScreen';
-  const WalletSpecsScreen({super.key});
+  final WalletData walletData;
+  const WalletSpecsScreen({super.key, required this.walletData});
 
   @override
   Widget build(BuildContext context) {
@@ -13,17 +16,17 @@ class WalletSpecsScreen extends StatelessWidget {
     double height = SizeConfig.screenH!;
     double width = SizeConfig.screenW!;
 
-    List<FlSpot> chartData = [
-      const FlSpot(0, 1),
-      const FlSpot(1, 3),
-      const FlSpot(2, 10),
-      const FlSpot(3, 7),
-      const FlSpot(4, 12),
-      const FlSpot(5, 13),
-      const FlSpot(6, 17),
-      const FlSpot(7, 15),
-      const FlSpot(8, 20),
-    ];
+    // List<FlSpot> chartData = [
+    //   const FlSpot(0, 1),
+    //   const FlSpot(1, 3),
+    //   const FlSpot(2, 10),
+    //   const FlSpot(3, 7),
+    //   const FlSpot(4, 12),
+    //   const FlSpot(5, 13),
+    //   const FlSpot(6, 17),
+    //   const FlSpot(7, 15),
+    //   const FlSpot(8, 20),
+    // ];
 
     return Scaffold(
       appBar: appBar(width),
@@ -42,10 +45,6 @@ class WalletSpecsScreen extends StatelessWidget {
                     'Wallet value',
                     style: TextStyle(fontSize: width * 0.05),
                   ),
-                  SizedBox(
-                    width: width * 0.02,
-                  ),
-                  const Icon(Icons.visibility),
                 ],
               ),
               Container(
@@ -54,7 +53,8 @@ class WalletSpecsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      '134 456.43',
+                      formatAmountFromDouble(
+                          walletData.inShares + walletData.liquidity),
                       style: TextStyle(
                           color: Colors.black87,
                           height: 1,
@@ -77,20 +77,24 @@ class WalletSpecsScreen extends StatelessWidget {
                     )),
                     Container(
                       padding: const EdgeInsets.all(5),
-                      decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(3)),
-                          color: Colors.lightGreen),
-                      child: const Text('+ 2.3%'),
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(3)),
+                        color: walletData.rate >= 0
+                            ? Colors.lightGreen
+                            : Colors.red,
+                      ),
+                      child: Text('${walletData.rate}%'),
                     ),
                   ],
                 ),
               ),
               Text(
-                'In collezioni: 100 000.00 €',
+                'In shares: ${formatAmountFromDouble(walletData.inShares)} €',
                 style: TextStyle(fontSize: width * 0.04),
               ),
               Text(
-                'Liquidi: 34 456.43 €',
+                'Liquidity: ${formatAmountFromDouble(walletData.liquidity)} €',
                 style: TextStyle(fontSize: width * 0.04),
               ),
               SizedBox(
@@ -101,18 +105,18 @@ class WalletSpecsScreen extends StatelessWidget {
                   scrollDirection: Axis.vertical,
                   child: Column(
                     children: <Widget>[
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        width: double.infinity,
-                        height: 300,
-                        child: LineChart(
-                          LineChartData(
-                              borderData: FlBorderData(show: false),
-                              lineBarsData: [
-                                LineChartBarData(spots: chartData),
-                              ]),
-                        ),
-                      ),
+                      // Container(
+                      //   padding: const EdgeInsets.all(10),
+                      //   width: double.infinity,
+                      //   height: 300,
+                      //   child: LineChart(
+                      //     LineChartData(
+                      //         borderData: FlBorderData(show: false),
+                      //         lineBarsData: [
+                      //           LineChartBarData(spots: chartData),
+                      //         ]),
+                      //   ),
+                      // ),
                       SizedBox(
                         height: height * 0.03,
                       ),
@@ -124,16 +128,19 @@ class WalletSpecsScreen extends StatelessWidget {
                           PieChartData(
                             sections: [
                               PieChartSectionData(
-                                value: 60,
+                                value: walletData.liquidity,
                                 color: Colors.blue,
-                                title: 'LIQUIDI',
+                                title: 'liquidity',
                                 radius: 125,
                               ),
                               PieChartSectionData(
-                                value: 40,
-                                color: Colors.blueGrey,
-                                title: 'COLLEZIONI',
+                                value: walletData.inShares,
+                                color: const Color(0xFF18314F),
+                                title: 'shares',
                                 radius: 125,
+                                titleStyle: const TextStyle(
+                                  color: Colors.white,
+                                ),
                               ),
                             ],
                             centerSpaceRadius: 0,

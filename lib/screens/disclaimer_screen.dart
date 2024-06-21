@@ -62,12 +62,31 @@ class _DisclaimerScreenState extends State<DisclaimerScreen> {
           ),
           Container(
             margin: const EdgeInsets.only(bottom: 15),
-            child: Text(
-              'Disclaimer',
-              style: TextStyle(
-                fontSize: heigh * 0.024,
-                height: 1.2,
-              ),
+            padding: const EdgeInsets.symmetric(
+                horizontal: 15), 
+            child: Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment.center, 
+              children: [
+                Text(
+                  'Disclaimer',
+                  style: TextStyle(
+                    fontSize: heigh * 0.024,
+                    height: 1.2,
+                  ),
+                ),
+                const SizedBox( height: 10),
+                Text(
+                  'This application is a demo, and all transactions and assets are purely virtual and fictitious. '
+                  'Although the euro (€) currency symbol is used within the application, no real money transactions are involved, '
+                  'and the transactions hold no actual monetary value.',
+                  style: TextStyle(
+                    fontSize: heigh *
+                        0.014,
+                    height: 1.5,
+                  ),
+                ),
+              ],
             ),
           ),
           ElevatedButton(

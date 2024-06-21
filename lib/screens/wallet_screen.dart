@@ -546,7 +546,7 @@ class _RefreshingWalletDataState extends State<RefreshingWalletData> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const WalletSpecsScreen(),
+                builder: (context) => WalletSpecsScreen(walletData: widget.walletData,),
               ),
             );
           },
