@@ -102,7 +102,7 @@ Future<List<WalletWatch>> getSharesOfUserOnSale(int userID) async {
   }
 }
 
-Future<List<ShareOnSale>> getSharesOfTheWatchOnSell(int watchID) async {
+Future<List<ShareOnSale>> getSharesOfTheWatchOnSell(int watchID, int b) async {
   try {
     // Retrieving all the on sale shares of a watch
     final response = await http.get(
@@ -195,6 +195,7 @@ Future<APIStatus> buyShares(
     return APIStatus.error;
   }
 }
+
 Future<List<MarketPlaceWatch>> getMarketPlaceWatches(
     int pageNumber, int watchPerPage, String query, int userId) async {
 

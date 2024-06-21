@@ -38,11 +38,11 @@ class _WatchScreenState extends State<WatchScreen> {
   }
 
   Future<void> _initializeData() async {
-    futureSharesData = getSharesOfTheWatchOnSell(widget.watch.watchId);
 
     final user = await getUserData();
     final userId = user.getInt('accountid') ?? 0;
 
+    futureSharesData = getSharesOfTheWatchOnSell(widget.watch.watchId, userId);
     final additionalData =
         await getWatchAdditionalData(userId, widget.watch.watchId);
     setState(() {

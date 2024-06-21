@@ -44,9 +44,17 @@ class _WalletScreenState extends State<WalletScreen> {
     SharedPreferences user = await getUserData();
     int userId = user.getInt('accountid') ?? 0;
 
-    setState(() {
-      futureWalletData = getWalletData(userId);
-    });
+    if (mounted) {
+      setState(() {
+        futureWalletData = getWalletData(userId);
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    // Se necessario, cancella timer o listener qui
+    super.dispose();
   }
 
   @override
@@ -99,7 +107,6 @@ class _WalletScreenState extends State<WalletScreen> {
 
 class CardsView extends StatefulWidget {
   final double width;
- 
 
   const CardsView({
     required this.width,
@@ -144,12 +151,9 @@ class _CardsViewState extends State<CardsView> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return _watches.isEmpty
-        ? _buildEmptyListView()
-        : _buildListView();
+    return _watches.isEmpty ? _buildEmptyListView() : _buildListView();
   }
 
   Widget _buildEmptyListView() {
@@ -173,8 +177,7 @@ class _CardsViewState extends State<CardsView> {
     return ListView.builder(
       itemCount: _watches.length + (_isLastPage ? 0 : 1),
       itemBuilder: (context, index) {
-        if (index == _watches.length - _nextPageTrigger &&
-            !_isLastPage) {
+        if (index == _watches.length - _nextPageTrigger && !_isLastPage) {
           fetchData();
         }
         if (index == _watches.length) {
@@ -258,11 +261,9 @@ class WalletInfo extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
-                    borderRadius:
-                        const BorderRadius.all(Radius.circular(3)),
-                    color: walletData.rate >= 0
-                        ? Colors.lightGreen
-                        : Colors.red,
+                    borderRadius: const BorderRadius.all(Radius.circular(3)),
+                    color:
+                        walletData.rate >= 0 ? Colors.lightGreen : Colors.red,
                   ),
                   child: Text('${walletData.rate}%'),
                 ),
@@ -307,20 +308,21 @@ class CustomBottomBigCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed(WatchScreen.id, arguments: Watch(
-          watchId: walletWatch.watchId,
-          condition: walletWatch.condition,
-          numberOfShares: walletWatch.numberOfShares,
-          retailPrice: walletWatch.retailPrice,
-          initialPrice: walletWatch.initialPrice,
-          actualPrice: walletWatch.actualPrice,
-          dialcolor: walletWatch.dialcolor,
-          year: walletWatch.year,
-          imageuri: walletWatch.imageuri,
-          description: walletWatch.description,
-          modelTypeId: walletWatch.modelTypeId,
-          modelType: walletWatch.modelType,
-        ));
+        Navigator.of(context).pushNamed(WatchScreen.id,
+            arguments: Watch(
+              watchId: walletWatch.watchId,
+              condition: walletWatch.condition,
+              numberOfShares: walletWatch.numberOfShares,
+              retailPrice: walletWatch.retailPrice,
+              initialPrice: walletWatch.initialPrice,
+              actualPrice: walletWatch.actualPrice,
+              dialcolor: walletWatch.dialcolor,
+              year: walletWatch.year,
+              imageuri: walletWatch.imageuri,
+              description: walletWatch.description,
+              modelTypeId: walletWatch.modelTypeId,
+              modelType: walletWatch.modelType,
+            ));
       },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 7),
@@ -349,8 +351,7 @@ class CustomBottomBigCard extends StatelessWidget {
                   FutureBuilder<String>(
                     future: imgUrl,
                     builder: (context, snapshot) {
-                      if (snapshot.connectionState ==
-                          ConnectionState.waiting) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
                         return const CircularProgressIndicator();
                       } else if (snapshot.hasData) {
                         return ClipRRect(
@@ -374,8 +375,7 @@ class CustomBottomBigCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(3)),
+                      borderRadius: const BorderRadius.all(Radius.circular(3)),
                       color: (walletWatch.increaseRate >= 0)
                           ? Colors.lightGreen
                           : Colors.red,

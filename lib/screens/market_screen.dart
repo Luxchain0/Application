@@ -22,9 +22,8 @@ class _MarketScreenState extends State<MarketScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
-    double height = SizeConfig.screenH!;
-    double width = SizeConfig.screenW!;
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -58,45 +57,44 @@ class _MarketScreenState extends State<MarketScreen> {
                     child: Icon(Icons.search_rounded),
                   ),
                   Expanded(
-                      flex: 3,
-                      child: GestureDetector(
-                        onTap: () {},
-                        child: TextFormField(
-                          autofocus: false,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black87),
-                          decoration: const InputDecoration(
-                              hintText: 'Name of the watch',
-                              border: InputBorder.none),
-                          onChanged: (value) async {
-                            if (value.isNotEmpty) {
-                              try {
-                                setState(() {
-                                  _nameSearchedWatch = value;
-                                });
-                              } catch (e) {
-                                print(e.toString());
-                              }
-                            }
-                          },
-                        ),
-                      )),
+                    flex: 3,
+                    child: GestureDetector(
+                      onTap: () {},
+                      child: TextFormField(
+                        autofocus: false,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.normal,
+                            color: Colors.black87),
+                        decoration: const InputDecoration(
+                            hintText: 'Name of the watch',
+                            border: InputBorder.none),
+                        onChanged: (value) {
+                          if (value.isNotEmpty) {
+                            setState(() {
+                              _nameSearchedWatch = value; // rimuoverlo per disattivare la ricerca automatica
+                              _provvisorio = value;
+                            });
+                          }
+                        },
+                      ),
+                    ),
+                  ),
                   SizedBox(
                     width: width * 0.02,
                   ),
                   Expanded(
-                      flex: 2,
-                      child: CustomButton(
-                          screenWidth: width,
-                          textColor: Colors.white,
-                          backgorundColor: Color.fromARGB(255, 89, 126, 188),
-                          text: 'Search',
-                          onPressed: () {
-                            setState(() {
-                              _nameSearchedWatch = _provvisorio;
-                            });
-                          })),
+                    flex: 2,
+                    child: CustomButton(
+                        screenWidth: width,
+                        textColor: Colors.white,
+                        backgorundColor: const Color.fromARGB(255, 89, 126, 188),
+                        text: 'Search',
+                        onPressed: () {
+                          setState(() {
+                            _nameSearchedWatch = _provvisorio;
+                          });
+                        }),
+                  ),
                   SizedBox(
                     width: width * 0.02,
                   ),
@@ -154,19 +152,35 @@ class _MarketCardsViewState extends State<MarketCardsView> {
   }
 
   Future<void> fetchData() async {
-    List<MarketPlaceWatch> req;
-    SharedPreferences user = await getUserData();
-    int userId = user.getInt('accountid') ?? 0;
+    try {
+      SharedPreferences user = await getUserData();
+      int userId = user.getInt('accountid') ?? 0;
 
-    req = await getMarketPlaceWatches(
-        _pageNumber, _numberOfWatchesPerRequest, widget.searchedString, userId);
+      List<MarketPlaceWatch> req = await getMarketPlaceWatches(
+          _pageNumber, _numberOfWatchesPerRequest, widget.searchedString, userId);
 
-    setState(() {
-      _watches.addAll(req);
-      _isLastPage = req.length < _numberOfWatchesPerRequest;
-      _isLoading = false;
-      _pageNumber = _pageNumber + 1;
-    });
+      if (mounted) {
+        setState(() {
+          _watches.addAll(req);
+          _isLastPage = req.length < _numberOfWatchesPerRequest;
+          _isLoading = false;
+          _pageNumber += 1;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isError = true;
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    // Se necessario, cancella timer o listener qui
+    super.dispose();
   }
 
   @override
@@ -188,7 +202,7 @@ class _MarketCardsViewState extends State<MarketCardsView> {
       );
     } else {
       return const Center(
-        child: Text('OOps!\nNo watch found with that name ...'),
+        child: Text('\nNo watch found with that name ...'),
       );
     }
   }
