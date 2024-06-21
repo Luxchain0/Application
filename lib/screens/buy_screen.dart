@@ -48,7 +48,7 @@ class _BuyScreenState extends State<BuyScreen> {
 
   doesTheUserHaveEnoughMoney() {
     return (_shareSelected <= buyInfo.numberOfShares &&
-            _shareSelected > 0 && _shareSelected <= 30 &&
+            _shareSelected > 0 && _shareSelected <= maxQuotes &&
             (_shareSelected * buyInfo.proposalPrice) <= _moneyInTheWallet)
         ? setState(() {
             _isButtonBuyAbled = true;
