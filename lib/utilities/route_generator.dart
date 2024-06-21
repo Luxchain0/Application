@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lux_chain/screens/FAQ_screen.dart';
 import 'package:lux_chain/screens/buy_screen.dart';
+import 'package:lux_chain/screens/disclaimer_screen.dart';
 import 'package:lux_chain/screens/login_screen.dart';
 import 'package:lux_chain/screens/market_screen.dart';
 import 'package:lux_chain/screens/modify_on_sale_share.dart';
@@ -25,6 +26,8 @@ class RouteGenerator {
     switch (settings.name) {
       case HomeScreen.id:
         return MaterialPageRoute(builder: (_) => const HomeScreen());
+      case DisclaimerScreen.id:
+        return MaterialPageRoute(builder: (_) => const DisclaimerScreen());
       case LoginScreen.id:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
       case ResetPasswordScreen.id:
