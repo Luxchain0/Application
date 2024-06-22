@@ -145,8 +145,7 @@ class _ResetPasswordState extends State<ResetPasswordScreen> {
                       'Content-Type': 'application/json; charset=UTF-8',
                     },
                     body: jsonEncode(requestBody),
-                  )
-                  .timeout(const Duration(seconds: 10));
+                  );
 
               if (response.statusCode == 200) {
                 showDialog(

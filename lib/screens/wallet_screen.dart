@@ -440,7 +440,7 @@ class CustomBottomBigCard extends StatelessWidget {
                     maxWidth: screenWidth*0.5,
                   ),
                   child: Text(
-                      'Initial Price: ${formatAmountFromDouble(walletWatch.initialPrice)}€'),
+                      'Retail Price: ${formatAmountFromDouble(walletWatch.retailPrice)}€'),
                 ),
                 Container(
                   constraints: BoxConstraints(

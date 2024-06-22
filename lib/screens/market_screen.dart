@@ -390,7 +390,7 @@ class CustomBottomBigCard extends StatelessWidget {
                     maxWidth: screenWidth*0.4,
                   ),
                   child: Text(
-                      'Initial Price: ${formatAmountFromDouble(marketWatch.initialPrice)}€'),
+                      'Retail Price: ${formatAmountFromDouble(marketWatch.retailPrice)}€'),
                 ),
                 Text('Total Shares: ${marketWatch.numberOfShares}'),
                 Text('Shares available: ${marketWatch.sharesOnSale}'),
