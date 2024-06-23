@@ -254,12 +254,13 @@ class _LoginState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildSocialBtn(VoidCallback onTap, AssetImage logo) {
+  Widget _buildSocialBtn(
+      VoidCallback onTap, AssetImage logo, double effective_height) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 60.0,
-        width: 60.0,
+        height: effective_height,
+        width: effective_height,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: Colors.white,
@@ -278,7 +279,7 @@ class _LoginState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildSocialBtnRow() {
+  Widget _buildSocialBtnRow(double height) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 30.0),
       child: Row(
@@ -378,6 +379,7 @@ class _LoginState extends State<LoginScreen> {
             const AssetImage(
               'assets/images/google.jpg',
             ),
+            height * 0.07,
           ),
         ],
       ),
@@ -472,7 +474,7 @@ class _LoginState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-//    double height = SizeConfig.screenH!;
+    double height = SizeConfig.screenH!;
     double width = SizeConfig.screenW!;
 
     return Scaffold(
@@ -491,9 +493,9 @@ class _LoginState extends State<LoginScreen> {
               height: double.infinity,
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 40.0,
-                  vertical: 40.0,
+                padding: EdgeInsets.symmetric(
+                  horizontal: height * 0.05,
+                  vertical: height * 0.015,
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -505,16 +507,16 @@ class _LoginState extends State<LoginScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 30.0),
+                    SizedBox(height: height * 0.04),
                     _buildEmailTF(),
-                    const SizedBox(height: 30.0),
+                    SizedBox(height: height * 0.04),
                     _buildPasswordTF(),
                     _buildForgotPasswordBtn(),
                     _buildShowPasswordBox(),
-                    const SizedBox(height: 10.0),
+                    SizedBox(height: height * 0.01),
                     _buildLoginBtn(),
                     _buildSignInWithText(),
-                    _buildSocialBtnRow(),
+                    _buildSocialBtnRow(height),
                     _buildSignupBtn(),
                   ],
                 ),

@@ -266,31 +266,9 @@ class _SignUpState extends State<SignUpScreen> {
                 token = myMap['jwt_token'];
                 saveData('token', token);
                 saveData('verified', false);
-                try {
-                  Map<String, String> requestBody = {
-                    'email': user.getString('email')!,
-                  };
-
-                  final response = await http.post(
-                    Uri.parse('$baseUrl/auth/request_verification_code'),
-                    headers: <String, String>{
-                      'Content-Type': 'application/json; charset=UTF-8',
-                    },
-                    body: jsonEncode(requestBody),
-                  );
-                  if (response.statusCode == 200) {
-                    Navigator.pushNamed(context, EmailVerificationScreen.id);
-                  } else if (response.statusCode == 404) {
-                    snackbar(
-                        context, 'Account not recognized, try re-signing up');
-                    Navigator.pop(context);
-                  } else {
-                    snackbar(context, 'Server error, please try again later');
-                  }
-                } catch (e) {
-                  snackbar(context, 'Connection error with the server');
-                  throw Exception('[FLUTTER] Login Error: $e');
-                }
+                Navigator.pushNamed(context, EmailVerificationScreen.id);
+              } else if (response.statusCode == 404) {
+                snackbar(context, 'Please insert a valid email');
               } else if (response.statusCode == 409) {
                 if (myMap['error']['meta']['target'].contains('email')) {
                   snackbar(context,
@@ -343,7 +321,7 @@ class _SignUpState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-//    double height = SizeConfig.screenH!;
+    double height = SizeConfig.screenH!;
     double width = SizeConfig.screenW!;
 
     return Scaffold(
@@ -362,9 +340,9 @@ class _SignUpState extends State<SignUpScreen> {
               height: double.infinity,
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 40.0,
-                  vertical: 40.0,
+                padding: EdgeInsets.symmetric(
+                  horizontal: height * 0.05,
+                  vertical: height * 0.015,
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -376,19 +354,19 @@ class _SignUpState extends State<SignUpScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 15.0),
+                    SizedBox(height: height * 0.014),
                     _buildFirstNameTF(),
-                    const SizedBox(height: 15.0),
+                    SizedBox(height: height * 0.014),
                     _buildLastnameTF(),
-                    const SizedBox(height: 15.0),
+                    SizedBox(height: height * 0.014),
                     _buildBirthDateTF(),
-                    const SizedBox(height: 15.0),
+                    SizedBox(height: height * 0.014),
                     _buildEmailTF(),
-                    const SizedBox(height: 15.0),
+                    SizedBox(height: height * 0.014),
                     _buildPasswordTF(),
-                    const SizedBox(height: 10.0),
+                    SizedBox(height: height * 0.014),
                     _buildShowPasswordBox(),
-                    const SizedBox(height: 15.0),
+                    SizedBox(height: height * 0.001),
                     _buildSignUpBtn(),
                   ],
                 ),
