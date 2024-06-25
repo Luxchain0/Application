@@ -43,7 +43,8 @@ class _MySharesScreenState extends State<MySharesScreen> {
     int userId = user.getInt('accountid') ?? 0;
 
     setState(() {
-      futureMySharesOnSale = getMySharesOnSale(userId, pageNumber, watchPerPage);
+      futureMySharesOnSale =
+          getMySharesOnSale(userId, pageNumber, watchPerPage);
     });
   }
 
@@ -56,7 +57,7 @@ class _MySharesScreenState extends State<MySharesScreen> {
 
   void _loadMoreShares() async {
     if (isLoadingMore) return;
-    
+
     setState(() {
       isLoadingMore = true;
     });
@@ -113,33 +114,33 @@ class _MySharesScreenState extends State<MySharesScreen> {
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Container(
-                          constraints: BoxConstraints(minHeight: height*0.6, maxWidth: width),
-                          child: const Center(
-                            child: CircularProgressIndicator()
-                          )
-                        );
+                          constraints: BoxConstraints(
+                              minHeight: height * 0.6, maxWidth: width),
+                          child:
+                              const Center(child: CircularProgressIndicator()));
                     } else if (snapshot.hasData) {
                       List<MySharesOnSale> mySharesOnSale = snapshot.data!;
-                      return mySharesOnSale.isNotEmpty 
-                      ? Column(
-                        children: snapshot.data!
-                            .map((myShare) => CustomCard(
-                                  watchID: myShare.watchId,
-                                  screenWidth: width,
-                                  myShare: myShare,
-                                  imgUrl: getDownloadURL(myShare.imageuri),
-                                ))
-                            .toList(),
-                      )
-                      : Container(
-                                    margin: EdgeInsets.symmetric(
-                                        vertical: height * 0.01),
-                                    child: const Center(
-                                      child: Text(
-                                          textAlign: TextAlign.center,
-                                          '\nYou\'ve not put up for sale any shares of your watches.'),
-                                    ),
-                                  );
+                      return mySharesOnSale.isNotEmpty
+                          ? Column(
+                              children: snapshot.data!
+                                  .map((myShare) => CustomCard(
+                                        watchID: myShare.watchId,
+                                        screenWidth: width,
+                                        myShare: myShare,
+                                        imgUrl:
+                                            getDownloadURL(myShare.imageuri),
+                                      ))
+                                  .toList(),
+                            )
+                          : Container(
+                              margin:
+                                  EdgeInsets.symmetric(vertical: height * 0.01),
+                              child: const Center(
+                                child: Text(
+                                    textAlign: TextAlign.center,
+                                    '\nYou\'ve not put up for sale any shares of your watches.'),
+                              ),
+                            );
                     } else if (snapshot.hasError) {
                       return Text('${snapshot.error}');
                     } else {
@@ -178,76 +179,77 @@ class CustomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: const EdgeInsets.symmetric(vertical: 7),
-        padding: const EdgeInsets.only(top: 10, bottom: 10),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(
-            color: Colors.black26,
-            width: 1,
-          ),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 2,
-              offset: Offset(3, 3), // Shadow position
-            ),
-          ],
-          borderRadius: const BorderRadius.all(Radius.circular(7)),
+      margin: const EdgeInsets.symmetric(vertical: 7),
+      padding: const EdgeInsets.only(top: 10, bottom: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(
+          color: Colors.black26,
+          width: 1,
         ),
-        child: Row(
-          children: [
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
-              child: Column(
-                children: [
-                  FutureBuilder<String>(
-                    future: imgUrl,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator();
-                      } else if (snapshot.hasData) {
-                        return ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(7)),
-                  child: Image.network(
-                    snapshot.data!,
-                    width: screenWidth * 0.25,
-                    height: screenWidth * 0.25,
-                    fit: BoxFit.cover,
-                  ),
-                );
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else {
-                        return const Text('Image not found');
-                      }
-                    },
-                  ),
-                  SizedBox(height: screenWidth * 0.02),
-                  CustomButton(
-                    screenWidth: screenWidth,
-                    backgorundColor: const Color.fromARGB(255, 17, 45, 68),
-                    textColor: Colors.white,
-                    text: 'Edit',
-                    onPressed: () => {
-                      Navigator.of(context).pushNamed(ModifyOnSaleShareScreen.id,
-            arguments: ModifySharesOnSale(
-              watchid: watchID,
-              brandName: myShare.modelType.model.brandname,
-              modelName: myShare.modelType.model.modelname,
-              proposalPrice: myShare.price,
-              onSaleAtPrice: myShare.onSaleAtPrice,
-              sharesOwned: myShare.sharesOwned,
-              sharesOnSale: myShare.sharesOnSale,
-              image: imgUrl,
-            ))
-                    },
-                  ),
-                ],
-              ),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 2,
+            offset: Offset(3, 3), // Shadow position
+          ),
+        ],
+        borderRadius: const BorderRadius.all(Radius.circular(7)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+            child: Column(
+              children: [
+                FutureBuilder<String>(
+                  future: imgUrl,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshot.hasData) {
+                      return ClipRRect(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(7)),
+                        child: Image.network(
+                          snapshot.data!,
+                          width: screenWidth * 0.25,
+                          height: screenWidth * 0.25,
+                          fit: BoxFit.cover,
+                        ),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      return const Text('Image not found');
+                    }
+                  },
+                ),
+                SizedBox(height: screenWidth * 0.02),
+                CustomButton(
+                  screenWidth: screenWidth,
+                  backgorundColor: const Color.fromARGB(255, 17, 45, 68),
+                  textColor: Colors.white,
+                  text: 'Edit',
+                  onPressed: () => {
+                    Navigator.of(context).pushNamed(ModifyOnSaleShareScreen.id,
+                        arguments: ModifySharesOnSale(
+                          watchid: watchID,
+                          brandName: myShare.modelType.model.brandname,
+                          modelName: myShare.modelType.model.modelname,
+                          proposalPrice: myShare.price,
+                          onSaleAtPrice: myShare.onSaleAtPrice,
+                          sharesOwned: myShare.sharesOwned,
+                          sharesOnSale: myShare.sharesOnSale,
+                          image: imgUrl,
+                        ))
+                  },
+                ),
+              ],
             ),
-            const SizedBox(width: 10),
-            Column(
+          ),
+          const SizedBox(width: 10),
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
@@ -261,8 +263,8 @@ class CustomCard extends StatelessWidget {
               ),
               Container(
                 constraints: BoxConstraints(
-                    maxWidth: screenWidth*0.4,
-                  ),
+                  maxWidth: screenWidth * 0.4,
+                ),
                 child: Text(
                   myShare.modelType.model.modelname,
                   style: TextStyle(
@@ -274,19 +276,20 @@ class CustomCard extends StatelessWidget {
                 ),
               ),
               Container(
-                constraints: BoxConstraints(
-                    maxWidth: screenWidth*0.4,
+                  constraints: BoxConstraints(
+                    maxWidth: screenWidth * 0.4,
                   ),
-                child: Text('Reference: ${myShare.modelType.reference}')),
+                  child: Text('Reference: ${myShare.modelType.reference}')),
               Text('Serial: $watchID'),
               SizedBox(height: screenWidth * 0.02),
               Text('Shares on Sale: ${myShare.sharesOnSale}'),
-              Text('At this price: ${myShare.onSaleAtPrice}'),                Text('Share price: ${formatAmountFromDouble(myShare.price)}€'),
+              Text('At this price: ${myShare.onSaleAtPrice}'),
+              Text('Share price: ${formatAmountFromDouble(myShare.price)}'),
             ],
           ),
-          ],
-        ),
-      );
+        ],
+      ),
+    );
   }
 }
 

@@ -382,7 +382,7 @@ class CustomBottomBigCard extends StatelessWidget {
                     maxWidth: screenWidth*0.4,
                   ),
                   child: Text(
-                      'Retail Price: ${formatAmountFromDouble(marketWatch.retailPrice)}€'),
+                      'Retail Price: ${formatAmountFromDouble(marketWatch.retailPrice)}'),
                 ),
                 SizedBox(height: screenWidth * 0.02),
                 Container(
@@ -390,7 +390,7 @@ class CustomBottomBigCard extends StatelessWidget {
                     maxWidth: screenWidth*0.4,
                   ),
                   child: Text(
-                      'Retail Price: ${formatAmountFromDouble(marketWatch.retailPrice)}€'),
+                      'Retail Price: ${formatAmountFromDouble(marketWatch.retailPrice)}'),
                 ),
                 Text('Total Shares: ${marketWatch.numberOfShares}'),
                 Text('Shares available: ${marketWatch.sharesOnSale}'),

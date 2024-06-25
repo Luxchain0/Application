@@ -197,7 +197,7 @@ class _SellScreenState extends State<SellScreen> {
                 SizedBox(
                   height: heigh * 0.02,
                 ),
-                Text('Actual Price: ${sellInfo.actualPrice} €'),
+                Text('Actual Price: ${sellInfo.actualPrice}'),
                 Text('Shares: ${sellInfo.numberOfShares}'),
                 Text('Owned shares: ${sellInfo.sharesOwned}'),
                 SizedBox(

@@ -200,9 +200,9 @@ class CustomBottomBigCard extends StatelessWidget {
             ),
             Text('Serial: $serialNumber'),
             SizedBox(height: screenWidth * 0.02),
-            Text('Prezzo di listino: ' + formatAmountFromInt(prezzoDiListino) + '€'),
-            Text('Quotazione attuale: ' + formatAmountFromInt(quotazioneAttuale) + '€'),
-            Text('Valore quota attuale: ' + formatAmountFromInt(valoreQuotaAttuale) + '€'),
+            Text('Prezzo di listino: ${formatAmountFromInt(prezzoDiListino)}'),
+            Text('Quotazione attuale: ${formatAmountFromInt(quotazioneAttuale)}'),
+            Text('Valore quota attuale: ${formatAmountFromInt(valoreQuotaAttuale)}'),
             Text('Quote totali: $quoteTotali'),
             Text('Quote disponibili: $quoteDisponibili'),
             SizedBox(

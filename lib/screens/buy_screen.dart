@@ -222,13 +222,13 @@ class _BuyScreenState extends State<BuyScreen> {
                 ),
                 Text('Shares on sale at this price: ${buyInfo.numberOfShares}'),
                 Text(
-                    'Price for one share: ${formatAmountFromDouble(buyInfo.proposalPrice)} €'),
+                    'Price for one share: ${formatAmountFromDouble(buyInfo.proposalPrice)}'),
                 SizedBox(
                   height: heigh * 0.004,
                 ),
                 Text('Total shares on sale of this watch: ${buyInfo.sharesOnSale}'),
                 Text(
-                    'Actual Price of the watch: ${formatAmountFromDouble(buyInfo.actualPrice)}€'),
+                    'Actual Price of the watch: ${formatAmountFromDouble(buyInfo.actualPrice)}'),
                 SizedBox(
                   height: heigh * 0.03,
                 ),
@@ -270,7 +270,7 @@ class _BuyScreenState extends State<BuyScreen> {
                               }),
                     ),
                     Text(
-                      'Total: ${formatAmountFromDouble(_shareSelected * buyInfo.proposalPrice)} €',
+                      'Total: ${formatAmountFromDouble(_shareSelected * buyInfo.proposalPrice)}',
                       style: TextStyle(
                           fontSize: heigh * 0.023, fontWeight: FontWeight.bold),
                     ),

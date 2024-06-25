@@ -195,9 +195,9 @@ class _WatchScreenState extends State<WatchScreen> {
         Text("Case material: ${widget.watch.modelType.casematerial}"),
         Text("Bracelet material: ${widget.watch.modelType.braceletmaterial}"),
         Text(
-            "Retail Price: ${formatAmountFromDouble(widget.watch.retailPrice)} €"),
+            "Retail Price: ${formatAmountFromDouble(widget.watch.retailPrice)}"),
         Text(
-            'Actual Price: ${formatAmountFromDouble(widget.watch.actualPrice)} €'),
+            'Actual Price: ${formatAmountFromDouble(widget.watch.actualPrice)}'),
         Text("Conditions: ${widget.watch.condition}"),
         Text("Shares: ${widget.watch.numberOfShares}"),
         RefreshingAdditionalData(
@@ -342,7 +342,7 @@ class CustomRowForQuote extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  '${formatAmountFromDouble(quotePrice)} €',
+                  formatAmountFromDouble(quotePrice),
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
