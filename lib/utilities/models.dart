@@ -87,7 +87,7 @@ class ModifySharesOnSale {
   setProposalPrice(String controller) {
     if (controller.contains(',')) {
       var splitted = controller.split(',');
-      String corretto = (splitted[0] + '.' + splitted[1][0] + splitted[1][1]);
+      String corretto = ('${splitted[0]}.${splitted[1][0]}${splitted[1][1]}');
       double number = double.parse(corretto);
       proposalPrice = number;
     } else {
