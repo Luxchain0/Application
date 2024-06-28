@@ -64,13 +64,6 @@ class WalletSpecsScreen extends StatelessWidget {
                     SizedBox(
                       width: width * 0.01,
                     ),
-                    Text(
-                      '€',
-                      style: TextStyle(
-                        fontSize: width * 0.06,
-                        height: 1,
-                      ),
-                    ),
                     Expanded(
                         child: SizedBox(
                       width: width * 0.01,
