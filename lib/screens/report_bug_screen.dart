@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart'
     as http; // Aggiunto l'import per utilizzare http.post
@@ -95,9 +97,16 @@ class ReportBugScreen extends StatelessWidget {
   }
 
   void _submitBugReport(String bugDescription, BuildContext context) async {
+    Map<String, dynamic> requestBody = {
+      'message': bugDescription,
+    };
+
     final response = await http.post(
       Uri.parse("$baseUrl/report"),
-      body: {'message': bugDescription},
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(requestBody),
     );
 
     if (response.statusCode == 200) {
@@ -112,7 +121,8 @@ class ReportBugScreen extends StatelessWidget {
             actions: <Widget>[
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, FrameScreen.id, (_) => false);
                 },
                 child: const Text('OK'),
               ),
