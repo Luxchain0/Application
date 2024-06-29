@@ -22,6 +22,7 @@ class _MySharesScreenState extends State<MySharesScreen> {
   bool isLoadingMore = false;
   int pageNumber = 1;
   int watchPerPage = 10;
+  bool isLastPage = false;
 
   @override
   void initState() {
@@ -56,6 +57,7 @@ class _MySharesScreenState extends State<MySharesScreen> {
   }
 
   void _loadMoreShares() async {
+    if (isLastPage) return;
     if (isLoadingMore) return;
 
     setState(() {
@@ -70,6 +72,10 @@ class _MySharesScreenState extends State<MySharesScreen> {
 
     List<MySharesOnSale> newShares =
         await getMySharesOnSale(userId, pageNumber, watchPerPage);
+
+    if (newShares.length < watchPerPage) {
+      isLastPage = true;
+    }
 
     setState(() {
       futureMySharesOnSale.then((shares) {

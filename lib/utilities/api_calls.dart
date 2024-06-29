@@ -248,7 +248,7 @@ Future<List<MySharesOnSale>> getMySharesOnSale(
   try {
     final response = await http.get(
       Uri.parse(
-          '$baseUrl/trade/onsale/$userID?page=$pageNumber&perPage=$watchPerPage'),
+          '$baseUrl/trade/onsale/$userID?pageNumber=$pageNumber&watchPerPage=$watchPerPage'),
     );
 
     if (response.statusCode == 200) {
