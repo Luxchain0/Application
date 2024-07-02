@@ -250,13 +250,6 @@ class WalletInfo extends StatelessWidget {
                 SizedBox(
                   width: width * 0.01,
                 ),
-                Text(
-                  '€',
-                  style: TextStyle(
-                    fontSize: width * 0.06,
-                    height: 1,
-                  ),
-                ),
                 Expanded(
                   child: SizedBox(
                     width: width * 0.01,
@@ -278,11 +271,11 @@ class WalletInfo extends StatelessWidget {
             height: height * 0.01,
           ),
           Text(
-            'In shares: ${formatAmountFromDouble(walletData.inShares)} €',
+            'In shares: ${formatAmountFromDouble(walletData.inShares)}',
             style: TextStyle(fontSize: width * 0.04),
           ),
           Text(
-            'Liquidity: ${formatAmountFromDouble(walletData.liquidity)} €',
+            'Liquidity: ${formatAmountFromDouble(walletData.liquidity)}',
             style: TextStyle(fontSize: width * 0.04),
           ),
           SizedBox(
@@ -428,7 +421,7 @@ class CustomBottomBigCard extends StatelessWidget {
                     maxWidth: screenWidth*0.5,
                   ),
                   child: Text(
-                      'Retail Price: ${formatAmountFromDouble(walletWatch.retailPrice)}€'),
+                      'Retail Price: ${formatAmountFromDouble(walletWatch.retailPrice)}'),
                 ),
                 SizedBox(height: screenWidth * 0.02),
                 Text(
@@ -438,14 +431,14 @@ class CustomBottomBigCard extends StatelessWidget {
                     maxWidth: screenWidth*0.5,
                   ),
                   child: Text(
-                      'Retail Price: ${formatAmountFromDouble(walletWatch.retailPrice)}€'),
+                      'Retail Price: ${formatAmountFromDouble(walletWatch.retailPrice)}'),
                 ),
                 Container(
                   constraints: BoxConstraints(
                     maxWidth: screenWidth*0.5,
                   ),
                   child: Text(
-                      'Actual Price: ${formatAmountFromDouble(walletWatch.actualPrice)}€'),
+                      'Actual Price: ${formatAmountFromDouble(walletWatch.actualPrice)}'),
                 ),
               ],
             ),

@@ -294,14 +294,14 @@ class CustomBottomBigCard extends StatelessWidget {
                     maxWidth: screenWidth*0.4,
                   ),
                   child: Text(
-                      'Retail Price: ${formatAmountFromDouble(favoriteWatch.retailPrice)}€'),
+                      'Retail Price: ${formatAmountFromDouble(favoriteWatch.retailPrice)}'),
                 ),
                 Container(
                   constraints: BoxConstraints(
                     maxWidth: screenWidth*0.4,
                   ),
                   child: Text(
-                      'Actual Price: ${formatAmountFromDouble(favoriteWatch.actualPrice)}€'),
+                      'Actual Price: ${formatAmountFromDouble(favoriteWatch.actualPrice)}'),
                 ),
               ],
             ),

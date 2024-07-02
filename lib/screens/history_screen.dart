@@ -226,7 +226,7 @@ class CustomCard extends StatelessWidget {
                 SizedBox(height: screenWidth * 0.02),
                 Text('Traded shares: $shareTraded'),
                 Text('Trade type: $buySell'),
-                Text('Total: ${formatAmountFromDouble(price * shareTraded)}€'),
+                Text('Total: ${formatAmountFromDouble(price * shareTraded)}'),
               ],
             )
           ]),

@@ -185,8 +185,6 @@ Future<APIStatus> buyShares(
     );
 
     if (response.statusCode == 200) {
-      // ignore: avoid_print
-      print("SUCCESS BUY");
       return APIStatus.success;
     } else {
       throw Exception(
@@ -286,8 +284,8 @@ Future<APIStatus> updateSharesOnSale(int watchId, int userId, double oldPrice,
     double newPrice, int numberOfShares) async {
   try {
     Map<String, dynamic> requestBody = {
-      'oldPrice': oldPrice.toString(),
-      'newPrice': newPrice.toString(),
+      'oldPrice': oldPrice,
+      'newPrice': newPrice,
       'numberOfShares': numberOfShares,
     };
 

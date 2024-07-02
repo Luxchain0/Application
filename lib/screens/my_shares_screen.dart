@@ -16,38 +16,143 @@ class MySharesScreen extends StatefulWidget {
 }
 
 class _MySharesScreenState extends State<MySharesScreen> {
+  late Future<List<MySharesOnSale>> futureMySharesOnSale = Future.value([]);
+  final ScrollController _scrollController = ScrollController();
+  bool isLoadingMore = false;
+  int pageNumber = 1;
+  int watchPerPage = 10;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeData();
+    _scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _initializeData() async {
+    Future<SharedPreferences> userFuture = getUserData();
+    SharedPreferences user = await userFuture;
+
+    int userId = user.getInt('accountid') ?? 0;
+
+    setState(() {
+      futureMySharesOnSale = getMySharesOnSale(userId, pageNumber, watchPerPage);
+    });
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      _loadMoreShares();
+    }
+  }
+
+  void _loadMoreShares() async {
+    if (isLoadingMore) return;
+    
+    setState(() {
+      isLoadingMore = true;
+    });
+
+    pageNumber++;
+
+    Future<SharedPreferences> userFuture = getUserData();
+    SharedPreferences user = await userFuture;
+    int userId = user.getInt('accountid') ?? 0;
+
+    List<MySharesOnSale> newShares =
+        await getMySharesOnSale(userId, pageNumber, watchPerPage);
+
+    setState(() {
+      futureMySharesOnSale.then((shares) {
+        shares.addAll(newShares);
+        return shares;
+      });
+      isLoadingMore = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-            vertical: height * 0.02, horizontal: width * 0.04),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              'My shares on sale',
-              style: TextStyle(
-                  color: Colors.black87,
-                  height: 1,
-                  fontSize: width * 0.1,
-                  fontFamily: 'Bebas'),
+      body: SafeArea(
+        bottom: false,
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: width * 0.05, vertical: height * 0.02),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: height * 0.02),
+                  child: Text(
+                    'My Shares on Sale',
+                    style: TextStyle(
+                        color: Colors.black87,
+                        height: 1,
+                        fontSize: width * 0.1,
+                        fontFamily: 'Bebas'),
+                  ),
+                ),
+                FutureBuilder<List<MySharesOnSale>>(
+                  future: futureMySharesOnSale,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Container(
+                          constraints: BoxConstraints(minHeight: height*0.6, maxWidth: width),
+                          child: const Center(
+                            child: CircularProgressIndicator()
+                          )
+                        );
+                    } else if (snapshot.hasData) {
+                      List<MySharesOnSale> mySharesOnSale = snapshot.data!;
+                      return mySharesOnSale.isNotEmpty 
+                      ? Column(
+                        children: snapshot.data!
+                            .map((myShare) => CustomCard(
+                                  watchID: myShare.watchId,
+                                  screenWidth: width,
+                                  myShare: myShare,
+                                  imgUrl: getDownloadURL(myShare.imageuri),
+                                ))
+                            .toList(),
+                      )
+                      : Container(
+                                    margin: EdgeInsets.symmetric(
+                                        vertical: height * 0.01),
+                                    child: const Center(
+                                      child: Text(
+                                          textAlign: TextAlign.center,
+                                          '\nYou\'ve not put up for sale any shares of your watches.'),
+                                    ),
+                                  );
+                    } else if (snapshot.hasError) {
+                      return Text('${snapshot.error}');
+                    } else {
+                      return const SizedBox(); // Placeholder widget when no data is available
+                    }
+                  },
+                ),
+                if (isLoadingMore)
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+              ],
             ),
-            SizedBox(
-              height: height * 0.01,
-            ),
-            Expanded(
-              child: MySharesOnSaleCardsView(
-                width: width,
-                height: height,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -300,8 +405,7 @@ class CustomCard extends StatelessWidget {
               Text('Serial: $watchID'),
               SizedBox(height: screenWidth * 0.02),
               Text('Shares on Sale: ${myShare.sharesOnSale}'),
-              Text('At this price: ${myShare.onSaleAtPrice}'),
-              Text('Share price: ${formatAmountFromDouble(myShare.price)}€'),
+              Text('At this price: ${myShare.onSaleAtPrice}'),                Text('Share price: ${formatAmountFromDouble(myShare.price)}€'),
             ],
           ),
         ],

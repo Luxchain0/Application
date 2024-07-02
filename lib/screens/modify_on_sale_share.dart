@@ -61,8 +61,6 @@ class _ModifyOnSaleShareScreenState extends State<ModifyOnSaleShareScreen> {
   }
 
   Future<void> _saveChanges() async {
-    print("SAVING");
-
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -80,11 +78,12 @@ class _ModifyOnSaleShareScreenState extends State<ModifyOnSaleShareScreen> {
               SharedPreferences user = await getUserData();
               int userId = user.getInt('accountid') ?? 0;
 
+
               var result = await updateSharesOnSale(
                 modifySharesOnSale.watchid, // watchId
                 userId,
                 modifySharesOnSale.proposalPrice, // oldPrice
-                double.parse(myController.text), // newPrice
+                double.parse(myController.text), // newPrice // FIXME: parse correctly
                 onSaleAtPrice, // numberOfShares
               );
               if (APIStatus.success == result) {
@@ -330,9 +329,6 @@ class _ModifyOnSaleShareScreenState extends State<ModifyOnSaleShareScreen> {
         OutlinedButton(
           onPressed: () {
             if (myController.text.isNotEmpty) {
-              setState(() {
-                modifySharesOnSale.setProposalPrice(myController.text);
-              });
               _saveChanges();
             }
           },

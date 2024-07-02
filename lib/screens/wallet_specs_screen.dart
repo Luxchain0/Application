@@ -64,13 +64,6 @@ class WalletSpecsScreen extends StatelessWidget {
                     SizedBox(
                       width: width * 0.01,
                     ),
-                    Text(
-                      '€',
-                      style: TextStyle(
-                        fontSize: width * 0.06,
-                        height: 1,
-                      ),
-                    ),
                     Expanded(
                         child: SizedBox(
                       width: width * 0.01,
@@ -90,11 +83,11 @@ class WalletSpecsScreen extends StatelessWidget {
                 ),
               ),
               Text(
-                'In shares: ${formatAmountFromDouble(walletData.inShares)} €',
+                'In shares: ${formatAmountFromDouble(walletData.inShares)}',
                 style: TextStyle(fontSize: width * 0.04),
               ),
               Text(
-                'Liquidity: ${formatAmountFromDouble(walletData.liquidity)} €',
+                'Liquidity: ${formatAmountFromDouble(walletData.liquidity)}',
                 style: TextStyle(fontSize: width * 0.04),
               ),
               SizedBox(
