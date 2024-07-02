@@ -1,6 +1,5 @@
 import 'package:candlesticks/candlesticks.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:lux_chain/screens/buy_screen.dart';
 import 'package:lux_chain/screens/sell_screen.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
@@ -27,8 +26,6 @@ class _WatchScreenState extends State<WatchScreen> {
   late double increaseRate = 0;
   late bool _isLoading = true;
 
-  late Future<List<Candle>> candles = Future.value([]);
-  final String interval = 'day';
 
   @override
   void initState() {
@@ -50,9 +47,6 @@ class _WatchScreenState extends State<WatchScreen> {
       increaseRate = additionalData.increaseRate;
       _isLoading = false;
     });
-
-    //TODO: da mettere a posto quesa cosa delle candele
-    // candles = getCandles(interval, widget.watch.watchId);
   }
 
   @override
@@ -89,24 +83,7 @@ class _WatchScreenState extends State<WatchScreen> {
                 //   child: FutureBuilder(
                 //     future: candles,
                 //     builder: (context, snapshot) {
-                //       if (snapshot.connectionState == ConnectionState.waiting) {
-                //         return const CircularProgressIndicator();
-                //       } else if (snapshot.hasData) {
-                //         print('Qua ci arriviamo');
-                //         print(snapshot.data);
-                //         final List<Candle> candles =
-                //             snapshot.data as List<Candle>;
-                //         return Candlesticks(
-                //           candles: candles,
-                //         );
-                //       } else if (snapshot.hasError) {
-                //         return Text('Error: ${snapshot.error}');
-                //       } else {
-                //         return const SizedBox();
-                //       }
-                //     },
-                //   ),
-                // ),
+               
                 SizedBox(height: height * 0.01),
                 if (sharesOwned > 0) _buildSellButton(),
                 SizedBox(height: height * 0.02),

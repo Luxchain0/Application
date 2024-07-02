@@ -463,6 +463,29 @@ class Favorite {
 }
 
 
+class Candle {
+  final int watchid;
+  final String date;
+  final double max;
+  final double min;
+
+  const Candle({
+    required this.watchid,
+    required this.date,
+    required this.max,
+    required this.min,
+  });
+
+  factory Candle.fromJson(Map<String, dynamic> json) {
+    return Candle(
+      watchid: json['watchid'] as int,
+      date: json['date'] as String,
+      max: json['max'] as double,
+      min: json['min'] as double,
+    );
+  }
+}
+
 
 
 

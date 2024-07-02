@@ -70,7 +70,8 @@ class _MarketScreenState extends State<MarketScreen> {
                         onChanged: (value) {
                           if (value.isNotEmpty) {
                             setState(() {
-                              _nameSearchedWatch = value; // rimuoverlo per disattivare la ricerca automatica
+                              _nameSearchedWatch =
+                                  value; // rimuoverlo per disattivare la ricerca automatica
                               _provvisorio = value;
                             });
                           }
@@ -86,7 +87,8 @@ class _MarketScreenState extends State<MarketScreen> {
                     child: CustomButton(
                         screenWidth: width,
                         textColor: Colors.white,
-                        backgorundColor: const Color.fromARGB(255, 89, 126, 188),
+                        backgorundColor:
+                            const Color.fromARGB(255, 89, 126, 188),
                         text: 'Search',
                         onPressed: () {
                           setState(() {
@@ -155,8 +157,8 @@ class _MarketCardsViewState extends State<MarketCardsView> {
       SharedPreferences user = await getUserData();
       int userId = user.getInt('accountid') ?? 0;
 
-      List<MarketPlaceWatch> req = await getMarketPlaceWatches(
-          _pageNumber, _numberOfWatchesPerRequest, widget.searchedString, userId);
+      List<MarketPlaceWatch> req = await getMarketPlaceWatches(_pageNumber,
+          _numberOfWatchesPerRequest, widget.searchedString, userId);
 
       if (mounted) {
         setState(() {
@@ -174,12 +176,6 @@ class _MarketCardsViewState extends State<MarketCardsView> {
         });
       }
     }
-  }
-
-  @override
-  void dispose() {
-    // Se necessario, cancella timer o listener qui
-    super.dispose();
   }
 
   @override
@@ -360,7 +356,7 @@ class CustomBottomBigCard extends StatelessWidget {
                 ),
                 Container(
                   constraints: BoxConstraints(
-                    maxWidth: screenWidth*0.4,
+                    maxWidth: screenWidth * 0.4,
                   ),
                   child: Text(
                     marketWatch.modelType.model.modelname,
@@ -373,13 +369,13 @@ class CustomBottomBigCard extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  constraints: BoxConstraints(
-                    maxWidth: screenWidth*0.4,
-                  ),
-                  child: Text('Serial: ${marketWatch.modelType.reference}')),
+                    constraints: BoxConstraints(
+                      maxWidth: screenWidth * 0.4,
+                    ),
+                    child: Text('Serial: ${marketWatch.modelType.reference}')),
                 Container(
                   constraints: BoxConstraints(
-                    maxWidth: screenWidth*0.4,
+                    maxWidth: screenWidth * 0.4,
                   ),
                   child: Text(
                       'Retail Price: ${formatAmountFromDouble(marketWatch.retailPrice)}€'),
@@ -387,7 +383,7 @@ class CustomBottomBigCard extends StatelessWidget {
                 SizedBox(height: screenWidth * 0.02),
                 Container(
                   constraints: BoxConstraints(
-                    maxWidth: screenWidth*0.4,
+                    maxWidth: screenWidth * 0.4,
                   ),
                   child: Text(
                       'Retail Price: ${formatAmountFromDouble(marketWatch.retailPrice)}€'),

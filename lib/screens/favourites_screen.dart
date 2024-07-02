@@ -3,7 +3,6 @@ import 'package:lux_chain/screens/watch_screen.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/firestore.dart';
-import 'package:lux_chain/utilities/size_config.dart';
 import 'package:lux_chain/utilities/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,94 +15,165 @@ class FavouritesScreen extends StatefulWidget {
 }
 
 class _FavouritesScreenState extends State<FavouritesScreen> {
-  Future<List<Favorite>> futureFavorites = Future.value([]);
+
+  @override
+  Widget build(BuildContext context) {
+   double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+            vertical: height * 0.02, horizontal: width * 0.04),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              'My favourites',
+              style: TextStyle(
+                  color: Colors.black87,
+                  height: 1,
+                  fontSize: width * 0.1,
+                  fontFamily: 'Bebas'),
+            ),
+            SizedBox(
+              height: height * 0.01,
+            ),
+            Expanded(
+              child: MyFavouritesCardsView(
+                width: width,
+                height: height,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class MyFavouritesCardsView extends StatefulWidget {
+  final double width;
+  final double height;
+
+  const MyFavouritesCardsView({
+    required this.width,
+    required this.height,
+    super.key,
+  });
+
+  @override
+  _MyFavouritesCardsViewState createState() =>
+      _MyFavouritesCardsViewState();
+}
+
+class _MyFavouritesCardsViewState extends State<MyFavouritesCardsView> {
+  late bool _isLastPage;
+  late int _pageNumber = 1;
+  late bool _isError;
+  late bool _isLoading;
+  final int _numberOfWatchesPerRequest = 10;
+  late List<Favorite> _favourites;
+  final int _nextPageTrigger = 0;
 
   @override
   void initState() {
-    _initializeData();
     super.initState();
+    _favourites = [];
+    _isLastPage = false;
+    _isLoading = true;
+    _isError = false;
+    fetchData();
   }
 
-  void _initializeData() async {
-    Future<SharedPreferences> userFuture = getUserData();
-    SharedPreferences user = await userFuture;
+  Future<void> fetchData() async {
+    try {
+      SharedPreferences user = await getUserData();
+      int userId = user.getInt('accountid') ?? 0;
 
-    int userId = user.getInt('accountid') ?? 0;
-    setState(() {
-      futureFavorites = getFavorites(userId);
-    });
+      print('page number: $_pageNumber');
+      print('object per request: $_numberOfWatchesPerRequest');
+      List<Favorite> req = await getFavorites(userId);
+      for (var element in req) {
+        print('watchID: ${element.watchid}');
+      }
+
+      if (mounted) {
+        print(_favourites.length.toString());
+        setState(() {
+          _favourites.addAll(req);
+          _isLastPage = req.length < _numberOfWatchesPerRequest;
+          _isLoading = false;
+          _pageNumber += 1;
+        });
+        print(_favourites.length.toString());
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isError = true;
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
-    double height = SizeConfig.screenH!;
-    double width = SizeConfig.screenW!;
+    return _favourites.isEmpty ? _buildEmptyListView() : _buildListView();
+  }
 
-    return Scaffold(
-      body: SafeArea(
-        bottom: false,
+  Widget _buildEmptyListView() {
+    if (_isLoading) {
+      return const Center(
         child: Padding(
-          padding: EdgeInsets.only(
-              right: width * 0.05, left: width * 0.05, top: height * 0.01),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Expanded(
-                child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: FutureBuilder<List<Favorite>>(
-                        future: futureFavorites,
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Container(
-                                constraints: BoxConstraints(
-                                    minHeight: height * 0.8, maxWidth: width),
-                                child: const Center(
-                                    child: CircularProgressIndicator()));
-                          } else if (snapshot.hasData) {
-                            List<Favorite> favorites = snapshot.data!;
-                            return favorites.isNotEmpty
-                                ? Column(
-                                    children: favorites.map(
-                                      (favorite) {
-                                        return CustomBottomBigCard(
-                                          watchID: favorite.watch.watchId,
-                                          screenWidth: width,
-                                          imgUrl: getDownloadURL(
-                                              favorite.watch.imageuri),
-                                          favoriteWatch: favorite.watch,
-                                        );
-                                      },
-                                    ).toList(),
-                                  )
-                                : Container(
-                                    margin: EdgeInsets.symmetric(
-                                        vertical: height * 0.01),
-                                    child: const Center(
-                                      child: Text(
-                                          textAlign: TextAlign.center,
-                                          '\nYou\'ve not added any watch as favourite yet.'),
-                                    ),
-                                  );
-                          } else if (snapshot.hasError) {
-                            // Gestisci il caso in cui si verifica un errore
-                            return Text('Error: ${snapshot.error}');
-                          } else {
-                            // Gestisci il caso in cui non ci sono dati disponibili
-                            return const Center(
-                              child: Text(
-                                  "\nYou've not added any watch as favourite yet."),
-                            ); // Placeholder widget when no data is available
-                          }
-                        })),
-              ),
-            ],
-          ),
+          padding: EdgeInsets.all(8),
+          child: CircularProgressIndicator(),
         ),
-      ),
+      );
+    } else if (_isError) {
+      return const Center(
+        child: Text('Errore'),
+      );
+    } else {
+      return const SizedBox();
+    }
+  }
+
+  Widget _buildListView() {
+    return ListView.builder(
+      itemCount: _favourites.length + (_isLastPage ? 0 : 1),
+      itemBuilder: (context, index) {
+        if (index == _favourites.length - _nextPageTrigger && !_isLastPage) {
+          fetchData();
+        }
+        if (index == _favourites.length) {
+          if (_isError) {
+            return const Center(
+              child: Text('Error'),
+            );
+          } else {
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+        }
+        final Favorite favourite = _favourites[index];
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 7),
+          child: CustomBottomBigCard(
+            watchID: favourite.watchid,
+            screenWidth: widget.width,
+            imgUrl: getDownloadURL(favourite.watch.imageuri),
+            favoriteWatch: favourite.watch,
+          ),
+        );
+      },
     );
   }
 }
