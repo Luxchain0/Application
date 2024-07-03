@@ -3,6 +3,7 @@ import 'package:lux_chain/screens/chart_card.dart';
 import 'package:lux_chain/screens/history_screen.dart';
 import 'package:lux_chain/screens/market_screen.dart';
 import 'package:lux_chain/screens/my_shares_screen.dart';
+import 'package:lux_chain/screens/settings_screen.dart';
 import 'package:lux_chain/screens/wallet_screen.dart';
 import 'package:lux_chain/screens/favourites_screen.dart';
 import 'package:lux_chain/utilities/size_config.dart';
@@ -27,7 +28,8 @@ class _FrameScreenState extends State<FrameScreen> {
     MySharesScreen(), //Le quote che hai in vendita
     HistoryScreen(), //Ultime quote che hai comprato o venduto
     FavouritesScreen(), //Preferiti
-    ChartCard(isShowingMainData: true),
+    SettingsScreen(),
+    //ChartCard(isShowingMainData: true),
    
   ];
 

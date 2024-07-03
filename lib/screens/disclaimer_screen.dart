@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lux_chain/screens/login_screen.dart';
+import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -90,7 +91,8 @@ class _DisclaimerScreenState extends State<DisclaimerScreen> {
             ),
           ),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
+              await accessLog();
               if (user.getBool("verified") == true) {
                 Navigator.pushNamedAndRemoveUntil(
                     context, FrameScreen.id, (_) => false);

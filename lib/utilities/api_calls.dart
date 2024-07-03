@@ -428,3 +428,22 @@ Future<List<Candle>> getCandles(String timeFrame, int watchID) async {
     throw Exception('[FLUTTER] Error retrieving candles: $e');
   }
 }
+
+Future<APIStatus> accessLog() async {
+  try {
+    final response = await http.post(
+      Uri.parse('$baseUrl/access'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return APIStatus.success;
+    } else {
+      return APIStatus.error;
+    }
+  } catch (e) {
+    return APIStatus.error;
+  }
+}
