@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:lux_chain/utilities/api_models.dart';
+import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/utils.dart';
 
 Future<List<WalletWatch>> getUserWalletWatches(
@@ -13,7 +14,12 @@ Future<List<WalletWatch>> getUserWalletWatches(
       'watchPerPage': watchPerPage.toString(),
     });
 
-    final response = await http.get(url);
+    final response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
@@ -32,6 +38,9 @@ Future<WatchAdditionalData> getWatchAdditionalData(
     // Retrieving all the additional information about the watch
     final response = await http.get(
       Uri.parse('$baseUrl/wallet/watch/$userID/$watchID'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
     );
 
     if (response.statusCode == 200) {
@@ -50,6 +59,9 @@ Future<List<WalletWatch>> getSharesByUser(int userID) async {
     //Retrieving all the shares owned by the user
     final response = await http.get(
       Uri.parse('$baseUrl/shares/$userID'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
     );
 
     if (response.statusCode == 200) {
@@ -68,6 +80,9 @@ Future<List<WalletWatch>> getSharesByWatch(int watchID) async {
     //Retreieving watch's shares
     final response = await http.get(
       Uri.parse('$baseUrl/watches/shares/$watchID'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
     );
 
     if (response.statusCode == 200) {
@@ -86,6 +101,9 @@ Future<List<WalletWatch>> getSharesOfUserOnSale(int userID) async {
     // Retreieving user's on sale shares
     final response = await http.get(
       Uri.parse('$baseUrl/shares/onSale/$userID'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
     );
 
     if (response.statusCode == 200) {
@@ -105,9 +123,10 @@ Future<List<ShareOnSale>> getSharesOfTheWatchOnSell(
     // Retrieving all the on sale shares of a watch
     final response = await http.get(
       Uri.parse('$baseUrl/marketplace/watch/$watchID')
-          .replace(queryParameters: {
-        'userId': userID.toString(),
-      }),
+          .replace(queryParameters: {'userId': userID.toString()}),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
     );
 
     if (response.statusCode == 200) {
@@ -126,6 +145,9 @@ Future<WalletData> getWalletData(int userID) async {
     // Retrieiving wallet data
     final response = await http.get(
       Uri.parse('$baseUrl/wallet/data/$userID'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
     );
 
     if (response.statusCode == 200) {
@@ -150,6 +172,7 @@ Future<APIStatus> sellShares(
     final response = await http.post(
       Uri.parse('$baseUrl/trade/sell/$watchID/$userID'),
       headers: <String, String>{
+        'Authorization': 'Bearer $token',
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(requestBody),
@@ -179,6 +202,7 @@ Future<APIStatus> buyShares(
     final response = await http.post(
       Uri.parse('$baseUrl/trade/buy/$watchID/$userID'),
       headers: <String, String>{
+        'Authorization': 'Bearer $token',
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(requestBody),
@@ -211,7 +235,12 @@ Future<List<MarketPlaceWatch>> getMarketPlaceWatches(
     final Uri url = Uri.parse('$baseUrl/marketplace/watches')
         .replace(queryParameters: queryParams);
 
-    final response = await http.get(url);
+    final response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
@@ -231,6 +260,9 @@ Future<List<Trade>> getTradeHistory(int userID) async {
   try {
     final response = await http.get(
       Uri.parse('$baseUrl/trade/history/$userID'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
     );
 
     if (response.statusCode == 200) {
@@ -250,6 +282,9 @@ Future<List<MySharesOnSale>> getMySharesOnSale(
     final response = await http.get(
       Uri.parse(
           '$baseUrl/trade/onsale/$userID?pageNumber=$pageNumber&watchPerPage=$watchPerPage'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
     );
 
     if (response.statusCode == 200) {
@@ -267,6 +302,9 @@ Future<List<Favorite>> getFavorites(int userID) async {
   try {
     final response = await http.get(
       Uri.parse('$baseUrl/wallet/favorites/$userID'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
     );
 
     if (response.statusCode == 200) {
@@ -292,6 +330,7 @@ Future<APIStatus> updateSharesOnSale(int watchId, int userId, double oldPrice,
     final response = await http.put(
       Uri.parse('$baseUrl/trade/onsale/$watchId/$userId'),
       headers: <String, String>{
+        'Authorization': 'Bearer $token',
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(requestBody),
@@ -311,6 +350,9 @@ Future<bool> getFavorite(int userID, int watchID) async {
   try {
     final response = await http.get(
       Uri.parse('$baseUrl/wallet/favorite/$userID/$watchID'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
     );
 
     if (response.statusCode == 200) {
@@ -328,6 +370,9 @@ Future<APIStatus> addToFavourite(int userID, int watchID) async {
   try {
     final response = await http.post(
       Uri.parse('$baseUrl/wallet/favorite/$userID/$watchID'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
     );
 
     if (response.statusCode == 201) {
@@ -347,6 +392,9 @@ Future<APIStatus> removeFromFavourite(int userID, int watchID) async {
   try {
     final response = await http.delete(
       Uri.parse('$baseUrl/wallet/favorite/$userID/$watchID'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
     );
 
     if (response.statusCode == 200) {
@@ -366,6 +414,9 @@ Future<List<Candle>> getCandles(String timeFrame, int watchID) async {
   try {
     final response = await http.get(
       Uri.parse('$baseUrl/graph/$timeFrame/$watchID'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
     );
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
