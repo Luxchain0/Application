@@ -19,12 +19,15 @@ class _MySharesScreenState extends State<MySharesScreen> {
   late Future<List<MySharesOnSale>> futureMySharesOnSale = Future.value([]);
   final ScrollController _scrollController = ScrollController();
   bool isLoadingMore = false;
+  bool isLastPage = false;
   int pageNumber = 1;
-  int watchPerPage = 10;
+  final int watchPerPage = 10;
+  late List<MySharesOnSale> _sharesOnSale;
 
   @override
   void initState() {
     super.initState();
+    _sharesOnSale = [];
     _initializeData();
     _scrollController.addListener(_scrollListener);
   }
@@ -36,44 +39,41 @@ class _MySharesScreenState extends State<MySharesScreen> {
   }
 
   void _initializeData() async {
-    Future<SharedPreferences> userFuture = getUserData();
-    SharedPreferences user = await userFuture;
-
+    SharedPreferences user = await getUserData();
     int userId = user.getInt('accountid') ?? 0;
 
+    List<MySharesOnSale> initialShares = await getMySharesOnSale(userId, pageNumber, watchPerPage);
     setState(() {
-      futureMySharesOnSale = getMySharesOnSale(userId, pageNumber, watchPerPage);
+      _sharesOnSale = initialShares;
+      futureMySharesOnSale = Future.value(_sharesOnSale);
     });
   }
 
   void _scrollListener() {
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {
+    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent && !isLoadingMore && !isLastPage) {
       _loadMoreShares();
     }
   }
 
   void _loadMoreShares() async {
-    if (isLoadingMore) return;
-    
     setState(() {
       isLoadingMore = true;
     });
 
     pageNumber++;
 
-    Future<SharedPreferences> userFuture = getUserData();
-    SharedPreferences user = await userFuture;
+    SharedPreferences user = await getUserData();
     int userId = user.getInt('accountid') ?? 0;
 
-    List<MySharesOnSale> newShares =
-        await getMySharesOnSale(userId, pageNumber, watchPerPage);
+    List<MySharesOnSale> newShares = await getMySharesOnSale(userId, pageNumber, watchPerPage);
 
     setState(() {
-      futureMySharesOnSale.then((shares) {
-        shares.addAll(newShares);
-        return shares;
-      });
+      if (newShares.isEmpty) {
+        isLastPage = true;
+      } else {
+        _sharesOnSale.addAll(newShares);
+        futureMySharesOnSale = Future.value(_sharesOnSale);
+      }
       isLoadingMore = false;
     });
   }
@@ -86,72 +86,63 @@ class _MySharesScreenState extends State<MySharesScreen> {
     return Scaffold(
       body: SafeArea(
         bottom: false,
-        child: SingleChildScrollView(
-          controller: _scrollController,
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: width * 0.05, vertical: height * 0.02),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: height * 0.02),
-                  child: Text(
-                    'My Shares on Sale',
-                    style: TextStyle(
-                        color: Colors.black87,
-                        height: 1,
-                        fontSize: width * 0.1,
-                        fontFamily: 'Bebas'),
-                  ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: width * 0.05, vertical: height * 0.02),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.symmetric(vertical: height * 0.02),
+                child: Text(
+                  'My Shares on Sale',
+                  style: TextStyle(
+                      color: Colors.black87,
+                      height: 1,
+                      fontSize: width * 0.1,
+                      fontFamily: 'Bebas'),
                 ),
-                FutureBuilder<List<MySharesOnSale>>(
+              ),
+              Expanded(
+                child: FutureBuilder<List<MySharesOnSale>>(
                   future: futureMySharesOnSale,
                   builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
+                    if (snapshot.connectionState == ConnectionState.waiting && _sharesOnSale.isEmpty) {
                       return Container(
-                          constraints: BoxConstraints(minHeight: height*0.6, maxWidth: width),
-                          child: const Center(
-                            child: CircularProgressIndicator()
-                          )
-                        );
+                        constraints: BoxConstraints(minHeight: height * 0.6, maxWidth: width),
+                        child: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
                     } else if (snapshot.hasData) {
                       List<MySharesOnSale> mySharesOnSale = snapshot.data!;
-                      return mySharesOnSale.isNotEmpty 
-                      ? Column(
-                        children: snapshot.data!
-                            .map((myShare) => CustomCard(
-                                  watchID: myShare.watchId,
-                                  screenWidth: width,
-                                  myShare: myShare,
-                                  imgUrl: getDownloadURL(myShare.imageuri),
-                                ))
-                            .toList(),
-                      )
-                      : Container(
-                                    margin: EdgeInsets.symmetric(
-                                        vertical: height * 0.01),
-                                    child: const Center(
-                                      child: Text(
-                                          textAlign: TextAlign.center,
-                                          '\nYou\'ve not put up for sale any shares of your watches.'),
-                                    ),
-                                  );
+                      return ListView.builder(
+                        controller: _scrollController,
+                        itemCount: mySharesOnSale.length + (isLoadingMore ? 1 : 0),
+                        itemBuilder: (context, index) {
+                          if (index == mySharesOnSale.length) {
+                            return const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Center(child: CircularProgressIndicator()),
+                            );
+                          }
+                          final myShare = mySharesOnSale[index];
+                          return CustomCard(
+                            watchID: myShare.watchId,
+                            screenWidth: width,
+                            myShare: myShare,
+                            imgUrl: getDownloadURL(myShare.imageuri),
+                          );
+                        },
+                      );
                     } else if (snapshot.hasError) {
-                      return Text('${snapshot.error}');
+                      return Center(child: Text('${snapshot.error}'));
                     } else {
                       return const SizedBox(); // Placeholder widget when no data is available
                     }
                   },
                 ),
-                if (isLoadingMore)
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Center(child: CircularProgressIndicator()),
-                  ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -159,139 +150,14 @@ class _MySharesScreenState extends State<MySharesScreen> {
   }
 }
 
-class MySharesOnSaleCardsView extends StatefulWidget {
-  final double width;
-  final double height;
-
-  const MySharesOnSaleCardsView({
-    required this.width,
-    required this.height,
-    super.key,
-  });
-
-  @override
-  _MySharesOnSaleCardsViewState createState() =>
-      _MySharesOnSaleCardsViewState();
-}
-
-class _MySharesOnSaleCardsViewState extends State<MySharesOnSaleCardsView> {
-  late bool _isLastPage;
-  late int _pageNumber = 1;
-  late bool _isError;
-  late bool _isLoading;
-  final int _numberOfSharesPerRequest = 3;
-  late List<MySharesOnSale> _shares;
-  final int _nextPageTrigger = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _shares = [];
-    _isLastPage = false;
-    _isLoading = true;
-    _isError = false;
-    fetchData();
-  }
-
-  Future<void> fetchData() async {
-    try {
-      SharedPreferences user = await getUserData();
-      int userId = user.getInt('accountid') ?? 0;
-
-      print('page number: $_pageNumber');
-      print('object per request: $_numberOfSharesPerRequest');
-      List<MySharesOnSale> req = await getMySharesOnSale(
-          userId, _pageNumber, _numberOfSharesPerRequest);
-      for (var element in req) {
-        print('watchID: ${element.watchId}');
-      }
-
-      if (mounted) {
-        print(_shares.length.toString());
-        setState(() {
-          _shares.addAll(req);
-          _isLastPage = req.length < _numberOfSharesPerRequest;
-          _isLoading = false;
-          _pageNumber += 1;
-        });
-        print(_shares.length.toString());
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _isError = true;
-          _isLoading = false;
-        });
-      }
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _shares.isEmpty ? _buildEmptyListView() : _buildListView();
-  }
-
-  Widget _buildEmptyListView() {
-    if (_isLoading) {
-      return const Center(
-        child: Padding(
-          padding: EdgeInsets.all(8),
-          child: CircularProgressIndicator(),
-        ),
-      );
-    } else if (_isError) {
-      return const Center(
-        child: Text('Errore'),
-      );
-    } else {
-      return const SizedBox();
-    }
-  }
-
-  Widget _buildListView() {
-    return ListView.builder(
-      itemCount: _shares.length + (_isLastPage ? 0 : 1),
-      itemBuilder: (context, index) {
-        if (index == _shares.length - _nextPageTrigger && !_isLastPage) {
-          fetchData();
-        }
-        if (index == _shares.length) {
-          if (_isError) {
-            return const Center(
-              child: Text('Error'),
-            );
-          } else {
-            return const Center(
-              child: Padding(
-                padding: EdgeInsets.all(8),
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
-        }
-        final MySharesOnSale share = _shares[index];
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 7),
-          child: CustomCard(
-            watchID: share.watchId,
-            screenWidth: widget.width,
-            myShare: share,
-            imgUrl: getDownloadURL(share.imageuri),
-          ),
-        );
-      },
-    );
-  }
-}
-
 class CustomCard extends StatelessWidget {
   const CustomCard({
-    super.key,
+    Key? key,
     required this.watchID,
     required this.screenWidth,
     required this.myShare,
     required this.imgUrl,
-  });
+  }) : super(key: key);
 
   final int watchID;
   final double screenWidth;
@@ -331,8 +197,7 @@ class CustomCard extends StatelessWidget {
                       return const CircularProgressIndicator();
                     } else if (snapshot.hasData) {
                       return ClipRRect(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(7)),
+                        borderRadius: const BorderRadius.all(Radius.circular(7)),
                         child: Image.network(
                           snapshot.data!,
                           width: screenWidth * 0.25,
@@ -353,7 +218,7 @@ class CustomCard extends StatelessWidget {
                   backgorundColor: const Color.fromARGB(255, 17, 45, 68),
                   textColor: Colors.white,
                   text: 'Edit',
-                  onPressed: () => {
+                  onPressed: () {
                     Navigator.of(context).pushNamed(ModifyOnSaleShareScreen.id,
                         arguments: ModifySharesOnSale(
                           watchid: watchID,
@@ -364,7 +229,7 @@ class CustomCard extends StatelessWidget {
                           sharesOwned: myShare.sharesOwned,
                           sharesOnSale: myShare.sharesOnSale,
                           image: imgUrl,
-                        ))
+                        ));
                   },
                 ),
               ],
@@ -398,14 +263,16 @@ class CustomCard extends StatelessWidget {
                 ),
               ),
               Container(
-                  constraints: BoxConstraints(
-                    maxWidth: screenWidth * 0.4,
-                  ),
-                  child: Text('Reference: ${myShare.modelType.reference}')),
+                constraints: BoxConstraints(
+                  maxWidth: screenWidth * 0.4,
+                ),
+                child: Text('Reference: ${myShare.modelType.reference}'),
+              ),
               Text('Serial: $watchID'),
               SizedBox(height: screenWidth * 0.02),
               Text('Shares on Sale: ${myShare.sharesOnSale}'),
-              Text('At this price: ${myShare.onSaleAtPrice}'),                Text('Share price: ${formatAmountFromDouble(myShare.price)}€'),
+              Text('At this price: ${myShare.onSaleAtPrice}'),
+              Text('Share price: ${formatAmountFromDouble(myShare.price)}€'),
             ],
           ),
         ],
@@ -447,3 +314,4 @@ class CustomButton extends StatelessWidget {
     );
   }
 }
+
