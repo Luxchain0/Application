@@ -418,6 +418,7 @@ Future<List<Candle>> getCandles(String timeFrame, int watchID) async {
         'Authorization': 'Bearer $token',
       },
     );
+    
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
       return data.map((e) => Candle.fromJson(e)).toList();

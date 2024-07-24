@@ -480,8 +480,8 @@ class Candle {
     return Candle(
       watchid: json['watchid'] as int,
       date: json['date'] as String,
-      max: json['max'] as double,
-      min: json['min'] as double,
+      max: double.parse(json['max'] as String),
+      min: double.parse(json['min'] as String),
     );
   }
 }
