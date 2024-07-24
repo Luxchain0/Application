@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:lux_chain/screens/email_verification_screen.dart';
+import 'package:lux_chain/screens/login/email_verification_screen.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:http/http.dart' as http;

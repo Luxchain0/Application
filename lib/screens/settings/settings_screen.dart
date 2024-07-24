@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:lux_chain/screens/FAQ_screen.dart';
-import 'package:lux_chain/screens/login_screen.dart';
-import 'package:lux_chain/screens/personal_data_screen.dart';
-import 'package:lux_chain/screens/report_bug_screen.dart';
+import 'package:lux_chain/screens/settings/FAQ_screen.dart';
+import 'package:lux_chain/screens/login/login_screen.dart';
+import 'package:lux_chain/screens/settings/personal_data_screen.dart';
+import 'package:lux_chain/screens/settings/report_bug_screen.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 

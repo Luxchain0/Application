@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:lux_chain/screens/email_verification_screen.dart';
-import 'package:lux_chain/screens/reset_password_screen.dart';
+import 'package:lux_chain/screens/login/email_verification_screen.dart';
+import 'package:lux_chain/screens/login/reset_password_screen.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/size_config.dart';
-import 'package:lux_chain/screens/signup_screen.dart';
+import 'package:lux_chain/screens/login/signup_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:lux_chain/utilities/utils.dart';
 import 'package:url_launcher/url_launcher.dart';

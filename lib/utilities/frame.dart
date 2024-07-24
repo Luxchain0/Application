@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:lux_chain/screens/chart_card.dart';
-import 'package:lux_chain/screens/history_screen.dart';
-import 'package:lux_chain/screens/market_screen.dart';
+import 'package:lux_chain/screens/bottom_menu/history_screen.dart';
+import 'package:lux_chain/screens/bottom_menu/market_screen.dart';
 import 'package:lux_chain/screens/my_shares_screen.dart';
-import 'package:lux_chain/screens/settings_screen.dart';
-import 'package:lux_chain/screens/wallet_screen.dart';
-import 'package:lux_chain/screens/favourites_screen.dart';
+import 'package:lux_chain/screens/settings/settings_screen.dart';
+import 'package:lux_chain/screens/bottom_menu/wallet_screen.dart';
+import 'package:lux_chain/screens/bottom_menu/favourites_screen.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,7 +30,6 @@ class _FrameScreenState extends State<FrameScreen> {
     FavouritesScreen(), //Preferiti
     // SettingsScreen(),
     ChartCard(isShowingMainData: true),
-   
   ];
 
   @override

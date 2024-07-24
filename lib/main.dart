@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:lux_chain/firebase_options.dart';
-import 'package:lux_chain/screens/disclaimer_screen.dart';
+import 'package:lux_chain/screens/login/disclaimer_screen.dart';
 import 'package:lux_chain/utilities/route_generator.dart';
 import 'package:lux_chain/utilities/theme_data.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lux_chain/screens/watch_screen.dart';
+import 'package:lux_chain/screens/bottom_menu/watch_screen.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/firestore.dart';

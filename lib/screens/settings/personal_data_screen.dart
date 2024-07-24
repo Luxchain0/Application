@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:lux_chain/screens/reset_password_screen.dart';
+import 'package:lux_chain/screens/login/reset_password_screen.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/size_config.dart';
-import 'package:lux_chain/screens/settings_screen.dart';
+import 'package:lux_chain/screens/settings/settings_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:lux_chain/utilities/utils.dart';
 

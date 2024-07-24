@@ -17,9 +17,9 @@ class FAQScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: appBar(width),
-      body: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.symmetric(
+      body: const SingleChildScrollView(
+        physics: AlwaysScrollableScrollPhysics(),
+        padding: EdgeInsets.symmetric(
           horizontal: 40.0,
           vertical: 40.0,
         ),
