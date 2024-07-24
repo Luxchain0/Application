@@ -1,6 +1,7 @@
 import 'package:candlesticks/candlesticks.dart';
 import 'package:flutter/material.dart';
 import 'package:lux_chain/screens/buy_screen.dart';
+import 'package:lux_chain/screens/chart_card.dart';
 import 'package:lux_chain/screens/sell_screen.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/api_models.dart';
@@ -26,7 +27,6 @@ class _WatchScreenState extends State<WatchScreen> {
   late double increaseRate = 0;
   late bool _isLoading = true;
 
-
   @override
   void initState() {
     print(widget.watch.watchId);
@@ -35,7 +35,6 @@ class _WatchScreenState extends State<WatchScreen> {
   }
 
   Future<void> _initializeData() async {
-
     final user = await getUserData();
     final userId = user.getInt('accountid') ?? 0;
 
@@ -60,40 +59,41 @@ class _WatchScreenState extends State<WatchScreen> {
       appBar: appBar(width),
       body: SafeArea(
         bottom: false,
-        child: _isLoading 
-          ? const Center(
-             child: CircularProgressIndicator(),
-            )
-          : SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: width * 0.05, vertical: height * 0.02),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                _buildWatchInfo(),
-                SizedBox(height: height * 0.02),
-                _buildImageContainer(height),
-                SizedBox(height: height * 0.02),
-                _buildDescription(),
-                SizedBox(height: height * 0.03),
-                //TODO: questa è la parte del grafico
-                // Container(
-                //   constraints: BoxConstraints(maxHeight: height * 0.6),
-                //   child: FutureBuilder(
-                //     future: candles,
-                //     builder: (context, snapshot) {
-               
-                SizedBox(height: height * 0.01),
-                if (sharesOwned > 0) _buildSellButton(),
-                SizedBox(height: height * 0.02),
-                _buildBestSharesForSale(),
-                SizedBox(height: height * 0.02),
-                _buildSharesOnSaleList(),
-              ],
-            ),
-          ),
-        ),
+        child: _isLoading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: width * 0.05, vertical: height * 0.02),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      _buildWatchInfo(),
+                      SizedBox(height: height * 0.02),
+                      _buildImageContainer(height),
+                      SizedBox(height: height * 0.02),
+                      _buildDescription(),
+                      SizedBox(height: height * 0.03),
+                      SizedBox(height: height * 0.01),
+                      Container(
+                        constraints: BoxConstraints(maxHeight: height * 0.6),
+                        child: ChartCard(
+                          isShowingMainData: false,
+                          watchId: widget.watch.watchId,
+                        ),
+                      ),
+                      SizedBox(height: height * 0.01),
+                      if (sharesOwned > 0) _buildSellButton(),
+                      SizedBox(height: height * 0.02),
+                      _buildBestSharesForSale(),
+                      SizedBox(height: height * 0.02),
+                      _buildSharesOnSaleList(),
+                    ],
+                  ),
+                ),
+              ),
       ),
     );
   }

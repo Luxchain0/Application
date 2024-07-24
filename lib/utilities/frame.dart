@@ -28,8 +28,7 @@ class _FrameScreenState extends State<FrameScreen> {
     MySharesScreen(), //Le quote che hai in vendita
     HistoryScreen(), //Ultime quote che hai comprato o venduto
     FavouritesScreen(), //Preferiti
-    // SettingsScreen(),
-    ChartCard(isShowingMainData: true),
+    SettingsScreen(),
   ];
 
   @override

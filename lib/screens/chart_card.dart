@@ -6,10 +6,14 @@ import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 
 class ChartCard extends StatefulWidget {
-  const ChartCard({super.key, required this.isShowingMainData});
-
-  final int watchId = 1;
+  final int watchId; // Aggiungi qui l'ID dell'orologio
   final bool isShowingMainData;
+
+  const ChartCard({
+    Key? key,
+    required this.watchId,
+    required this.isShowingMainData,
+  }) : super(key: key);
 
   @override
   State<ChartCard> createState() => _ChartCardState();
