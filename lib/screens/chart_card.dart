@@ -159,17 +159,22 @@ class _ChartCardState extends State<ChartCard> {
         ),
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
-            reservedSize: 60,
+            reservedSize: 70,
             showTitles: true,
-            interval: _delta / 2 > 0 ? _delta / 2 : 1, // Intervallo minimo di 1
+            interval: _delta / 5 > 0 ? _delta / 5 : 1,
             getTitlesWidget: (value, meta) {
+              
               return SideTitleWidget(
                 axisSide: meta.axisSide,
                 space: 8.0,
                 child: Text(
-                  value.toString(), 
+                  formatRawAmountFromDouble(value),
                   style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 12),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  maxLines: 1, // Ensure text is kept in one line
                 ),
               );
             },
@@ -185,20 +190,20 @@ class _ChartCardState extends State<ChartCard> {
 
   SideTitles get bottomTitles => SideTitles(
         showTitles: true,
-        reservedSize: 20, // Reduced reserved size
+        reservedSize: 20,
         interval: 1,
         getTitlesWidget: (value, meta) {
           String text = _getLabel(value);
           return SideTitleWidget(
             axisSide: meta.axisSide,
-            space: 4.0, // Reduced space
+            space: 4.0,
             child: Text(
               text,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 10, // Reduced font size
+                fontSize: 10,
               ),
-              overflow: TextOverflow.ellipsis, // Prevent wrapping
+              overflow: TextOverflow.ellipsis,
             ),
           );
         },
@@ -214,10 +219,9 @@ class _ChartCardState extends State<ChartCard> {
     switch (_selected) {
       // Usato _selected come String
       case 'hour':
-        return DateFormat('HH:mm').format(date);
+        return DateFormat('HH').format(date);
       case 'day':
         return DateFormat('dd/MM').format(date);
-      case 'min':
       default:
         return DateFormat('dd/MM/yyyy').format(date);
     }
@@ -232,7 +236,7 @@ class _ChartCardState extends State<ChartCard> {
         show: true,
         drawHorizontalLine: true,
         drawVerticalLine: true,
-        horizontalInterval: _delta / 2 > 0 ? _delta / 2 : 1,
+        horizontalInterval: _delta / 5 > 0 ? _delta / 5 : 1,
       );
 
   FlBorderData get borderData => FlBorderData(

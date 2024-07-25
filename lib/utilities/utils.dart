@@ -13,6 +13,10 @@ String formatAmountFromDouble(double number) {
   final formatter = NumberFormat.currency(symbol: '€', decimalDigits: 2, locale: 'it_IT');
   return formatter.format(number);
 }
+String formatRawAmountFromDouble(double number) {
+  final formatter = NumberFormat.currency(symbol: '', decimalDigits: 2, locale: 'it_IT');
+  return formatter.format(number);
+}
 
 double parseFormattedStringToDouble(String formattedString) {
   String cleanedString = formattedString.replaceAll('€', '').replaceAll(' ', '').trim();
