@@ -26,6 +26,8 @@ class _ChartCardState extends State<ChartCard> {
   final List<FlSpot> _listDotsMax = [];
   final List<FlSpot> _listDotsMin = [];
   final List<DateTime> _dates = [];
+  DateTime selectedStartDate = DateTime.now();
+  DateTime selectedEndDate = DateTime.now();
 
   double _delta = 0;
   double _min = 0;
@@ -35,18 +37,18 @@ class _ChartCardState extends State<ChartCard> {
   @override
   void initState() {
     super.initState();
-    _initializeData(_selected);
+    _initializeData(_selected, selectedStartDate, selectedEndDate);
   }
 
-  void updateSelected(String newSelection) {
+  void updateSelected(String newSelection, DateTime startDate, DateTime endDate) {
     setState(() {
       _selected = newSelection;
-      _initializeData(_selected);
+      _initializeData(_selected, startDate, endDate);
     });
   }
 
-  Future<void> _initializeData(String temporal) async {
-    futureData = await getCandles(temporal, widget.watchId);
+  Future<void> _initializeData(String temporal, DateTime startDate, DateTime endDate) async {
+    futureData = await getCandles(temporal, widget.watchId, startDate, endDate);
 
     double min = double.infinity;
     double max = double.negativeInfinity;
@@ -84,15 +86,70 @@ class _ChartCardState extends State<ChartCard> {
 
     return Column(
       children: [
-        SizedBox(height: height * 0.05),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            const Text(
+              'Start Date: ',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+                "${selectedStartDate.day} - ${selectedStartDate.month} - ${selectedStartDate.year}"),
+            TextButton(
+                onPressed: () async {
+                  final DateTime? dateTime = await showDatePicker(
+                    context: context,
+                    firstDate: DateTime(1990),
+                    lastDate: DateTime(2040),
+                  );
+                  dateTime != null
+                      ? setState(() {
+                          selectedStartDate = dateTime;
+                        })
+                      : null;
+                },
+                child: const Text('Change date')),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            const Text(
+              'End Date: ',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+                "${selectedEndDate.day} - ${selectedEndDate.month} - ${selectedEndDate.year}"),
+            TextButton(
+                onPressed: () async {
+                  final DateTime? dateTime = await showDatePicker(
+                      context: context,
+                      firstDate: DateTime(1990),
+                      lastDate: DateTime(2040));
+                  dateTime != null
+                      ? setState(() {
+                          selectedEndDate = dateTime;
+                        })
+                      : null;
+                },
+                child: const Text('Change date')),
+          ],
+        ),
         Container(
           margin: const EdgeInsets.symmetric(vertical: 30),
           constraints:
-              BoxConstraints(maxWidth: width * 0.9, maxHeight: height * 0.3),
-          child: LineChart(
+              BoxConstraints(maxWidth: width * 0.9, maxHeight: height * 0.27),
+          child: 
+          _listDotsMax.isNotEmpty
+          ? LineChart(
             sampleData,
             duration: const Duration(milliseconds: 250),
-          ),
+          )
+          : const Text('There is no data to show in the selected period')
         ),
         SegmentedButton(
           segments: const <ButtonSegment<String>>[
@@ -111,7 +168,7 @@ class _ChartCardState extends State<ChartCard> {
           ],
           selected: {_selected},
           onSelectionChanged: (newSelection) =>
-              updateSelected(newSelection.first),
+              updateSelected(newSelection.first, selectedStartDate, selectedStartDate),
         ),
         SizedBox(height: height * 0.03),
         Row(
@@ -161,9 +218,8 @@ class _ChartCardState extends State<ChartCard> {
           sideTitles: SideTitles(
             reservedSize: 70,
             showTitles: true,
-            interval: _delta / 5 > 0 ? _delta / 5 : 1,
+            interval: _delta / 3 > 0 ? _delta / 3 : 1,
             getTitlesWidget: (value, meta) {
-              
               return SideTitleWidget(
                 axisSide: meta.axisSide,
                 space: 8.0,
@@ -196,7 +252,7 @@ class _ChartCardState extends State<ChartCard> {
           String text = _getLabel(value);
           return SideTitleWidget(
             axisSide: meta.axisSide,
-            space: 4.0,
+            space: 7.0,
             child: Text(
               text,
               style: const TextStyle(
@@ -236,7 +292,7 @@ class _ChartCardState extends State<ChartCard> {
         show: true,
         drawHorizontalLine: true,
         drawVerticalLine: true,
-        horizontalInterval: _delta / 5 > 0 ? _delta / 5 : 1,
+        horizontalInterval: _delta / 3 > 0 ? _delta / 3 : 1,
       );
 
   FlBorderData get borderData => FlBorderData(

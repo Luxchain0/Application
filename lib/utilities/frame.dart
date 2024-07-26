@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lux_chain/screens/chart_card.dart';
 import 'package:lux_chain/screens/bottom_menu/history_screen.dart';
 import 'package:lux_chain/screens/bottom_menu/market_screen.dart';
 import 'package:lux_chain/screens/bottom_menu/my_shares_screen.dart';

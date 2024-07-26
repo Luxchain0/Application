@@ -410,7 +410,7 @@ Future<APIStatus> removeFromFavourite(int userID, int watchID) async {
   }
 }
 
-Future<List<Candle>> getCandles(String timeFrame, int watchID) async {
+Future<List<Candle>> getCandles(String timeFrame, int watchID, DateTime startDate, DateTime endDate) async {
   try {
     final response = await http.get(
       Uri.parse('$baseUrl/graph/$timeFrame/$watchID'),
