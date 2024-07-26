@@ -463,23 +463,26 @@ class Favorite {
 }
 
 
-class Candle {
+class GraphData {
   final int watchid;
   final String date;
+  final double avg;
   final double max;
   final double min;
 
-  const Candle({
+  const GraphData({
     required this.watchid,
     required this.date,
+    required this.avg,
     required this.max,
     required this.min,
   });
 
-  factory Candle.fromJson(Map<String, dynamic> json) {
-    return Candle(
+  factory GraphData.fromJson(Map<String, dynamic> json) {
+    return GraphData(
       watchid: json['watchid'] as int,
       date: json['date'] as String,
+      avg: double.parse(json['avg'] as String),
       max: double.parse(json['max'] as String),
       min: double.parse(json['min'] as String),
     );

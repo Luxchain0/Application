@@ -410,23 +410,32 @@ Future<APIStatus> removeFromFavourite(int userID, int watchID) async {
   }
 }
 
-Future<List<Candle>> getCandles(String timeFrame, int watchID, DateTime startDate, DateTime endDate) async {
+Future<List<GraphData>> getGraphDatas(String timeFrame, int watchID, DateTime startDate, DateTime endDate) async {
   try {
+    String formattedStartDate = startDate.toIso8601String();
+    String formattedEndDate = endDate.toIso8601String();
+
+    final Uri url = Uri.parse('$baseUrl/graph/$timeFrame/$watchID')
+        .replace(queryParameters: {
+      'fromDate': formattedStartDate,
+      'toDate': formattedEndDate,
+    });
+
     final response = await http.get(
-      Uri.parse('$baseUrl/graph/$timeFrame/$watchID'),
+      url,
       headers: {
         'Authorization': 'Bearer $token',
       },
     );
-    
+
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
-      return data.map((e) => Candle.fromJson(e)).toList();
+      return data.map((e) => GraphData.fromJson(e)).toList();
     } else {
-      throw Exception('[FLUTTER] Failed to load candles');
+      throw Exception('[FLUTTER] Failed to load graph data');
     }
   } catch (e) {
-    throw Exception('[FLUTTER] Error retrieving candles: $e');
+    throw Exception('[FLUTTER] Error retrieving graph data: $e');
   }
 }
 

@@ -22,11 +22,11 @@ class ChartCard extends StatefulWidget {
 
 class _ChartCardState extends State<ChartCard> {
   String _selected = 'day';
-  List<Candle> futureData = [];
+  List<GraphData> futureData = [];
   final List<FlSpot> _listDotsMax = [];
   final List<FlSpot> _listDotsMin = [];
   final List<DateTime> _dates = [];
-  DateTime selectedStartDate = DateTime.now();
+  DateTime selectedStartDate = DateTime.now().subtract(const Duration(days: 7));
   DateTime selectedEndDate = DateTime.now();
 
   double _delta = 0;
@@ -40,15 +40,18 @@ class _ChartCardState extends State<ChartCard> {
     _initializeData(_selected, selectedStartDate, selectedEndDate);
   }
 
-  void updateSelected(String newSelection, DateTime startDate, DateTime endDate) {
+  void updateSelected(
+      String newSelection, DateTime startDate, DateTime endDate) {
     setState(() {
       _selected = newSelection;
       _initializeData(_selected, startDate, endDate);
     });
   }
 
-  Future<void> _initializeData(String temporal, DateTime startDate, DateTime endDate) async {
-    futureData = await getCandles(temporal, widget.watchId, startDate, endDate);
+  Future<void> _initializeData(
+      String temporal, DateTime startDate, DateTime endDate) async {
+    futureData =
+        await getGraphDatas(temporal, widget.watchId, startDate, endDate);
 
     double min = double.infinity;
     double max = double.negativeInfinity;
@@ -58,7 +61,7 @@ class _ChartCardState extends State<ChartCard> {
     _dates.clear();
     _contatore = 0;
 
-    for (Candle candle in futureData) {
+    for (GraphData candle in futureData) {
       if (candle.max > max) max = candle.max;
       if (candle.min < min) min = candle.min;
 
@@ -101,14 +104,16 @@ class _ChartCardState extends State<ChartCard> {
                 onPressed: () async {
                   final DateTime? dateTime = await showDatePicker(
                     context: context,
-                    firstDate: DateTime(1990),
-                    lastDate: DateTime(2040),
+                    firstDate: DateTime(2024),
+                    lastDate: DateTime(2030),
                   );
-                  dateTime != null
-                      ? setState(() {
-                          selectedStartDate = dateTime;
-                        })
-                      : null;
+                  if (dateTime != null) {
+                    setState(() {
+                      selectedStartDate = dateTime;
+                    });
+                    _initializeData(
+                        _selected, selectedStartDate, selectedEndDate);
+                  }
                 },
                 child: const Text('Change date')),
           ],
@@ -128,29 +133,30 @@ class _ChartCardState extends State<ChartCard> {
                 onPressed: () async {
                   final DateTime? dateTime = await showDatePicker(
                       context: context,
-                      firstDate: DateTime(1990),
-                      lastDate: DateTime(2040));
-                  dateTime != null
-                      ? setState(() {
-                          selectedEndDate = dateTime;
-                        })
-                      : null;
+                      firstDate: DateTime(2024),
+                      lastDate: DateTime(2030));
+                  if (dateTime != null) {
+                    setState(() {
+                      selectedEndDate = dateTime;
+                    });
+                    _initializeData(
+                        _selected, selectedStartDate, selectedEndDate);
+                  }
                 },
                 child: const Text('Change date')),
           ],
         ),
         Container(
-          margin: const EdgeInsets.symmetric(vertical: 30),
-          constraints:
-              BoxConstraints(maxWidth: width * 0.9, maxHeight: height * 0.27),
-          child: 
-          _listDotsMax.isNotEmpty
-          ? LineChart(
-            sampleData,
-            duration: const Duration(milliseconds: 250),
-          )
-          : const Text('There is no data to show in the selected period')
-        ),
+            margin: const EdgeInsets.symmetric(vertical: 30),
+            constraints:
+                BoxConstraints(maxWidth: width * 0.9, maxHeight: height * 0.27),
+            child: _listDotsMax.isNotEmpty
+                ? LineChart(
+                    sampleData,
+                    duration: const Duration(milliseconds: 250),
+                  )
+                : const Text(
+                    'There is no data to show in the selected period')),
         SegmentedButton(
           segments: const <ButtonSegment<String>>[
             // ButtonSegment<String>(
@@ -167,8 +173,8 @@ class _ChartCardState extends State<ChartCard> {
             ),
           ],
           selected: {_selected},
-          onSelectionChanged: (newSelection) =>
-              updateSelected(newSelection.first, selectedStartDate, selectedStartDate),
+          onSelectionChanged: (newSelection) => updateSelected(
+              newSelection.first, selectedStartDate, selectedStartDate),
         ),
         SizedBox(height: height * 0.03),
         Row(
