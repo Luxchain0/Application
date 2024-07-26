@@ -159,10 +159,6 @@ class _ChartCardState extends State<ChartCard> {
                     'There is no data to show in the selected period')),
         SegmentedButton(
           segments: const <ButtonSegment<String>>[
-            // ButtonSegment<String>(
-            //   value: 'min',
-            //   label: Text('Min'),
-            // ),
             ButtonSegment<String>(
               value: 'hour',
               label: Text('Hour'),
@@ -189,6 +185,19 @@ class _ChartCardState extends State<ChartCard> {
               measure: 'Minimum sold price',
               screenWidth: width,
               color: Colors.redAccent,
+            ),
+          ],
+        ),
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Flexible(
+              child: Text(
+                "This is the value of a share of this watch during the selected time window",
+                textAlign: TextAlign.center,
+                softWrap: true,
+                overflow: TextOverflow.visible,
+              ),
             ),
           ],
         ),

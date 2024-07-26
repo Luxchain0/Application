@@ -41,14 +41,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Navigator.of(context).pushNamed(PersonalDataScreen.id),
               },
             ),
-            const SizedBox(height: 30.0),
-            CustomCard(
-              icon: Icons.question_mark,
-              text: 'FAQ',
-              onPressed: () => {
-                Navigator.of(context).pushNamed(FAQScreen.id),
-              },
-            ),
+            // const SizedBox(height: 30.0),
+            // CustomCard(
+            //   icon: Icons.question_mark,
+            //   text: 'FAQ',
+            //   onPressed: () => {
+            //     Navigator.of(context).pushNamed(FAQScreen.id),
+            //   },
+            // ),
             const SizedBox(height: 30.0),
             CustomCard(
               icon: Icons.bug_report,

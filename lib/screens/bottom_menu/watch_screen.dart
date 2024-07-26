@@ -77,12 +77,13 @@ class _WatchScreenState extends State<WatchScreen> {
                       _buildDescription(),
                       SizedBox(height: height * 0.03),
                       SizedBox(height: height * 0.01),
-                      Container(
-                        constraints: BoxConstraints(maxHeight: height * 0.6),
-                        child: ChartCard(
-                          isShowingMainData: false,
-                          watchId: widget.watch.watchId,
-                        ),
+                      Column(
+                        children: [
+                          ChartCard(
+                            isShowingMainData: false,
+                            watchId: widget.watch.watchId,
+                          ),
+                        ],
                       ),
                       SizedBox(height: height * 0.01),
                       if (sharesOwned > 0) _buildSellButton(),
