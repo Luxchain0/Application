@@ -267,7 +267,7 @@ class _ChartCardState extends State<ChartCard> {
           String text = _getLabel(value);
           return SideTitleWidget(
             axisSide: meta.axisSide,
-            space: 7.0,
+            space: 4.0,
             child: Text(
               text,
               style: const TextStyle(
