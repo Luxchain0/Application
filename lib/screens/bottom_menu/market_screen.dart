@@ -373,21 +373,9 @@ class CustomBottomBigCard extends StatelessWidget {
                       maxWidth: screenWidth * 0.4,
                     ),
                     child: Text('Serial: ${marketWatch.modelType.reference}')),
-                Container(
-                  constraints: BoxConstraints(
-                    maxWidth: screenWidth * 0.4,
-                  ),
-                  child: Text(
-                      'Retail Price: ${formatAmountFromDouble(marketWatch.retailPrice)}'),
-                ),
                 SizedBox(height: screenWidth * 0.02),
-                Container(
-                  constraints: BoxConstraints(
-                    maxWidth: screenWidth * 0.4,
-                  ),
-                  child: Text(
-                      'Retail Price: ${formatAmountFromDouble(marketWatch.retailPrice)}'),
-                ),
+                Text('Retail Price: ${formatAmountFromDouble(marketWatch.retailPrice)}'),
+                Text('Actual Price: ${formatAmountFromDouble(marketWatch.actualPrice)}'),
                 Text('Total Shares: ${marketWatch.numberOfShares}'),
                 Text('Shares available: ${marketWatch.sharesOnSale}'),
                 SizedBox(height: screenWidth * 0.02),

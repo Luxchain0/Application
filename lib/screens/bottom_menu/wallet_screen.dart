@@ -232,51 +232,51 @@ class WalletInfo extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 3),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  formatAmountFromDouble(
-                      walletData.inShares + walletData.liquidity),
-                  style: TextStyle(
-                    color: Colors.black87,
-                    height: 1,
-                    fontSize: width * 0.1,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(
-                  width: width * 0.01,
-                ),
-                Expanded(
-                  child: SizedBox(
-                    width: width * 0.01,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(3)),
-                    color:
-                        walletData.rate >= 0 ? Colors.lightGreen : Colors.red,
-                  ),
-                  child: Text('${walletData.rate}%'),
-                ),
-              ],
+          Text(
+            formatAmountFromDouble(walletData.inShares + walletData.liquidity),
+            style: TextStyle(
+              color: Colors.black87,
+              height: 1,
+              fontSize: width * 0.1,
+              fontWeight: FontWeight.bold,
             ),
           ),
           SizedBox(
-            height: height * 0.01,
+            height: height * 0.02,
           ),
-          Text(
-            'In shares: ${formatAmountFromDouble(walletData.inShares)}',
-            style: TextStyle(fontSize: width * 0.04),
-          ),
-          Text(
-            'Liquidity: ${formatAmountFromDouble(walletData.liquidity)}',
-            style: TextStyle(fontSize: width * 0.04),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'In shares: ${formatAmountFromDouble(walletData.inShares)}',
+                    style: TextStyle(fontSize: width * 0.04),
+                  ),
+                  Text(
+                    'Liquidity: ${formatAmountFromDouble(walletData.liquidity)}',
+                    style: TextStyle(fontSize: width * 0.04),
+                  ),
+                ],
+              ),
+              SizedBox(
+                width: width * 0.01,
+              ),
+              Expanded(
+                child: SizedBox(
+                  width: width * 0.01,
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(3)),
+                  color: walletData.rate >= 0 ? Colors.lightGreen : Colors.red,
+                ),
+                child: Text('${walletData.rate}%'),
+              ),
+            ],
           ),
           SizedBox(
             height: height * 0.04,
@@ -324,8 +324,8 @@ class CustomBottomBigCard extends StatelessWidget {
             ));
       },
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: screenHeight*0.003),
-        padding: EdgeInsets.symmetric(vertical: screenHeight*0.015),
+        margin: EdgeInsets.symmetric(vertical: screenHeight * 0.003),
+        padding: EdgeInsets.symmetric(vertical: screenHeight * 0.015),
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(
@@ -379,7 +379,9 @@ class CustomBottomBigCard extends StatelessWidget {
                           ? Colors.lightGreen
                           : Colors.red,
                     ),
-                    child: Text('${walletWatch.increaseRate}%'),
+                    child: (walletWatch.increaseRate >= 0)
+                        ? Text('+${walletWatch.increaseRate}%')
+                        : Text('-${walletWatch.increaseRate}%'),
                   ),
                 ],
               ),
@@ -399,7 +401,7 @@ class CustomBottomBigCard extends StatelessWidget {
                 ),
                 Container(
                   constraints: BoxConstraints(
-                    maxWidth: screenWidth*0.5,
+                    maxWidth: screenWidth * 0.5,
                   ),
                   child: Text(
                     walletWatch.modelType.model.modelname,
@@ -412,13 +414,14 @@ class CustomBottomBigCard extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  constraints: BoxConstraints(
-                    maxWidth: screenWidth*0.5,
-                  ),
-                  child: Text('Reference: ${walletWatch.modelType.reference}')),
+                    constraints: BoxConstraints(
+                      maxWidth: screenWidth * 0.5,
+                    ),
+                    child:
+                        Text('Reference: ${walletWatch.modelType.reference}')),
                 Container(
                   constraints: BoxConstraints(
-                    maxWidth: screenWidth*0.5,
+                    maxWidth: screenWidth * 0.5,
                   ),
                   child: Text(
                       'Retail Price: ${formatAmountFromDouble(walletWatch.retailPrice)}'),
@@ -428,14 +431,14 @@ class CustomBottomBigCard extends StatelessWidget {
                     'Owned Shares: ${walletWatch.owned}/${walletWatch.numberOfShares}'),
                 Container(
                   constraints: BoxConstraints(
-                    maxWidth: screenWidth*0.5,
+                    maxWidth: screenWidth * 0.5,
                   ),
                   child: Text(
                       'Retail Price: ${formatAmountFromDouble(walletWatch.retailPrice)}'),
                 ),
                 Container(
                   constraints: BoxConstraints(
-                    maxWidth: screenWidth*0.5,
+                    maxWidth: screenWidth * 0.5,
                   ),
                   child: Text(
                       'Actual Price: ${formatAmountFromDouble(walletWatch.actualPrice)}'),
@@ -537,7 +540,9 @@ class _RefreshingWalletDataState extends State<RefreshingWalletData> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => WalletSpecsScreen(walletData: widget.walletData,),
+                builder: (context) => WalletSpecsScreen(
+                  walletData: widget.walletData,
+                ),
               ),
             );
           },
