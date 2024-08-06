@@ -482,9 +482,9 @@ class GraphData {
     return GraphData(
       watchid: json['watchid'] as int,
       date: json['date'] as String,
-      avg: double.parse(json['avg'] as String),
-      max: double.parse(json['max'] as String),
-      min: double.parse(json['min'] as String),
+      avg: (json['avg'] is num) ? customDoubleParser(json['avg']) : double.parse(json['avg'] as String),
+      max: (json['avg'] is num) ? customDoubleParser(json['max']) : double.parse(json['max'] as String),
+      min: (json['avg'] is num) ? customDoubleParser(json['min']) : double.parse(json['min'] as String),
     );
   }
 }

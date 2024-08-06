@@ -381,7 +381,7 @@ class CustomBottomBigCard extends StatelessWidget {
                     ),
                     child: (walletWatch.increaseRate >= 0)
                         ? Text('+${walletWatch.increaseRate}%')
-                        : Text('-${walletWatch.increaseRate}%'),
+                        : Text('${walletWatch.increaseRate}%'),
                   ),
                 ],
               ),
