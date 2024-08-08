@@ -1,3 +1,6 @@
+import 'package:intl/intl.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 import 'package:lux_chain/utilities/utils.dart';
 
 enum APIStatus {
@@ -380,33 +383,32 @@ class MySharesOnSale extends Watch {
     required this.onSaleAtPrice,
     required this.sharesOwned,
     required this.sharesOnSale,
-  }) : super (
-    watchId: watchId,
-    condition: condition,
-    numberOfShares: numberOfShares,
-    retailPrice: retailPrice,
-    initialPrice: initialPrice,
-    actualPrice: actualPrice,
-    dialcolor: dialColor,
-    year: year,
-    imageuri: imageuri,
-    description: description,
-    modelTypeId: modelTypeId,
-    modelType: ModelType(
-      modeltypeid: modelTypeId,
-      reference: reference,
-      braceletmaterial: braceletMaterial,
-      casematerial: caseMaterial,
-      diameter: diameter,
-      modelid: modelId,
-      model: Model(
-        modelid: modelId,
-        modelname: modelName,
-        brandname: brandName,
-      ),
-    ),
-
-  );
+  }) : super(
+          watchId: watchId,
+          condition: condition,
+          numberOfShares: numberOfShares,
+          retailPrice: retailPrice,
+          initialPrice: initialPrice,
+          actualPrice: actualPrice,
+          dialcolor: dialColor,
+          year: year,
+          imageuri: imageuri,
+          description: description,
+          modelTypeId: modelTypeId,
+          modelType: ModelType(
+            modeltypeid: modelTypeId,
+            reference: reference,
+            braceletmaterial: braceletMaterial,
+            casematerial: caseMaterial,
+            diameter: diameter,
+            modelid: modelId,
+            model: Model(
+              modelid: modelId,
+              modelname: modelName,
+              brandname: brandName,
+            ),
+          ),
+        );
 
   factory MySharesOnSale.fromJson(Map<String, dynamic> json) {
     return MySharesOnSale(
@@ -459,7 +461,6 @@ class Favorite {
   }
 }
 
-
 class GraphData {
   final int watchid;
   final String date;
@@ -476,22 +477,38 @@ class GraphData {
   });
 
   factory GraphData.fromJson(Map<String, dynamic> json) {
+    String rawDate = json['date'] as String;
+
+    String romeDate = convertDateToRomeTime(rawDate);
+
     return GraphData(
       watchid: json['watchid'] as int,
-      date: json['date'] as String,
-      avg: (json['avg'] is num) ? customDoubleParser(json['avg']) : double.parse(json['avg'] as String),
-      max: (json['avg'] is num) ? customDoubleParser(json['max']) : double.parse(json['max'] as String),
-      min: (json['avg'] is num) ? customDoubleParser(json['min']) : double.parse(json['min'] as String),
+      date: romeDate,
+      avg: (json['avg'] is num)
+          ? customDoubleParser(json['avg'])
+          : double.parse(json['avg'] as String),
+      max: (json['max'] is num)
+          ? customDoubleParser(json['max'])
+          : double.parse(json['max'] as String),
+      min: (json['min'] is num)
+          ? customDoubleParser(json['min'])
+          : double.parse(json['min'] as String),
     );
   }
+
+  static String convertDateToRomeTime(String jsondate) {
+    tz.initializeTimeZones();
+
+    DateTime dateTime = DateTime.parse(jsondate);
+
+    final rome = tz.getLocation('Europe/Rome');
+    final romeTime = tz.TZDateTime.from(dateTime, rome);
+
+    final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm:ss');
+    return formatter.format(romeTime);
+  }
+
+  static double customDoubleParser(num value) {
+    return value.toDouble();
+  }
 }
-
-
-
-
-
-
-
-
-
-
