@@ -5,7 +5,7 @@ description: Luxchain
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 
-version: 0.2.0
+version: 0.2.1
 
 environment:
   sdk: '>=3.1.2 <4.0.0'
