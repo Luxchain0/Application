@@ -31,7 +31,6 @@ class _MySharesScreenState extends State<HistoryScreen> {
     Future<SharedPreferences> userFuture = getUserData();
     SharedPreferences user = await userFuture;
 
-    // Assume that you have a specific key in SharedPreferences
     int userId = user.getInt('accountid') ?? 0;
 
     setState(() {

@@ -270,8 +270,7 @@ class MarketPlaceWatch extends Watch {
 class Trade extends Watch {
   final double price;
   final int sharesTraded;
-  final int yearOfTrade;
-  final int dayOfTrade;
+  final String tradeinterval;
   final String type;
 
   Trade({
@@ -295,8 +294,7 @@ class Trade extends Watch {
     required brandName,
     required this.price,
     required this.sharesTraded,
-    required this.yearOfTrade,
-    required this.dayOfTrade,
+    required this.tradeinterval,
     required this.type,
   }) : super(
           watchId: watchId,
@@ -347,8 +345,7 @@ class Trade extends Watch {
       brandName: json['brandname'] as String,
       price: double.parse(json['price'] as String),
       sharesTraded: json['sharestraded'] as int,
-      yearOfTrade: json['yearoftrade'] as int,
-      dayOfTrade: json['dayoftrade'] as int,
+      tradeinterval: json['tradeinterval'] as String,
       type: json['type'] as String,
     );
   }
