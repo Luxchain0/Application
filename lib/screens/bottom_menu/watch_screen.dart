@@ -488,7 +488,22 @@ class RefreshingAdditionalData extends StatelessWidget {
                 borderRadius: BorderRadius.circular(3),
                 color: increaseRate >= 0 ? Colors.lightGreen : Colors.red,
               ),
-              child: Text("$increaseRate%"),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '${increaseRate >= 0 ? '+' : ''}$increaseRate%',
+                    style:
+                        const TextStyle(color: Colors.white),
+                  ),
+                  const SizedBox(width: 4),
+                  const Icon(
+                    Icons.public,
+                    color: Colors.white,
+                    size: 16,
+                  ),
+                ],
+              ),
             ),
           ],
         ),

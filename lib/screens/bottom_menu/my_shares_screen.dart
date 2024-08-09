@@ -94,7 +94,7 @@ class _MySharesScreenState extends State<MySharesScreen> {
               Container(
                 margin: EdgeInsets.symmetric(vertical: height * 0.02),
                 child: Text(
-                  'My Shares on Sale',
+                  'My Shares for Sale',
                   style: TextStyle(
                       color: Colors.black87,
                       height: 1,
@@ -137,7 +137,7 @@ class _MySharesScreenState extends State<MySharesScreen> {
                     } else if (snapshot.hasError) {
                       return Center(child: Text('${snapshot.error}'));
                     } else {
-                      return const SizedBox(); // Placeholder widget when no data is available
+                      return const SizedBox();
                     }
                   },
                 ),
@@ -179,7 +179,7 @@ class CustomCard extends StatelessWidget {
           BoxShadow(
             color: Colors.black12,
             blurRadius: 2,
-            offset: Offset(3, 3), // Shadow position
+            offset: Offset(3, 3),
           ),
         ],
         borderRadius: const BorderRadius.all(Radius.circular(7)),
@@ -270,7 +270,7 @@ class CustomCard extends StatelessWidget {
               ),
               Text('Serial: $watchID'),
               SizedBox(height: screenWidth * 0.02),
-              Text('Shares on Sale: ${myShare.sharesOnSale}'),
+              Text('Shares for Sale: ${myShare.sharesOnSale}'),
               Text('At this price: ${myShare.onSaleAtPrice}'),
               Text('Share price: ${formatAmountFromDouble(myShare.price)}'),
             ],

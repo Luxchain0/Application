@@ -210,7 +210,7 @@ class CustomBottomBigCard extends StatelessWidget {
             BoxShadow(
               color: Colors.black12,
               blurRadius: 2,
-              offset: Offset(3, 3), // Shadow position
+              offset: Offset(3, 3),
             ),
           ],
           borderRadius: const BorderRadius.all(Radius.circular(7)),

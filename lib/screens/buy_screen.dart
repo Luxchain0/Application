@@ -179,7 +179,7 @@ class _BuyScreenState extends State<BuyScreen> {
                         width: 1,
                       ),
                       borderRadius: const BorderRadius.all(Radius.circular(7))),
-                  alignment: Alignment.center, // This is needed
+                  alignment: Alignment.center,
                   child: FutureBuilder<String>(
                     future: buyInfo.image,
                     builder: (context, snapshot) {
@@ -192,7 +192,7 @@ class _BuyScreenState extends State<BuyScreen> {
                           child: Image.network(
                             snapshot.data!,
                             fit: BoxFit
-                                .cover, // L'immagine si espanderà per riempire il contenitore
+                                .cover,
                           ),
                         );
                       } else {
@@ -220,13 +220,13 @@ class _BuyScreenState extends State<BuyScreen> {
                 SizedBox(
                   height: heigh * 0.02,
                 ),
-                Text('Shares on sale at this price: ${buyInfo.numberOfShares}'),
+                Text('Shares for sale at this price: ${buyInfo.numberOfShares}'),
                 Text(
                     'Price for one share: ${formatAmountFromDouble(buyInfo.proposalPrice)}'),
                 SizedBox(
                   height: heigh * 0.004,
                 ),
-                Text('Total shares on sale of this watch: ${buyInfo.sharesOnSale}'),
+                Text('Total shares for sale of this watch: ${buyInfo.sharesOnSale}'),
                 Text(
                     'Actual Price of the watch: ${formatAmountFromDouble(buyInfo.actualPrice)}'),
                 SizedBox(

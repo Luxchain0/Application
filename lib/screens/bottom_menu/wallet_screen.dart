@@ -96,7 +96,7 @@ class _WalletScreenState extends State<WalletScreen> {
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {
-                return const SizedBox(); // Placeholder widget when no data is available
+                return const SizedBox();
               }
             },
           ),
@@ -274,7 +274,10 @@ class WalletInfo extends StatelessWidget {
                   borderRadius: const BorderRadius.all(Radius.circular(3)),
                   color: walletData.rate >= 0 ? Colors.lightGreen : Colors.red,
                 ),
-                child: Text('${walletData.rate}%'),
+                child: Text(
+                  '${walletData.rate}%',
+                  style: const TextStyle(color: Colors.white),
+                ),
               ),
             ],
           ),
@@ -336,7 +339,7 @@ class CustomBottomBigCard extends StatelessWidget {
             BoxShadow(
               color: Colors.black12,
               blurRadius: 2,
-              offset: Offset(3, 3), // Shadow position
+              offset: Offset(3, 3),
             ),
           ],
           borderRadius: const BorderRadius.all(Radius.circular(7)),
@@ -379,10 +382,25 @@ class CustomBottomBigCard extends StatelessWidget {
                           ? Colors.lightGreen
                           : Colors.red,
                     ),
-                    child: (walletWatch.increaseRate >= 0)
-                        ? Text('+${walletWatch.increaseRate}%')
-                        : Text('${walletWatch.increaseRate}%'),
-                  ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize
+                          .min,
+                      children: [
+                        Text(
+                          '${walletWatch.increaseRate >= 0 ? '+' : ''}${walletWatch.increaseRate}%',
+                          style: const TextStyle(
+                              color: Colors.white), 
+                        ),
+                        const SizedBox(
+                            width: 4),
+                        const Icon(
+                          Icons.wallet,
+                          color: Colors.white,
+                          size: 16, 
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),

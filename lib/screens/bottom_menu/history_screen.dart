@@ -92,7 +92,7 @@ class _MySharesScreenState extends State<HistoryScreen> {
                     } else if (snapshot.hasError) {
                       return Text('${snapshot.error}');
                     } else {
-                      return const SizedBox(); // Placeholder widget when no data is available
+                      return const SizedBox();
                     }
                   },
                 ),
@@ -155,7 +155,7 @@ class CustomCard extends StatelessWidget {
                 BoxShadow(
                   color: Colors.black12,
                   blurRadius: 2,
-                  offset: Offset(3, 3), // Shadow position
+                  offset: Offset(3, 3),
                 ),
               ],
               borderRadius: const BorderRadius.all(Radius.circular(7))),

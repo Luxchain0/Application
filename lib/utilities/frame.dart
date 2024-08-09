@@ -40,14 +40,14 @@ class _FrameScreenState extends State<FrameScreen> {
         body: pages[currentPageIndex],
         bottomNavigationBar: NavigationBar(
           animationDuration: const Duration(seconds: 1),
-          labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
           destinations: const [
             NavigationDestination(
                 icon: Icon(Icons.wallet_rounded), label: 'Wallet'),
             NavigationDestination(
                 icon: Icon(Icons.store_rounded), label: 'Market'),
             NavigationDestination(
-                icon: Icon(Icons.shopping_bag_rounded), label: 'Shopping bag'),
+                icon: Icon(Icons.shopping_bag_rounded), label: 'For Sale'),
             NavigationDestination(
                 icon: Icon(Icons.alarm_outlined), label: 'History'),
             NavigationDestination(
@@ -84,7 +84,6 @@ appBar(width) {
       ));
 }
 
-// method for saving data to shared preferences
 void saveData(String key, dynamic value) async {
   print('Saving $key: $value');
   if (value is String) {

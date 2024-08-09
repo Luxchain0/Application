@@ -156,7 +156,7 @@ class _SellScreenState extends State<SellScreen> {
                         width: 1,
                       ),
                       borderRadius: const BorderRadius.all(Radius.circular(7))),
-                  alignment: Alignment.center, // This is needed
+                  alignment: Alignment.center,
                   child: FutureBuilder<String>(
                     future: sellInfo.image,
                     builder: (context, snapshot) {
@@ -168,8 +168,7 @@ class _SellScreenState extends State<SellScreen> {
                               const BorderRadius.all(Radius.circular(7)),
                           child: Image.network(
                             snapshot.data!,
-                            fit: BoxFit
-                                .cover, // L'immagine si espanderà per riempire il contenitore
+                            fit: BoxFit.cover,
                           ),
                         );
                       } else {
@@ -256,14 +255,12 @@ class _SellScreenState extends State<SellScreen> {
                         ),
                         onChanged: (value) {
                           if (value.isNotEmpty) {
-                            // Sostituire la virgola con un punto
                             String correctedValue = value.replaceAll(',', '.');
                             try {
                               setState(() {
                                 _priceOfOneShare = double.parse(correctedValue);
                               });
                             } catch (e) {
-                              // Gestire il caso in cui la stringa non possa essere convertita in double
                               setState(() {
                                 _priceOfOneShare = 0;
                               });

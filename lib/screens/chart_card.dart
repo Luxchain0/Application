@@ -1,6 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // Per la formattazione delle date
+import 'package:intl/intl.dart';
 import 'package:lux_chain/utilities/api_calls.dart';
 import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/size_config.dart';
@@ -116,7 +116,6 @@ class _ChartCardState extends State<ChartCard> {
                       );
 
                       if (selectedTime != null) {
-                        // Combina la data selezionata con l'ora selezionata
                         final DateTime dateTimeWithTime = DateTime(
                           dateTime.year,
                           dateTime.month,
@@ -244,7 +243,7 @@ class _ChartCardState extends State<ChartCard> {
                     fontSize: 12,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 1, // Ensure text is kept in one line
+                  maxLines: 1,
                 ),
               );
             },
@@ -287,7 +286,6 @@ class _ChartCardState extends State<ChartCard> {
     final DateTime date = _dates[value.toInt()];
 
     switch (_selected) {
-      // Usato _selected come String
       case 'hour':
         return DateFormat('HH').format(date);
       case 'day':

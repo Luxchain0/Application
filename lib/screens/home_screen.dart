@@ -155,7 +155,7 @@ class CustomBottomBigCard extends StatelessWidget {
             BoxShadow(
               color: Colors.black12,
               blurRadius: 2,
-              offset: Offset(3, 3), // Shadow position
+              offset: Offset(3, 3),
             ),
           ],
           borderRadius: const BorderRadius.all(Radius.circular(7))),
@@ -163,7 +163,7 @@ class CustomBottomBigCard extends StatelessWidget {
         Column(children: [
           Container(
             margin: const EdgeInsets.only(right: 15),
-            alignment: Alignment.center, // This is needed
+            alignment: Alignment.center,
             child: Image.asset(
               img,
               fit: BoxFit.contain,

@@ -59,8 +59,8 @@ class _DashboardExcelScreenState extends State<DashboardExcelScreen> {
                     fontFamily: 'Bebas'),
               ),
               Container(
-                margin: EdgeInsets.only(top: heigh * 0.015), // This is needed
-                child: Text(
+                margin: EdgeInsets.only(top: heigh * 0.015),
+                child: const Text(
                     'Per eseguire questa operazione correttamente l\'applicazione deve ricevere un foglio excel contenente dati in un formato ben preciso.'),
               ),
               SizedBox(

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart'
-    as http; // Aggiunto l'import per utilizzare http.post
+    as http;
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/size_config.dart';
 import 'package:lux_chain/utilities/utils.dart';
@@ -74,7 +74,7 @@ class ReportBugScreen extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   _submitBugReport(reportController.text,
-                      context); // Chiamata alla funzione per inviare il report
+                      context);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
@@ -110,8 +110,6 @@ class ReportBugScreen extends StatelessWidget {
     );
 
     if (response.statusCode == 200) {
-      // Successo
-      // Mostra un messaggio di conferma
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -131,8 +129,6 @@ class ReportBugScreen extends StatelessWidget {
         },
       );
     } else {
-      // Errore
-      // Mostra un messaggio di errore
       showDialog(
         context: context,
         builder: (BuildContext context) {

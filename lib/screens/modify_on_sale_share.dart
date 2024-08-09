@@ -83,7 +83,7 @@ class _ModifyOnSaleShareScreenState extends State<ModifyOnSaleShareScreen> {
                 modifySharesOnSale.watchid, // watchId
                 userId,
                 modifySharesOnSale.proposalPrice, // oldPrice
-                double.parse(myController.text), // newPrice // FIXME: parse correctly
+                double.parse(myController.text), // newPrice
                 onSaleAtPrice, // numberOfShares
               );
               if (APIStatus.success == result) {

@@ -7,7 +7,6 @@ import 'package:lux_chain/utilities/utils.dart';
 Future<List<WalletWatch>> getUserWalletWatches(
     int userID, int pageNumber, int watchPerPage) async {
   try {
-    // Costruisce l'URL con i parametri di query
     final url =
         Uri.parse('$baseUrl/wallet/watches/$userID').replace(queryParameters: {
       'pageNumber': pageNumber.toString(),
@@ -35,7 +34,6 @@ Future<List<WalletWatch>> getUserWalletWatches(
 Future<WatchAdditionalData> getWatchAdditionalData(
     int userID, int watchID) async {
   try {
-    // Retrieving all the additional information about the watch
     final response = await http.get(
       Uri.parse('$baseUrl/wallet/watch/$userID/$watchID'),
       headers: {
@@ -98,7 +96,6 @@ Future<List<WalletWatch>> getSharesByWatch(int watchID) async {
 
 Future<List<WalletWatch>> getSharesOfUserOnSale(int userID) async {
   try {
-    // Retreieving user's on sale shares
     final response = await http.get(
       Uri.parse('$baseUrl/shares/onSale/$userID'),
       headers: {
@@ -120,7 +117,6 @@ Future<List<WalletWatch>> getSharesOfUserOnSale(int userID) async {
 Future<List<ShareOnSale>> getSharesOfTheWatchOnSell(
     int watchID, int userID) async {
   try {
-    // Retrieving all the on sale shares of a watch
     final response = await http.get(
       Uri.parse('$baseUrl/marketplace/watch/$watchID')
           .replace(queryParameters: {'userId': userID.toString()}),
@@ -142,7 +138,6 @@ Future<List<ShareOnSale>> getSharesOfTheWatchOnSell(
 
 Future<WalletData> getWalletData(int userID) async {
   try {
-    // Retrieiving wallet data
     final response = await http.get(
       Uri.parse('$baseUrl/wallet/data/$userID'),
       headers: {
@@ -342,7 +337,7 @@ Future<APIStatus> updateSharesOnSale(int watchId, int userId, double oldPrice,
       return APIStatus.error;
     }
   } catch (e) {
-    throw Exception('[FLUTTER] Error updating shares on sale: $e');
+    throw Exception('[FLUTTER] Error updating shares for sale: $e');
   }
 }
 
@@ -417,12 +412,8 @@ Future<List<GraphData>> getGraphDatas(String timeFrame, int watchID, DateTime st
       startDate = endDate.subtract(const Duration(hours: 12));
     }
 
-
     String formattedStartDate = startDate.toUtc().toIso8601String();
     String formattedEndDate = endDate.toUtc().toIso8601String();
-
-    print(formattedStartDate);
-    print(formattedEndDate);
 
     final Uri url = Uri.parse('$baseUrl/graph/$timeFrame/$watchID')
         .replace(queryParameters: {

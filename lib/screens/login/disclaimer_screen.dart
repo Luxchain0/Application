@@ -20,7 +20,6 @@ class _DisclaimerScreenState extends State<DisclaimerScreen> {
     _loadPreferences();
   }
 
-  // Method to load the shared preference data
   void _loadPreferences() async {
     user = await SharedPreferences.getInstance();
     token = user.getString('token');

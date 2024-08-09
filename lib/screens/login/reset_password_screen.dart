@@ -193,7 +193,6 @@ class _ResetPasswordState extends State<ResetPasswordScreen> {
 
   @override
   void dispose() {
-    // Clean up the controller when the widget is disposed.
     passwordController.dispose();
     super.dispose();
   }
@@ -201,7 +200,6 @@ class _ResetPasswordState extends State<ResetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-//    double height = SizeConfig.screenH!;
     double width = SizeConfig.screenW!;
 
     return Scaffold(

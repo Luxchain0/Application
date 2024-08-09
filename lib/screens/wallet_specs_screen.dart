@@ -16,18 +16,6 @@ class WalletSpecsScreen extends StatelessWidget {
     double height = SizeConfig.screenH!;
     double width = SizeConfig.screenW!;
 
-    // List<FlSpot> chartData = [
-    //   const FlSpot(0, 1),
-    //   const FlSpot(1, 3),
-    //   const FlSpot(2, 10),
-    //   const FlSpot(3, 7),
-    //   const FlSpot(4, 12),
-    //   const FlSpot(5, 13),
-    //   const FlSpot(6, 17),
-    //   const FlSpot(7, 15),
-    //   const FlSpot(8, 20),
-    // ];
-
     return Scaffold(
       appBar: appBar(width),
       body: SafeArea(
@@ -98,18 +86,6 @@ class WalletSpecsScreen extends StatelessWidget {
                   scrollDirection: Axis.vertical,
                   child: Column(
                     children: <Widget>[
-                      // Container(
-                      //   padding: const EdgeInsets.all(10),
-                      //   width: double.infinity,
-                      //   height: 300,
-                      //   child: LineChart(
-                      //     LineChartData(
-                      //         borderData: FlBorderData(show: false),
-                      //         lineBarsData: [
-                      //           LineChartBarData(spots: chartData),
-                      //         ]),
-                      //   ),
-                      // ),
                       SizedBox(
                         height: height * 0.03,
                       ),

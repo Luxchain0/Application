@@ -15,14 +15,12 @@ import 'package:lux_chain/screens/bottom_menu/wallet_screen.dart';
 import 'package:lux_chain/screens/bottom_menu/watch_screen.dart';
 import 'package:lux_chain/screens/home_screen.dart';
 import 'package:lux_chain/screens/settings/settings_screen.dart';
-import 'package:lux_chain/screens/wallet_timeline_screen.dart';
 import 'package:lux_chain/utilities/api_models.dart';
 import 'package:lux_chain/utilities/frame.dart';
 import 'package:lux_chain/utilities/models.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
-    // Recupera gli argomenti passati, se ci sono
     final args = settings.arguments;
 
     switch (settings.name) {
@@ -63,10 +61,6 @@ class RouteGenerator {
         break;
       case WalletScreen.id:
         return MaterialPageRoute(builder: (_) => const WalletScreen());
-      case WalletTimelineScreen.id:
-        return MaterialPageRoute(builder: (_) => const WalletTimelineScreen());
-      // case ModelScreen.id:
-      //   return MaterialPageRoute(builder: (_) => const ModelScreen());
       case MarketScreen.id:
         return MaterialPageRoute(builder: (_) => const MarketScreen());
       case FrameScreen.id:
@@ -86,14 +80,12 @@ class RouteGenerator {
         }
         break;
       default:
-        // Se la route non è stata trovata, restituisci una route di errore
         return _errorRoute();
     }
     return _errorRoute();
   }
 
   static Route<dynamic> _errorRoute() {
-    // Route di errore predefinita
     return MaterialPageRoute(builder: (_) {
       return Scaffold(
         appBar: AppBar(

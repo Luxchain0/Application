@@ -101,7 +101,6 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
           .timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
-        // Successo
         showDialog(
           context: context,
           builder: (BuildContext context) => AlertDialog(
@@ -121,8 +120,6 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
           ),
         );
       } else {
-        // Errore
-        // Mostra un messaggio di errore
         snackbar(context, 'Server error, please try again later');
       }
     } catch (e) {
