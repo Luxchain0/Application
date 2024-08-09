@@ -412,8 +412,17 @@ Future<APIStatus> removeFromFavourite(int userID, int watchID) async {
 
 Future<List<GraphData>> getGraphDatas(String timeFrame, int watchID, DateTime startDate, DateTime endDate) async {
   try {
-    String formattedStartDate = startDate.toIso8601String();
-    String formattedEndDate = endDate.toIso8601String();
+
+    if (timeFrame == "hour") {
+      startDate = endDate.subtract(const Duration(hours: 12));
+    }
+
+
+    String formattedStartDate = startDate.toUtc().toIso8601String();
+    String formattedEndDate = endDate.toUtc().toIso8601String();
+
+    print(formattedStartDate);
+    print(formattedEndDate);
 
     final Uri url = Uri.parse('$baseUrl/graph/$timeFrame/$watchID')
         .replace(queryParameters: {

@@ -26,6 +26,7 @@ class _ChartCardState extends State<ChartCard> {
   final List<FlSpot> _listDotsMax = [];
   final List<FlSpot> _listDotsMin = [];
   final List<DateTime> _dates = [];
+  
   DateTime selectedStartDate = DateTime.now().subtract(const Duration(days: 7));
   DateTime selectedEndDate = DateTime.now();
 
@@ -93,35 +94,6 @@ class _ChartCardState extends State<ChartCard> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             const Text(
-              'Start Date: ',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-                "${selectedStartDate.day} - ${selectedStartDate.month} - ${selectedStartDate.year}"),
-            TextButton(
-                onPressed: () async {
-                  final DateTime? dateTime = await showDatePicker(
-                    context: context,
-                    firstDate: DateTime(2024),
-                    lastDate: DateTime(2030),
-                  );
-                  if (dateTime != null) {
-                    setState(() {
-                      selectedStartDate = dateTime;
-                    });
-                    _initializeData(
-                        _selected, selectedStartDate, selectedEndDate);
-                  }
-                },
-                child: const Text('Change date')),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            const Text(
               'End Date: ',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
@@ -134,11 +106,38 @@ class _ChartCardState extends State<ChartCard> {
                   final DateTime? dateTime = await showDatePicker(
                       context: context,
                       firstDate: DateTime(2024),
-                      lastDate: DateTime(2030));
+                      lastDate: DateTime.now().add(const Duration(days: 1)));
                   if (dateTime != null) {
-                    setState(() {
-                      selectedEndDate = dateTime;
-                    });
+                    
+                    if(_selected == "hour"){
+                      final TimeOfDay? selectedTime = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.fromDateTime(selectedEndDate),
+                      );
+
+                      if (selectedTime != null) {
+                        // Combina la data selezionata con l'ora selezionata
+                        final DateTime dateTimeWithTime = DateTime(
+                          dateTime.year,
+                          dateTime.month,
+                          dateTime.day,
+                          selectedTime.hour,
+                          selectedTime.minute,
+                        );
+
+                        setState(() {
+                          selectedEndDate = dateTimeWithTime;
+                          selectedStartDate = selectedEndDate.subtract(const Duration(hours: 12));
+                        });
+                      }
+                      
+                    } else if(_selected == "day"){
+                      setState(() {
+                        selectedEndDate = dateTime;
+                        selectedStartDate = dateTime.subtract(const Duration(days: 7));
+                      });
+                    }
+
                     _initializeData(
                         _selected, selectedStartDate, selectedEndDate);
                   }
